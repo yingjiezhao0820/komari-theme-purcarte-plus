@@ -99,7 +99,7 @@ const FilteredTooltip = (props: any) => {
   );
   if (!filtered.length) return null;
   return (
-      <div id="tooltip-scroll-container" style={{ maxHeight: "50vh", overflowY: "auto", pointerEvents: "auto", paddingRight: "4px" }} onWheel={(e) => e.stopPropagation()}>
+      <div id="tooltip-scroll-container" style={{ maxHeight: "300px", overflowY: "auto", pointerEvents: "auto", paddingRight: "4px" }} onWheel={(e) => e.stopPropagation()}>
         <CustomTooltip {...rest} active={true} payload={filtered} />
       </div>
   );
