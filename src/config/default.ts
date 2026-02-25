@@ -25,6 +25,11 @@ export interface ConfigOptions {
   enableSearchButton: boolean; // 是否启用搜索按钮
   enableAdminButton: boolean; // 是否启用管理员按钮
   selectedFooterStyle: FooterStyle; // 页脚样式
+  hideFooterOriginal: boolean; // 是否隐藏底栏原始内容（Powered by...）
+  enableServerUptime: boolean; // 是否启用服务器运行时间显示
+  serverStartTime: string; // 服务器启动时间（UTC+8），格式: "年,月,日,时,分,秒"
+  serverUptimeTemplate: string; // 运行时间显示模板
+  footerCustomContent: string; // 底栏自定义内容（换行分割多行，支持markdown链接和图片）
   enableJsonRPC2Api: boolean; // 是否启用 JSON-RPC2 API 适配
   isShowStatsInHeader: boolean; // 是否在标题栏中显示统计信息
   mergeGroupsWithStats: boolean; // 是否在统计栏中合并分组
@@ -90,6 +95,11 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableSearchButton: true,
   enableAdminButton: true,
   selectedFooterStyle: "followContent",
+  hideFooterOriginal: false,
+  enableServerUptime: false,
+  serverStartTime: "",
+  serverUptimeTemplate: "已不稳定运行 {days} 天 {hours} 小时 {minutes} 分钟 {seconds} 秒",
+  footerCustomContent: "",
   enableJsonRPC2Api: false,
   isShowStatsInHeader: false,
   mergeGroupsWithStats: false,

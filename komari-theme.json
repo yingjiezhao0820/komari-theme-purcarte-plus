@@ -218,6 +218,41 @@
                 "help": "设置底栏样式为 fixed（固定）, levitation（悬浮）, followContent（跟随内容）或 hidden（隐藏）"
             },
             {
+                "key": "hideFooterOriginal",
+                "name": "隐藏底栏原始内容",
+                "type": "switch",
+                "default": false,
+                "help": "启用后将隐藏底栏中的 'Powered by Komari Monitor | Theme by PurCarte-Plus' 内容"
+            },
+            {
+                "key": "enableServerUptime",
+                "name": "启用服务器运行时间",
+                "type": "switch",
+                "default": false,
+                "help": "启用后将在底栏显示服务器运行时间计时器"
+            },
+            {
+                "key": "serverStartTime",
+                "name": "服务器启动时间（UTC+8）",
+                "type": "string",
+                "default": "",
+                "help": "格式: 年,月,日,时,分,秒（eg: 2025,11,5,20,30,5 表示2025年11月5日20时30分5秒），留空则不显示"
+            },
+            {
+                "key": "serverUptimeTemplate",
+                "name": "运行时间显示模板",
+                "type": "string",
+                "default": "已不稳定运行 {days} 天 {hours} 小时 {minutes} 分钟 {seconds} 秒",
+                "help": "自定义运行时间的显示格式，可用变量: {days}（天）、{hours}（时）、{minutes}（分）、{seconds}（秒），自由排列组合（eg: Running {days}d {hours}h {minutes}m {seconds}s）"
+            },
+            {
+                "key": "footerCustomContent",
+                "name": "底栏自定义内容",
+                "type": "string",
+                "default": "",
+                "help": "自定义底栏内容，使用 ${n} 分割多行，支持Markdown格式的链接 [文本](链接) 和图片 ![描述](图片链接)"
+            },
+            {
                 "name": "内容设置",
                 "type": "title"
             },

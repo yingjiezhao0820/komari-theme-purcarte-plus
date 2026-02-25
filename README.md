@@ -11,7 +11,7 @@
 ---
 
 > [!NOTE]
-> 本主题在 [原作者 Montia37](https://github.com/Montia37/komari-theme-purcarte) 版本基础上进行二次开发的主题，且是在 Claude 的辅助下完成
+> 本主题在 [原作者:Montia37 v1.2.5](https://github.com/Montia37/komari-theme-purcarte/releases/tag/v1.2.5) 版本基础上进行二次开发的主题，且是在 Claude 的辅助下完成
 
 ## 🚀 快速开始
 
@@ -168,6 +168,31 @@
   - **可选项:** `fixed`, `levitation`, `followContent`, `hidden`
   - **默认值:** `followContent`
   - **说明:** 设置底栏样式为 fixed（固定）, levitation（悬浮）, followContent（跟随内容）或 hidden（隐藏）
+
+- **隐藏底栏原始内容** (`hideFooterOriginal`)
+  - **类型:** `switch`
+  - **默认值:** `false`
+  - **说明:** 启用后将隐藏底栏中的 'Powered by Komari Monitor | Theme by PurCarte-Plus' 内容
+
+- **启用服务器运行时间** (`enableServerUptime`)
+  - **类型:** `switch`
+  - **默认值:** `false`
+  - **说明:** 启用后将在底栏显示服务器运行时间计时器
+
+- **服务器启动时间（UTC+8）** (`serverStartTime`)
+  - **类型:** `string`
+  - **默认值:** `(空)`
+  - **说明:** 格式: 年,月,日,时,分,秒（eg: 2025,11,5,20,30,5 表示2025年11月5日20时30分5秒），留空则不显示
+
+- **运行时间显示模板** (`serverUptimeTemplate`)
+  - **类型:** `string`
+  - **默认值:** `已不稳定运行 {days} 天 {hours} 小时 {minutes} 分钟 {seconds} 秒`
+  - **说明:** 自定义运行时间的显示格式，可用变量: {days}（天）、{hours}（时）、{minutes}（分）、{seconds}（秒），自由排列组合（eg: Running {days}d {hours}h {minutes}m {seconds}s）
+
+- **底栏自定义内容** (`footerCustomContent`)
+  - **类型:** `string`
+  - **默认值:** `(空)`
+  - **说明:** 自定义底栏内容，使用 ${n} 分割多行，支持Markdown格式的链接 [文本](链接) 和图片 ![描述](图片链接)
 
 #### 内容设置
 
@@ -333,6 +358,151 @@
   - **类型:** `switch`
   - **默认值:** `true`
   - **说明:** 启用后将对未登录用户启用反调试保护，禁止右键菜单、开发者工具等操作
+
+## 📁 项目结构
+
+```
+komari-theme-purcarte-plus/
+├── public/                                  # 静态资源目录
+│   └── assets/
+│       ├── default-background-image.jpg     # 默认桌面端背景图片
+│       ├── LanternRivers_1080p15fps2Mbps3s.mp4  # 默认视频背景
+│       ├── logo.png                         # 站点 Logo
+│       ├── pwa-icon.png                     # PWA 应用图标
+│       ├── flags/                           # 国家/地区旗帜 SVG 图标集（250+）
+│       └── logo/                            # 操作系统与服务 Logo 图标集（30+）
+│
+├── src/                                     # 源代码目录
+│   ├── main.tsx                             # 应用入口，挂载 React 根组件，注册 Router/Theme/Config/Data 等 Provider
+│   ├── vite-env.d.ts                        # Vite 环境类型声明
+│   ├── index.css                            # 全局 CSS 样式
+│   ├── palette-rgb.css                      # Radix 主题色 RGB 调色板变量定义
+│   │
+│   ├── pages/                               # 页面组件
+│   │   ├── Home.tsx                         # 首页仪表盘，展示统计栏、节点网格/表格/紧凑视图
+│   │   ├── Private.tsx                      # 私有站点未认证提示页
+│   │   ├── NotFound.tsx                     # 404 页面
+│   │   └── instance/                        # Instance 详情页
+│   │       ├── index.tsx                    # Instance 页面入口与路由包装
+│   │       ├── Instance.tsx                 # Instance 详情主视图（基本信息、系统指标、网络状态）
+│   │       ├── LoadCharts.tsx               # CPU/负载 历史图表
+│   │       └── PingChart.tsx                # 延迟/丢包 历史图表
+│   │
+│   ├── components/                          # 组件目录
+│   │   ├── DynamicContent.tsx               # 动态背景内容处理（图片/视频背景切换与主题适配）
+│   │   ├── loading.tsx                      # 加载动画组件
+│   │   ├── Loading.css                      # 加载动画样式
+│   │   │
+│   │   ├── ui/                              # 基础 UI 组件库（基于 Radix UI）
+│   │   │   ├── avatar.tsx                   # 头像组件
+│   │   │   ├── button.tsx                   # 按钮组件
+│   │   │   ├── card.tsx                     # 卡片容器组件
+│   │   │   ├── chart.tsx                    # 图表包装组件（集成 Recharts）
+│   │   │   ├── dropdown-menu.tsx            # 下拉菜单组件
+│   │   │   ├── dropdown-menu.css            # 下拉菜单样式
+│   │   │   ├── input.tsx                    # 输入框组件
+│   │   │   ├── progress-bar.tsx             # 线性进度条组件
+│   │   │   ├── progress-circle.tsx          # 环形进度条组件
+│   │   │   ├── scroll-area.tsx              # 可滚动区域组件
+│   │   │   ├── select.tsx                   # 下拉选择组件
+│   │   │   ├── sonner.tsx                   # Toast 通知组件（集成 Sonner）
+│   │   │   ├── switch.tsx                   # 开关切换组件
+│   │   │   ├── tag.tsx                      # 标签/徽章组件
+│   │   │   ├── tips.tsx                     # 提示气泡组件
+│   │   │   └── tooltip.tsx                  # 工具提示组件
+│   │   │
+│   │   ├── sections/                        # 页面区块组件
+│   │   │   ├── Header.tsx                   # 标题栏（Logo、标题、搜索、视图切换、主题切换、管理入口）
+│   │   │   ├── Footer.tsx                   # 底栏（自定义内容、服务器运行时间、Markdown 渲染）
+│   │   │   ├── Flag.tsx                     # 国家旗帜展示组件
+│   │   │   ├── NodeGrid.tsx                 # 节点网格视图（卡片式布局）
+│   │   │   ├── NodeCompact.tsx              # 节点紧凑视图（精简列表）
+│   │   │   ├── NodeDisplay.tsx              # 节点详细信息展示（弹窗/侧栏详情）
+│   │   │   ├── NodeTable.tsx                # 节点表格视图（可展开行详情）
+│   │   │   └── StatsBar/                    # 统计栏组件集
+│   │   │       ├── index.tsx                # 统计栏主组件（在线/离线/流量/网速等聚合统计）
+│   │   │       ├── types.ts                 # 统计栏类型定义
+│   │   │       ├── StatChips.tsx            # 统计数据卡片（当前时间、在线数、地区、流量、网速）
+│   │   │       ├── GroupSelector.tsx         # 分组筛选选择器
+│   │   │       ├── SortToggleMenu.tsx        # 排序选项菜单
+│   │   │       └── StatsToggleMenu.tsx       # 统计卡片显示/隐藏控制菜单
+│   │   │
+│   │   ├── settings/                        # 设置面板组件
+│   │   │   ├── SettingsPanel.tsx             # 主题配置设置面板（管理员使用）
+│   │   │   ├── SettingItem.tsx              # 单项设置控件（switch/select/string/number）
+│   │   │   ├── EditButton.tsx               # 配置编辑按钮（标题栏触发入口）
+│   │   │   └── CustomTextsEditor.tsx        # 自定义 UI 文本可视化编辑器
+│   │   │
+│   │   └── enhanced/                        # 增强功能组件集（KomariBeautify）
+│   │       ├── EnhancedFeatures.tsx         # 增强功能总入口（统一管理各增强组件的挂载）
+│   │       ├── WelcomeBubble.tsx             # 欢迎气泡（展示访客 IP、地理位置、浏览器信息）
+│   │       ├── FinanceWidget.tsx             # 资产统计悬浮球（服务器总价值、月均支出、剩余价值）
+│   │       ├── ServerTradeModal.tsx          # 服务器交易计算弹窗
+│   │       ├── EarthGlobe.tsx               # 3D 地球组件入口（懒加载）
+│   │       ├── GlobeRenderer.tsx            # Globe.gl 3D 地球渲染器
+│   │       ├── ScrollHelpers.tsx            # 滚动到顶部/底部辅助按钮
+│   │       ├── Protection.tsx               # 访客反调试保护（禁止右键、开发者工具等）
+│   │       ├── emojiMap.ts                  # 国家代码 → Emoji/坐标 映射表
+│   │       ├── useUserGeo.ts                # 用户地理位置检测 Hook（多 API 回退策略）
+│   │       ├── useExchangeRates.ts          # 汇率获取与货币转换 Hook
+│   │       ├── financeUtils.ts              # 资产计算工具函数（价格转换、估值计算）
+│   │       └── enhanced.css                 # 增强功能专用样式
+│   │
+│   ├── config/                              # 配置管理
+│   │   ├── default.ts                       # 默认配置值与 ConfigOptions 类型定义
+│   │   ├── ConfigContext.ts                 # 配置 React Context 定义
+│   │   ├── ConfigProvider.tsx               # 配置 Provider（从后端 API 加载配置并合并默认值）
+│   │   ├── hooks.ts                         # 配置相关 Hooks（useAppConfig、useLocale）
+│   │   ├── locales.ts                       # 国际化文案（中文/英文）
+│   │   └── index.ts                         # 配置模块统一导出
+│   │
+│   ├── contexts/                            # React Context 提供者
+│   │   ├── NodeDataContext.tsx              # 节点数据 Context（REST/RPC API 数据获取与缓存）
+│   │   ├── LiveDataContext.tsx              # 实时数据 Context（WebSocket 实时推送）
+│   │   └── ThemeContext.tsx                 # 主题 Context（亮色/暗色/跟随系统）
+│   │
+│   ├── hooks/                               # 自定义 Hooks
+│   │   ├── useLoadCharts.ts                 # CPU/负载 历史图表数据获取 Hook
+│   │   ├── usePingChart.ts                  # 延迟/丢包 历史图表数据获取 Hook
+│   │   ├── useNodeCommons.ts                # 节点通用工具 Hook（状态判断、运行时间、颜色映射）
+│   │   ├── useTheme.ts                      # 主题管理 Hook（切换亮色/暗色/自动模式）
+│   │   └── useMobile.ts                     # 移动端响应式检测 Hook
+│   │
+│   ├── services/                            # 服务层
+│   │   └── api.ts                           # API 服务类（Komari 后端 REST 与 JSON-RPC2 通信）
+│   │
+│   ├── types/                               # TypeScript 类型定义
+│   │   ├── node.d.ts                        # 节点数据结构类型（NodeData、NodeStats、ApiResponse 等）
+│   │   ├── rpc.d.ts                         # JSON-RPC2 响应类型
+│   │   └── LiveData.ts                      # WebSocket 实时数据流类型
+│   │
+│   └── utils/                               # 工具函数
+│       ├── index.ts                         # 工具模块统一导出（cn、formatBytes 等）
+│       ├── formatHelper.ts                  # 数据格式化（字节、运行时间、流量限制）
+│       ├── chartHelper.ts                   # 图表工具（OKLCH 颜色生成、标签格式化）
+│       ├── converters.ts                    # 类型转换工具（NodeStats ↔ RpcNodeStatus）
+│       ├── regionHelper.ts                  # 地区 Emoji → 名称映射
+│       ├── localeUtils.ts                   # 国际化工具（深度对象合并）
+│       ├── osImageHelper.ts                 # 操作系统 Logo 查找工具
+│       └── RecordHelper.tsx                 # 图表数据处理（削峰、插值、空值填充）
+│
+├── index.html                               # HTML 入口文件（含 PWA 元数据）
+├── komari-theme.json                        # Komari 主题配置声明文件（定义后台可配置项）
+├── preview.png                              # 主题预览截图
+├── package.json                             # 项目依赖与脚本定义
+├── package-lock.json                        # npm 依赖锁定文件
+├── yarn.lock                                # Yarn 依赖锁定文件
+├── vite.config.ts                           # Vite 构建配置（React + Tailwind 插件）
+├── tailwind.config.ts                       # Tailwind CSS 配置
+├── tsconfig.json                            # TypeScript 根配置
+├── tsconfig.app.json                        # TypeScript 应用编译配置
+├── tsconfig.node.json                       # TypeScript Node 编译配置
+├── eslint.config.js                         # ESLint 代码检查配置
+├── components.json                          # shadcn/ui 组件配置
+├── .gitignore                               # Git 忽略规则
+├── LICENSE                                  # MIT 开源许可证
+└── README.md                                # 项目说明文档
+```
 
 ## 🛠️ 本地开发
 
