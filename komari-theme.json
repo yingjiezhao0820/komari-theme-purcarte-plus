@@ -8,484 +8,1155 @@
     "preview": "preview.png",
     "configuration": {
         "type": "managed",
+        "name": {
+            "zh-CN": "PurCart Plus 主题设置",
+            "zh-TW": "PurCart Plus 主題設置",
+            "en": "PurCart Plus Theme Settings",
+            "ja": "PurCart Plus テーマ設定"
+        },
         "data": [
             {
-                "name": "前端管理开关",
+                "name": {
+                    "zh-CN": "前端管理开关",
+                    "zh-TW": "前端管理開關",
+                    "en": "Frontend Management",
+                    "ja": "フロントエンド管理"
+                },
                 "type": "title"
             },
             {
                 "key": "isShowConfigEditButtonInLogined",
-                "name": "是否在登录时显示配置编辑按钮",
+                "name": {
+                    "zh-CN": "是否在登录时显示配置编辑按钮",
+                    "zh-TW": "是否在登錄時顯示配置編輯按鈕",
+                    "en": "Show Config Edit Button When Logged In",
+                    "ja": "ログイン時に設定編集ボタンを表示"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后将在登录时在标题栏最右侧显示配置编辑按钮，方便管理员进行主题配置"
+                "help": {
+                    "zh-CN": "启用后将在登录时在标题栏最右侧显示配置编辑按钮，方便管理员进行主题配置",
+                    "zh-TW": "啟用後將在登錄時在標題欄最右側顯示配置編輯按鈕，方便管理員進行主題配置",
+                    "en": "Enable to show the config edit button on the right side of the header when logged in.",
+                    "ja": "有効にすると、ログイン時にヘッダーの右端に設定編集ボタンが表示されます。"
+                }
             },
             {
-                "name": "样式调整",
+                "name": {
+                    "zh-CN": "样式调整",
+                    "zh-TW": "樣式調整",
+                    "en": "Style Adjustment",
+                    "ja": "スタイル調整"
+                },
                 "type": "title"
             },
             {
                 "key": "mainWidth",
-                "name": "主要内容宽度",
+                "name": {
+                    "zh-CN": "主要内容宽度",
+                    "zh-TW": "主要內容寬度",
+                    "en": "Main Content Width",
+                    "ja": "メインコンテンツ幅"
+                },
                 "type": "number",
                 "default": 85,
-                "help": "调整主要内容的最大宽度，单位为视口宽度的百分比（vw），建议值为 80-90"
+                "help": {
+                    "zh-CN": "调整主要内容的最大宽度，单位为视口宽度的百分比（vw），建议值为 80-90",
+                    "zh-TW": "調整主要內容的最大寬度，單位為視口寬度的百分比（vw），建議值為 80-90",
+                    "en": "Adjust the max width of main content in viewport width percentage (vw). Recommended: 80-90.",
+                    "ja": "メインコンテンツの最大幅をビューポート幅のパーセンテージ（vw）で調整します。推奨値：80-90。"
+                }
             },
             {
                 "key": "backgroundImage",
-                "name": "桌面端背景图片链接",
+                "name": {
+                    "zh-CN": "桌面端背景图片链接",
+                    "zh-TW": "桌面端背景圖片連結",
+                    "en": "Desktop Background Image URL",
+                    "ja": "デスクトップ背景画像URL"
+                },
                 "type": "string",
                 "default": "/assets/default-background-image.jpg",
-                "help": "支持多张背景图片或图片api，使用“,”分割，使用“|”分隔亮色模式和暗色模式，填写单个则同时用于亮暗模式"
+                "help": {
+                    "zh-CN": "支持多张背景图片或图片api，使用“,”分割，使用“|”分隔亮色模式和暗色模式，填写单个则同时用于亮暗模式",
+                    "zh-TW": "支持多張背景圖片或圖片api，使用“,”分割，使用“|”分隔亮色模式和暗色模式，填寫單個則同時用於亮暗模式",
+                    "en": "Supports multiple images/APIs separated by comma. Use '|' to separate Light and Dark modes. Single value applies to both.",
+                    "ja": "複数の画像/APIに対応（カンマ区切り）。「|」を使用してライトモードとダークモードを区切ります。単一の場合は両方に適用されます。"
+                }
             },
             {
                 "key": "backgroundImageMobile",
-                "name": "移动端背景图片链接",
+                "name": {
+                    "zh-CN": "移动端背景图片链接",
+                    "zh-TW": "移動端背景圖片連結",
+                    "en": "Mobile Background Image URL",
+                    "ja": "モバイル背景画像URL"
+                },
                 "type": "string",
                 "default": "",
-                "help": "移动端背景图片链接，与桌面端一样区分亮暗模式，留空则使用桌面端背景"
+                "help": {
+                    "zh-CN": "移动端背景图片链接，与桌面端一样区分亮暗模式，留空则使用桌面端背景",
+                    "zh-TW": "移動端背景圖片連結，與桌面端一樣區分亮暗模式，留空則使用桌面端背景",
+                    "en": "Mobile background URL. Supports Light/Dark mode separation like desktop. Uses desktop background if empty.",
+                    "ja": "モバイル用背景URL。デスクトップ同様にライト/ダークモードを区別します。空の場合はデスクトップ背景を使用します。"
+                }
             },
             {
                 "key": "enableVideoBackground",
-                "name": "启用视频背景",
+                "name": {
+                    "zh-CN": "启用视频背景",
+                    "zh-TW": "啟用視頻背景",
+                    "en": "Enable Video Background",
+                    "ja": "動画背景を有効化"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后将使用视频作为背景"
+                "help": {
+                    "zh-CN": "启用后将使用视频作为背景",
+                    "zh-TW": "啟用後將使用視頻作為背景",
+                    "en": "Enable to use video as background.",
+                    "ja": "有効にすると動画を背景として使用します。"
+                }
             },
             {
                 "key": "videoBackgroundUrl",
-                "name": "桌面端视频背景链接",
+                "name": {
+                    "zh-CN": "桌面端视频背景链接",
+                    "zh-TW": "桌面端視頻背景連結",
+                    "en": "Desktop Video Background URL",
+                    "ja": "デスクトップ動画背景URL"
+                },
                 "type": "string",
                 "default": "/assets/LanternRivers_1080p15fps2Mbps3s.mp4",
-                "help": "视频背景链接，使用“|”分隔亮色模式和暗色模式，填写单个则同时用于亮暗模式，建议使用无声视频，且视频文件较大时可能会影响加载速度"
+                "help": {
+                    "zh-CN": "视频背景链接，使用“|”分隔亮色模式和暗色模式，填写单个则同时用于亮暗模式，建议使用无声视频，且视频文件较大时可能会影响加载速度",
+                    "zh-TW": "視頻背景連結，使用“|”分隔亮色模式和暗色模式，填寫單個則同時用於亮暗模式，建議使用無聲視頻，且視頻文件較大時可能會影響加載速度",
+                    "en": "Video URL. Use '|' to separate Light/Dark modes. Silent videos recommended. Large files may affect loading speed.",
+                    "ja": "動画URL。「|」でライト/ダークモードを区切ります。無音動画を推奨。ファイルサイズが大きいと読み込み速度に影響する場合があります。"
+                }
             },
             {
                 "key": "videoBackgroundUrlMobile",
-                "name": "移动端视频背景链接",
+                "name": {
+                    "zh-CN": "移动端视频背景链接",
+                    "zh-TW": "移動端視頻背景連結",
+                    "en": "Mobile Video Background URL",
+                    "ja": "モバイル動画背景URL"
+                },
                 "type": "string",
                 "default": "",
-                "help": "移动端视频背景链接，多个使用“,”分割，与桌面端一样区分亮暗模式，留空则使用桌面端视频"
+                "help": {
+                    "zh-CN": "移动端视频背景链接，多个使用“,”分割，与桌面端一样区分亮暗模式，留空则使用桌面端视频",
+                    "zh-TW": "移動端視頻背景連結，多個使用“,”分割，與桌面端一樣區分亮暗模式，留空則使用桌面端視頻",
+                    "en": "Mobile video URL. Separated by comma. Supports Light/Dark mode. Uses desktop video if empty.",
+                    "ja": "モバイル動画URL。カンマ区切り。ライト/ダークモード対応。空の場合はデスクトップ動画を使用します。"
+                }
             },
             {
                 "key": "backagroundAlignment",
-                "name": "背景对齐方式",
+                "name": {
+                    "zh-CN": "背景对齐方式",
+                    "zh-TW": "背景對齊方式",
+                    "en": "Background Alignment",
+                    "ja": "背景の配置"
+                },
                 "type": "string",
                 "default": "cover,top",
-                "help": "调整背景图片和视频的对齐方式，使用“,”分隔背景大小和位置两个属性，背景大小可选 cover（覆盖）,contain（包含）,fill（填充）；背景位置可选 center（居中）,top（顶部）,bottom（底部）,left（左侧）,right（右侧），eg: cover,top"
+                "help": {
+                    "zh-CN": "调整背景图片和视频的对齐方式，使用“,”分隔背景大小和位置两个属性，背景大小可选 cover（覆盖）,contain（包含）,fill（填充）；背景位置可选 center（居中）,top（顶部）,bottom（底部）,left（左侧）,right（右侧），eg: cover,top",
+                    "zh-TW": "調整背景圖片和視頻的對齊方式，使用“,”分隔背景大小和位置兩個屬性，背景大小可選 cover（覆蓋）,contain（包含）,fill（填充）；背景位置可選 center（居中）,top（頂部）,bottom（底部）,left（左側）,right（右側），eg: cover,top",
+                    "en": "Adjust background size and position, separated by comma. Size: cover, contain, fill. Position: center, top, bottom, left, right. E.g., cover,top.",
+                    "ja": "背景サイズと位置をカンマで区切って調整します。サイズ：cover, contain, fill。位置：center, top, bottom, left, right。例：cover,top。"
+                }
             },
             {
                 "key": "enableBlur",
-                "name": "启用磨砂玻璃效果",
+                "name": {
+                    "zh-CN": "启用磨砂玻璃效果",
+                    "zh-TW": "啟用磨砂玻璃效果",
+                    "en": "Enable Frosted Glass Effect",
+                    "ja": "すりガラス効果を有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后将使主要容器拥有磨砂玻璃效果"
+                "help": {
+                    "zh-CN": "启用后将使主要容器拥有磨砂玻璃效果",
+                    "zh-TW": "啟用後將使主要容器擁有磨砂玻璃效果",
+                    "en": "Enable to apply frosted glass effect to the main container.",
+                    "ja": "有効にすると、メインコンテナにすりガラス効果が適用されます。"
+                }
             },
             {
                 "key": "blurValue",
-                "name": "磨砂玻璃模糊值",
+                "name": {
+                    "zh-CN": "磨砂玻璃模糊值",
+                    "zh-TW": "磨砂玻璃模糊值",
+                    "en": "Blur Value",
+                    "ja": "ぼかしの値"
+                },
                 "type": "number",
                 "default": 5,
-                "help": "调整模糊值大小，数值越大模糊效果越明显，建议值为 5-20，为 0 则表示不启用模糊效果"
+                "help": {
+                    "zh-CN": "调整模糊值大小，数值越大模糊效果越明显，建议值为 5-20，为 0 则表示不启用模糊效果",
+                    "zh-TW": "調整模糊值大小，數值越大模糊效果越明顯，建議值為 5-20，為 0 則表示不啟用模糊效果",
+                    "en": "Adjust blur intensity. Higher values mean more blur. Recommended: 5-20. 0 disables blur.",
+                    "ja": "ぼかしの強度を調整します。値が大きいほどぼかしが強くなります。推奨：5-20。0で無効化。"
+                }
             },
             {
                 "key": "blurBackgroundColor",
-                "name": "磨砂玻璃背景色",
+                "name": {
+                    "zh-CN": "磨砂玻璃背景色",
+                    "zh-TW": "磨砂玻璃背景色",
+                    "en": "Blur Background Color",
+                    "ja": "ぼかし背景色"
+                },
                 "type": "string",
                 "default": "rgba(255, 255, 255, 0.5)|rgba(0, 0, 0, 0.5)",
-                "help": "调整模糊背景色，推荐 rgba 颜色值（eg: rgba(255, 255, 255, 0.5)|rgba(0, 0, 0, 0.5)），使用“|”分隔亮色模式和暗色模式的颜色值，填写单个则同时用于亮暗模式"
+                "help": {
+                    "zh-CN": "调整模糊背景色，推荐 rgba 颜色值，使用“|”分隔亮色模式和暗色模式的颜色值，填写单个则同时用于亮暗模式",
+                    "zh-TW": "調整模糊背景色，推薦 rgba 顏色值，使用“|”分隔亮色模式和暗色模式的顏色值，填寫單個則同時用於亮暗模式",
+                    "en": "Adjust blur background color. RGBA recommended. Use '|' to separate Light/Dark modes.",
+                    "ja": "ぼかしの背景色を調整します。RGBA推奨。「|」でライト/ダークモードを区切ります。"
+                }
             },
             {
                 "key": "enableTransparentTags",
-                "name": "启用标签透明背景",
+                "name": {
+                    "zh-CN": "启用标签透明背景",
+                    "zh-TW": "啟用標籤透明背景",
+                    "en": "Enable Transparent Tags",
+                    "ja": "透明タグ背景を有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后标签将使用较为透明的背景色，当背景情况复杂导致标签难以辨识时建议关闭"
+                "help": {
+                    "zh-CN": "启用后标签将使用较为透明的背景色，当背景情况复杂导致标签难以辨识时建议关闭",
+                    "zh-TW": "啟用後標籤將使用較為透明的背景色，當背景情況複雜導致標籤難以辨識時建議關閉",
+                    "en": "Tags will use a transparent background. Disable if tags are hard to read on complex backgrounds.",
+                    "ja": "タグに透明な背景を使用します。背景が複雑でタグが見にくい場合は無効にしてください。"
+                }
             },
             {
                 "key": "tagDefaultColorList",
-                "name": "标签默认颜色列表",
+                "name": {
+                    "zh-CN": "标签默认颜色列表",
+                    "zh-TW": "標籤默認顏色列表",
+                    "en": "Default Tag Color List",
+                    "ja": "デフォルトタグ色リスト"
+                },
                 "type": "string",
                 "default": "lime,cyan,pink,crimson,iris,violet,plum,indigo,blue,jade,mint,grass,teal,sky,red,ruby,tomato,orange,amber,yellow,green,purple,gold,bronze,brown,gray,mauve,slate",
-                "help": "标签默认颜色列表，展示的标签将按顺序调用该颜色池，逗号分隔（可用的颜色列表请参考：https://www.radix-ui.com/themes/docs/theme/color，改完没有生效则说明填写有误）"
+                "help": {
+                    "zh-CN": "标签默认颜色列表，展示的标签将按顺序调用该颜色池，逗号分隔",
+                    "zh-TW": "標籤默認顏色列表，展示的標籤將按順序調用該顏色池，逗號分隔",
+                    "en": "List of default colors for tags, separated by comma. Tags will cycle through this pool.",
+                    "ja": "タグのデフォルト色リスト（カンマ区切り）。タグはこの色プールを順に使用します。"
+                }
             },
             {
                 "key": "selectThemeColor",
-                "name": "默认主题颜色",
+                "name": {
+                    "zh-CN": "默认主题颜色",
+                    "zh-TW": "默認主題顏色",
+                    "en": "Default Theme Color",
+                    "ja": "デフォルトテーマ色"
+                },
                 "type": "select",
                 "options": "gray,gold,bronze,brown,yellow,amber,orange,tomato,red,ruby,crimson,pink,plum,purple,violet,iris,indigo,blue,cyan,teal,jade,green,grass,lime,mint,sky",
                 "default": "violet",
-                "help": "设置默认主题颜色，颜色对照请参考：https://www.radix-ui.com/themes/docs/theme/color"
+                "help": {
+                    "zh-CN": "设置默认主题颜色，颜色对照请参考 Radix UI 颜色文档",
+                    "zh-TW": "設置默認主題顏色，顏色對照請參考 Radix UI 顏色文檔",
+                    "en": "Set default theme color. Refer to Radix UI docs for colors.",
+                    "ja": "デフォルトのテーマ色を設定します。色の詳細はRadix UIドキュメントを参照してください。"
+                }
             },
             {
-                "name": "浏览器本地存储配置",
+                "name": {
+                    "zh-CN": "浏览器本地存储配置",
+                    "zh-TW": "瀏覽器本地存儲配置",
+                    "en": "Local Storage Config",
+                    "ja": "ローカルストレージ設定"
+                },
                 "type": "title"
             },
             {
                 "key": "enableLocalStorage",
-                "name": "启用 localStorage 配置",
+                "name": {
+                    "zh-CN": "启用 localStorage 配置",
+                    "zh-TW": "啟用 localStorage 配置",
+                    "en": "Enable localStorage",
+                    "ja": "localStorageを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后将优先使用用户浏览器本地配置的视图和外观设置。关闭后将强制使用下方的主题配置，本地可调整但刷新即恢复"
+                "help": {
+                    "zh-CN": "启用后将优先使用用户浏览器本地配置的视图和外观设置。关闭后将强制使用下方的主题配置",
+                    "zh-TW": "啟用後將優先使用用戶瀏覽器本地配置的視圖和外觀設置。關閉後將強制使用下方的主題配置",
+                    "en": "Prioritize user's local browser settings for view and appearance. If disabled, theme config is enforced.",
+                    "ja": "ユーザーのブラウザのローカル設定（表示や外観）を優先します。無効にすると、テーマ設定が強制されます。"
+                }
             },
             {
                 "key": "selectedDefaultView",
-                "name": "桌面端默认展示视图",
+                "name": {
+                    "zh-CN": "桌面端默认展示视图",
+                    "zh-TW": "桌面端默認展示視圖",
+                    "en": "Desktop Default View",
+                    "ja": "デスクトップデフォルト表示"
+                },
                 "type": "select",
                 "options": "grid,table,compact",
                 "default": "grid",
-                "help": "设置默认展示视图为网格、表格或紧凑型"
+                "help": {
+                    "zh-CN": "设置默认展示视图为网格、表格或紧凑型",
+                    "zh-TW": "設置默認展示視圖為網格、表格或緊湊型",
+                    "en": "Set default view to Grid, Table, or Compact.",
+                    "ja": "デフォルト表示をグリッド、テーブル、またはコンパクトに設定します。"
+                }
             },
             {
                 "key": "selectedDefaultAppearance",
-                "name": "默认外观",
+                "name": {
+                    "zh-CN": "默认外观",
+                    "zh-TW": "默認外觀",
+                    "en": "Default Appearance",
+                    "ja": "デフォルトの外観"
+                },
                 "type": "select",
                 "options": "system,light,dark",
                 "default": "system",
-                "help": "设置默认外观为浅色、深色或系统主题"
+                "help": {
+                    "zh-CN": "设置默认外观为浅色、深色或系统主题",
+                    "zh-TW": "設置默認外觀為淺色、深色或系統主題",
+                    "en": "Set default appearance to Light, Dark, or System.",
+                    "ja": "デフォルトの外観をライト、ダーク、またはシステムに設定します。"
+                }
             },
             {
                 "key": "statusCardsVisibility",
-                "name": "状态卡片显示控制",
+                "name": {
+                    "zh-CN": "状态卡片显示控制",
+                    "zh-TW": "狀態卡片顯示控制",
+                    "en": "Status Cards Visibility",
+                    "ja": "ステータスカード表示設定"
+                },
                 "type": "string",
                 "default": "currentTime:true,currentOnline:true,regionOverview:true,trafficOverview:true,networkSpeed:true",
-                "help": "控制状态卡片的显示与隐藏，格式为 卡片名称:显示状态（true/false），多个卡片使用逗号分隔，支持的卡片名称包括 currentTime（当前时间）, currentOnline（当前在线）, regionOverview（点亮地区）, trafficOverview（流量概览）, networkSpeed（网络速率）"
+                "help": {
+                    "zh-CN": "控制状态卡片的显示与隐藏，格式为 卡片名称:true/false，逗号分隔",
+                    "zh-TW": "控制狀態卡片的顯示與隱藏，格式為 卡片名稱:true/false，逗號分隔",
+                    "en": "Control visibility of status cards. Format: cardName:true/false, comma separated.",
+                    "ja": "ステータスカードの表示/非表示を制御します。形式：cardName:true/false（カンマ区切り）。"
+                }
             },
             {
-                "name": "标题栏设置",
+                "name": {
+                    "zh-CN": "标题栏设置",
+                    "zh-TW": "標題欄設置",
+                    "en": "Header Settings",
+                    "ja": "ヘッダー設定"
+                },
                 "type": "title"
             },
             {
                 "key": "selectedHeaderStyle",
-                "name": "标题栏样式",
+                "name": {
+                    "zh-CN": "标题栏样式",
+                    "zh-TW": "標題欄樣式",
+                    "en": "Header Style",
+                    "ja": "ヘッダースタイル"
+                },
                 "type": "select",
                 "options": "fixed,levitation",
                 "default": "fixed",
-                "help": "设置标题栏样式为 fixed（固定）或 levitation（悬浮）"
+                "help": {
+                    "zh-CN": "设置标题栏样式为 fixed（固定）或 levitation（悬浮）",
+                    "zh-TW": "設置標題欄樣式為 fixed（固定）或 levitation（懸浮）",
+                    "en": "Set header style to Fixed or Levitation.",
+                    "ja": "ヘッダースタイルを固定（Fixed）または浮遊（Levitation）に設定します。"
+                }
             },
             {
                 "key": "enableLogo",
-                "name": "启用标题栏左侧 Logo",
+                "name": {
+                    "zh-CN": "启用标题栏左侧 Logo",
+                    "zh-TW": "啟用標題欄左側 Logo",
+                    "en": "Enable Header Logo",
+                    "ja": "ヘッダーロゴを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后默认在标题栏左侧显示 Logo"
+                "help": {
+                    "zh-CN": "启用后默认在标题栏左侧显示 Logo",
+                    "zh-TW": "啟用後默認在標題欄左側顯示 Logo",
+                    "en": "Enable to show Logo on the left side of the header.",
+                    "ja": "有効にすると、ヘッダーの左側にロゴが表示されます。"
+                }
             },
             {
                 "key": "logoUrl",
-                "name": "Logo 图片链接",
+                "name": {
+                    "zh-CN": "Logo 图片链接",
+                    "zh-TW": "Logo 圖片連結",
+                    "en": "Logo URL",
+                    "ja": "ロゴURL"
+                },
                 "type": "string",
                 "required": false,
                 "default": "/assets/logo.png",
-                "help": "Logo 图片链接（eg: https://test.com/logo.png）"
+                "help": {
+                    "zh-CN": "Logo 图片链接（eg: https://test.com/logo.png）",
+                    "zh-TW": "Logo 圖片連結（eg: https://test.com/logo.png）",
+                    "en": "URL of the Logo image.",
+                    "ja": "ロゴ画像のURL。"
+                }
             },
             {
                 "key": "enableTitle",
-                "name": "启用标题栏标题",
+                "name": {
+                    "zh-CN": "启用标题栏标题",
+                    "zh-TW": "啟用標題欄標題",
+                    "en": "Enable Header Title",
+                    "ja": "ヘッダータイトルを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后默认在顶栏左侧显示标题"
+                "help": {
+                    "zh-CN": "启用后默认在顶栏左侧显示标题",
+                    "zh-TW": "啟用後默認在頂欄左側顯示標題",
+                    "en": "Enable to show the title on the left side of the header.",
+                    "ja": "有効にすると、ヘッダーの左側にタイトルが表示されます。"
+                }
             },
             {
                 "key": "titleText",
-                "name": "标题栏标题文本",
+                "name": {
+                    "zh-CN": "标题栏标题文本",
+                    "zh-TW": "標題欄標題文本",
+                    "en": "Header Title Text",
+                    "ja": "ヘッダータイトルテキスト"
+                },
                 "type": "string",
                 "default": "",
-                "help": "标题栏左侧显示的文本（留空则使用站点标题）"
+                "help": {
+                    "zh-CN": "标题栏左侧显示的文本（留空则使用站点标题）",
+                    "zh-TW": "標題欄左側顯示的文本（留空則使用站點標題）",
+                    "en": "Text displayed on the left of header. Uses site title if empty.",
+                    "ja": "ヘッダー左側に表示されるテキスト（空の場合はサイトタイトルを使用）。"
+                }
             },
             {
                 "key": "enableSearchButton",
-                "name": "启用搜索按钮",
+                "name": {
+                    "zh-CN": "启用搜索按钮",
+                    "zh-TW": "啟用搜索按鈕",
+                    "en": "Enable Search Button",
+                    "ja": "検索ボタンを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后默认在标题栏右侧显示搜索按钮"
+                "help": {
+                    "zh-CN": "启用后默认在标题栏右侧显示搜索按钮",
+                    "zh-TW": "啟用後默認在標題欄右側顯示搜索按鈕",
+                    "en": "Enable to show search button on the right side of the header.",
+                    "ja": "有効にすると、ヘッダーの右側に検索ボタンが表示されます。"
+                }
             },
             {
                 "key": "enableAdminButton",
-                "name": "启用管理按钮",
+                "name": {
+                    "zh-CN": "启用管理按钮",
+                    "zh-TW": "啟用管理按鈕",
+                    "en": "Enable Admin Button",
+                    "ja": "管理ボタンを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后默认在标题栏右侧显示管理按钮"
+                "help": {
+                    "zh-CN": "启用后默认在标题栏右侧显示管理按钮",
+                    "zh-TW": "啟用後默認在標題欄右側顯示管理按鈕",
+                    "en": "Enable to show admin button on the right side of the header.",
+                    "ja": "有効にすると、ヘッダーの右側に管理ボタンが表示されます。"
+                }
             },
             {
-                "name": "底栏设置",
+                "name": {
+                    "zh-CN": "底栏设置",
+                    "zh-TW": "底欄設置",
+                    "en": "Footer Settings",
+                    "ja": "フッター設定"
+                },
                 "type": "title"
             },
             {
                 "key": "selectedFooterStyle",
-                "name": "底栏样式",
+                "name": {
+                    "zh-CN": "底栏样式",
+                    "zh-TW": "底欄樣式",
+                    "en": "Footer Style",
+                    "ja": "フッタースタイル"
+                },
                 "type": "select",
                 "options": "fixed,levitation,followContent,hidden",
                 "default": "followContent",
-                "help": "设置底栏样式为 fixed（固定）, levitation（悬浮）, followContent（跟随内容）或 hidden（隐藏）"
+                "help": {
+                    "zh-CN": "设置底栏样式为 fixed, levitation, followContent 或 hidden",
+                    "zh-TW": "設置底欄樣式為 fixed, levitation, followContent 或 hidden",
+                    "en": "Set footer style: Fixed, Levitation, FollowContent, or Hidden.",
+                    "ja": "フッタースタイルを設定：固定、浮遊、内容追従、または非表示。"
+                }
             },
             {
                 "key": "hideFooterOriginal",
-                "name": "隐藏底栏原始内容",
+                "name": {
+                    "zh-CN": "隐藏底栏原始内容",
+                    "zh-TW": "隱藏底欄原本內容",
+                    "en": "Hide Original Footer",
+                    "ja": "元のフッターを隠す"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后将隐藏底栏中的 'Powered by Komari Monitor | Theme by PurCarte-Plus' 内容"
+                "help": {
+                    "zh-CN": "启用后将隐藏底栏中的 'Powered by Komari Monitor' 等版权内容",
+                    "zh-TW": "啟用後將隱藏底欄中的 'Powered by Komari Monitor' 等版權內容",
+                    "en": "Hide 'Powered by Komari Monitor' content in the footer.",
+                    "ja": "フッターの「Powered by Komari Monitor」等の内容を非表示にします。"
+                }
             },
             {
                 "key": "enableServerUptime",
-                "name": "启用服务器运行时间",
+                "name": {
+                    "zh-CN": "启用服务器运行时间",
+                    "zh-TW": "啟用伺服器運行時間",
+                    "en": "Enable Server Uptime",
+                    "ja": "サーバー稼働時間を有効化"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后将在底栏显示服务器运行时间计时器"
+                "help": {
+                    "zh-CN": "启用后将在底栏显示服务器运行时间计时器",
+                    "zh-TW": "啟用後將在底欄顯示伺服器運行時間計時器",
+                    "en": "Show server uptime timer in the footer.",
+                    "ja": "フッターにサーバー稼働時間タイマーを表示します。"
+                }
             },
             {
                 "key": "serverStartTime",
-                "name": "服务器启动时间（UTC+8）",
+                "name": {
+                    "zh-CN": "服务器启动时间（UTC+8）",
+                    "zh-TW": "伺服器啟動時間（UTC+8）",
+                    "en": "Server Start Time (UTC+8)",
+                    "ja": "サーバー起動時間（UTC+8）"
+                },
                 "type": "string",
                 "default": "",
-                "help": "格式: 年,月,日,时,分,秒（eg: 2025,11,5,20,30,5 表示2025年11月5日20时30分5秒），留空则不显示"
+                "help": {
+                    "zh-CN": "格式: 年,月,日,时,分,秒（eg: 2025,11,5,20,30,5）",
+                    "zh-TW": "格式: 年,月,日,時,分,秒（eg: 2025,11,5,20,30,5）",
+                    "en": "Format: YYYY,MM,DD,HH,MM,SS (e.g., 2025,11,5,20,30,5)",
+                    "ja": "形式：年,月,日,時,分,秒（例：2025,11,5,20,30,5）"
+                }
             },
             {
                 "key": "serverUptimeTemplate",
-                "name": "运行时间显示模板",
+                "name": {
+                    "zh-CN": "运行时间显示模板",
+                    "zh-TW": "運行時間顯示模板",
+                    "en": "Uptime Display Template",
+                    "ja": "稼働時間表示テンプレート"
+                },
                 "type": "string",
                 "default": "已不稳定运行 {days} 天 {hours} 小时 {minutes} 分钟 {seconds} 秒",
-                "help": "自定义运行时间的显示格式，可用变量: {days}（天）、{hours}（时）、{minutes}（分）、{seconds}（秒），自由排列组合（eg: Running {days}d {hours}h {minutes}m {seconds}s）"
+                "help": {
+                    "zh-CN": "自定义运行时间格式，可用变量: {days}, {hours}, {minutes}, {seconds}",
+                    "zh-TW": "自定義運行時間格式，可用變量: {days}, {hours}, {minutes}, {seconds}",
+                    "en": "Custom format. Vars: {days}, {hours}, {minutes}, {seconds}",
+                    "ja": "カスタム表示形式。変数: {days}, {hours}, {minutes}, {seconds}"
+                }
             },
             {
                 "key": "footerCustomContent",
-                "name": "底栏自定义内容",
+                "name": {
+                    "zh-CN": "底栏自定义内容",
+                    "zh-TW": "底欄自定義內容",
+                    "en": "Custom Footer Content",
+                    "ja": "カスタムフッター内容"
+                },
                 "type": "richtext",
                 "default": "",
-                "help": "自定义底栏内容，支持直接换行，也兼容 ${n} 分割多行，支持Markdown格式的链接 [文本](链接) 和图片 ![描述](图片链接)"
+                "help": {
+                    "zh-CN": "自定义底栏内容，支持Markdown链接和图片，兼容 ${n} 换行",
+                    "zh-TW": "自定義底欄內容，支持Markdown鏈接和圖片，兼容 ${n} 換行",
+                    "en": "Custom footer content. Supports Markdown links/images and ${n} for newlines.",
+                    "ja": "カスタムフッター内容。Markdownリンク/画像および改行コード ${n} に対応。"
+                }
             },
             {
-                "name": "内容设置",
+                "name": {
+                    "zh-CN": "内容设置",
+                    "zh-TW": "內容設置",
+                    "en": "Content Settings",
+                    "ja": "コンテンツ設定"
+                },
                 "type": "title"
             },
             {
                 "key": "enableJsonRPC2Api",
-                "name": "启用 JSON-RPC2 API 适配（实验性，未完全支持特性）",
+                "name": {
+                    "zh-CN": "启用 JSON-RPC2 API 适配",
+                    "zh-TW": "啟用 JSON-RPC2 API 適配",
+                    "en": "Enable JSON-RPC2 API",
+                    "ja": "JSON-RPC2 APIを有効化"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后将在支持的 Komari 版本（>=1.0.7）优先使用 JSON-RPC2 API 获取数据，以提升兼容性和性能，若出现问题请关闭此选项"
+                "help": {
+                    "zh-CN": "实验性功能：优先使用 JSON-RPC2 API 获取数据（需 Komari >=1.0.7）",
+                    "zh-TW": "實驗性功能：優先使用 JSON-RPC2 API 獲取數據（需 Komari >=1.0.7）",
+                    "en": "Experimental: Prioritize JSON-RPC2 API for data (Requires Komari >=1.0.7).",
+                    "ja": "実験的：データ取得にJSON-RPC2 APIを優先使用（Komari >=1.0.7が必要）。"
+                }
             },
             {
                 "key": "isShowStatsInHeader",
-                "name": "是否在标题栏中显示统计信息",
+                "name": {
+                    "zh-CN": "是否在标题栏中显示统计信息",
+                    "zh-TW": "是否在標題欄中顯示統計信息",
+                    "en": "Show Stats in Header",
+                    "ja": "ヘッダーに統計を表示"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后将在标题栏中显示统计信息，仅在大屏桌面端有效，当标题栏空间不足时将恢复原统计栏位置"
+                "help": {
+                    "zh-CN": "启用后将在标题栏中显示统计信息（仅大屏有效）",
+                    "zh-TW": "啟用後將在標題欄中顯示統計信息（僅大屏有效）",
+                    "en": "Show statistics in the header (Desktop only).",
+                    "ja": "ヘッダーに統計情報を表示します（デスクトップのみ）。"
+                }
             },
             {
                 "key": "mergeGroupsWithStats",
-                "name": "合并分组栏与统计栏",
+                "name": {
+                    "zh-CN": "合并分组栏与统计栏",
+                    "zh-TW": "合併分組欄與統計欄",
+                    "en": "Merge Groups with Stats",
+                    "ja": "グループと統計を統合"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后分组栏将合并到统计栏中，并以下拉菜单形式展示"
+                "help": {
+                    "zh-CN": "启用后分组栏将合并到统计栏中，以下拉菜单展示",
+                    "zh-TW": "啟用後分組欄將合併到統計欄中，以下拉菜單展示",
+                    "en": "Merge group bar into stats bar as a dropdown menu.",
+                    "ja": "グループバーを統計バーに統合し、ドロップダウンメニューとして表示します。"
+                }
             },
             {
                 "key": "enableStatsBar",
-                "name": "启用统计栏",
+                "name": {
+                    "zh-CN": "启用统计栏",
+                    "zh-TW": "啟用統計欄",
+                    "en": "Enable Stats Bar",
+                    "ja": "統計バーを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后默认显示统计栏"
+                "help": {
+                    "zh-CN": "启用后默认显示统计栏",
+                    "zh-TW": "啟用後默認顯示統計欄",
+                    "en": "Enable to show the statistics bar.",
+                    "ja": "統計バーを表示します。"
+                }
             },
             {
                 "key": "enableSortControl",
-                "name": "启用排序控制",
+                "name": {
+                    "zh-CN": "启用排序控制",
+                    "zh-TW": "啟用排序控制",
+                    "en": "Enable Sort Control",
+                    "ja": "ソート制御を有効化"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后在统计栏添加排序控制下拉菜单选项，分别对流量上下行和网速上下行进行升降排序，仅在启用统计栏时有效"
+                "help": {
+                    "zh-CN": "在统计栏添加排序控制下拉菜单（流量/网速排序）",
+                    "zh-TW": "在統計欄添加排序控制下拉菜單（流量/網速排序）",
+                    "en": "Add sort control dropdown in stats bar (Sort by Traffic/Speed).",
+                    "ja": "統計バーにソート制御ドロップダウンを追加（通信量/速度でソート）。"
+                }
             },
             {
                 "key": "isOfflineNodesBehind",
-                "name": "启用离线节点置后显示",
+                "name": {
+                    "zh-CN": "启用离线节点置后显示",
+                    "zh-TW": "啟用離線節點置後顯示",
+                    "en": "Move Offline Nodes to End",
+                    "ja": "オフラインノードを最後に表示"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后离线节点将被自动置后显示"
+                "help": {
+                    "zh-CN": "启用后离线节点将被自动置后显示",
+                    "zh-TW": "啟用後離線節點將被自動置後顯示",
+                    "en": "Automatically move offline nodes to the bottom of the list.",
+                    "ja": "オフラインのノードを自動的にリストの最後に移動します。"
+                }
             },
             {
                 "key": "enableGroupedBar",
-                "name": "启用分组栏",
+                "name": {
+                    "zh-CN": "启用分组栏",
+                    "zh-TW": "啟用分組欄",
+                    "en": "Enable Group Bar",
+                    "ja": "グループバーを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后默认显示分组栏"
+                "help": {
+                    "zh-CN": "启用后默认显示分组栏",
+                    "zh-TW": "啟用後默認顯示分組欄",
+                    "en": "Enable to show the group selection bar.",
+                    "ja": "グループ選択バーを表示します。"
+                }
             },
             {
                 "key": "defaultSelectedGroup",
-                "name": "默认选择展示分组",
+                "name": {
+                    "zh-CN": "默认选择展示分组",
+                    "zh-TW": "默認選擇展示分組",
+                    "en": "Default Selected Group",
+                    "ja": "デフォルト選択グループ"
+                },
                 "type": "string",
                 "default": "",
-                "help": "设置默认选择展示的分组，填写后端设置的分组名，留空则默认展示“所有”分组"
+                "help": {
+                    "zh-CN": "设置默认选择展示的分组，填写分组名，留空则展示“所有”",
+                    "zh-TW": "設置默認選擇展示的分組，填寫分組名，留空則展示“所有”",
+                    "en": "Set default group name. Shows 'All' if empty.",
+                    "ja": "デフォルトのグループ名を設定します。空の場合は「すべて」を表示。"
+                }
             },
             {
                 "key": "selectMobileDefaultView",
-                "name": "移动端默认展示视图",
+                "name": {
+                    "zh-CN": "移动端默认展示视图",
+                    "zh-TW": "移動端默認展示視圖",
+                    "en": "Mobile Default View",
+                    "ja": "モバイルデフォルト表示"
+                },
                 "type": "select",
                 "options": "grid,table,compact",
                 "default": "grid",
-                "help": "设置移动端默认展示视图为网格、表格或紧凑型"
+                "help": {
+                    "zh-CN": "设置移动端默认展示视图为网格、表格或紧凑型",
+                    "zh-TW": "設置移動端默認展示視圖為網格、表格或緊湊型",
+                    "en": "Set default mobile view to Grid, Table, or Compact.",
+                    "ja": "モバイルのデフォルト表示をグリッド、テーブル、またはコンパクトに設定します。"
+                }
             },
             {
                 "key": "enableSwap",
-                "name": "启用 SWAP 显示",
+                "name": {
+                    "zh-CN": "启用 SWAP 显示",
+                    "zh-TW": "啟用 SWAP 顯示",
+                    "en": "Enable SWAP Display",
+                    "ja": "SWAP表示を有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后默认显示 SWAP 信息"
+                "help": {
+                    "zh-CN": "启用后默认显示 SWAP 信息",
+                    "zh-TW": "啟用後默認顯示 SWAP 信息",
+                    "en": "Enable to show SWAP information.",
+                    "ja": "SWAP情報を表示します。"
+                }
             },
             {
                 "key": "pingChartTimeInPreview",
-                "name": "预览详情的延迟图表时间范围",
+                "name": {
+                    "zh-CN": "预览详情的延迟图表时间范围",
+                    "zh-TW": "預覽詳情的延遲圖表時間範圍",
+                    "en": "Ping Chart Time Range",
+                    "ja": "Pingチャート時間範囲"
+                },
                 "type": "number",
                 "default": 1,
-                "help": "设置卡片右上角弹窗详情和表格下拉详情中延迟图表的时间范围，单位为小时，建议值为 1-24，时间范围太大容易导致页面卡顿"
+                "help": {
+                    "zh-CN": "设置详情中延迟图表的时间范围（小时），建议 1-24",
+                    "zh-TW": "設置詳情中延遲圖表的時間範圍（小時），建議 1-24",
+                    "en": "Time range for ping chart in details (hours). Recommended: 1-24.",
+                    "ja": "詳細のPingチャートの時間範囲（時間）。推奨：1-24。"
+                }
             },
             {
                 "key": "isShowHWBarInCard",
-                "name": "是否在卡片中显示硬件信息栏",
+                "name": {
+                    "zh-CN": "是否在卡片中显示硬件信息栏",
+                    "zh-TW": "是否在卡片中顯示硬件信息欄",
+                    "en": "Show Hardware Info in Card",
+                    "ja": "カードにハードウェア情報を表示"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后将在节点卡片中标题栏之下显示硬件信息栏（CPU、内存和硬盘总量）"
+                "help": {
+                    "zh-CN": "启用后将在节点卡片中显示硬件信息栏（CPU、内存和硬盘）",
+                    "zh-TW": "啟用後將在節點卡片中顯示硬件信息欄（CPU、內存和硬盤）",
+                    "en": "Show hardware info (CPU, RAM, Disk) in server cards.",
+                    "ja": "サーバーカードにハードウェア情報（CPU、RAM、ディスク）を表示します。"
+                }
             },
             {
                 "key": "isShowValueUnderProgressBar",
-                "name": "是否在流量进度条下方显示数值",
+                "name": {
+                    "zh-CN": "是否在流量进度条下方显示数值",
+                    "zh-TW": "是否在流量進度條下方顯示數值",
+                    "en": "Show Value Under Progress Bar",
+                    "ja": "プログレスバー下に値を表示"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后将在内存、SWAP、硬盘占用情况进度条下方显示实际占用数值"
+                "help": {
+                    "zh-CN": "启用后将在内存、SWAP、硬盘进度条下方显示实际数值",
+                    "zh-TW": "啟用後將在內存、SWAP、硬盤進度條下方顯示實際數值",
+                    "en": "Show actual values below Memory, SWAP, and Disk progress bars.",
+                    "ja": "メモリ、SWAP、ディスクのプログレスバーの下に実際の値を表示します。"
+                }
             },
             {
                 "key": "selectTrafficProgressStyle",
-                "name": "流量进度条样式",
+                "name": {
+                    "zh-CN": "流量进度条样式",
+                    "zh-TW": "流量進度條樣式",
+                    "en": "Traffic Progress Style",
+                    "ja": "通信量バーのスタイル"
+                },
                 "type": "select",
                 "options": "circular,linear",
                 "default": "circular",
-                "help": "设置流量进度条样式为 circular（环形）或 linear（线形）"
+                "help": {
+                    "zh-CN": "设置流量进度条样式为 circular（环形）或 linear（线形）",
+                    "zh-TW": "設置流量進度條樣式為 circular（環形）或 linear（線形）",
+                    "en": "Set traffic progress style to Circular or Linear.",
+                    "ja": "通信量バーのスタイルを円形（Circular）または線形（Linear）に設定します。"
+                }
             },
             {
                 "key": "enableListItemProgressBar",
-                "name": "启用列表视图进度条",
+                "name": {
+                    "zh-CN": "启用列表视图进度条",
+                    "zh-TW": "啟用列表視圖進度條",
+                    "en": "Enable List View Progress Bar",
+                    "ja": "リスト表示のバーを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后列表视图中将会显示进度条来表示使用率"
+                "help": {
+                    "zh-CN": "启用后列表视图中将会显示进度条来表示使用率",
+                    "zh-TW": "啟用後列表視圖中將會顯示進度條來表示使用率",
+                    "en": "Show progress bars for usage in list view.",
+                    "ja": "リスト表示で使用率を表すプログレスバーを表示します。"
+                }
             },
             {
-                "name": "Instance 设置",
+                "name": {
+                    "zh-CN": "Instance 设置",
+                    "zh-TW": "Instance 設置",
+                    "en": "Instance Settings",
+                    "ja": "インスタンス設定"
+                },
                 "type": "title"
             },
             {
                 "key": "enableInstanceDetail",
-                "name": "启用 Instance 详情信息",
+                "name": {
+                    "zh-CN": "启用 Instance 详情信息",
+                    "zh-TW": "啟用 Instance 詳情信息",
+                    "en": "Enable Instance Details",
+                    "ja": "インスタンス詳細を有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后默认显示 Instance 详情"
+                "help": {
+                    "zh-CN": "启用后默认显示 Instance 详情",
+                    "zh-TW": "啟用後默認顯示 Instance 詳情",
+                    "en": "Enable to show Instance details.",
+                    "ja": "インスタンス詳細を表示します。"
+                }
             },
             {
                 "key": "enablePingChart",
-                "name": "启用延迟图表",
+                "name": {
+                    "zh-CN": "启用延迟图表",
+                    "zh-TW": "啟用延遲圖表",
+                    "en": "Enable Ping Chart",
+                    "ja": "Pingチャートを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后默认显示延迟图表"
+                "help": {
+                    "zh-CN": "启用后默认显示延迟图表",
+                    "zh-TW": "啟用後默認顯示延遲圖表",
+                    "en": "Enable to show Ping chart.",
+                    "ja": "Pingチャートを表示します。"
+                }
             },
             {
                 "key": "enableConnectBreaks",
-                "name": "启用连接断点",
+                "name": {
+                    "zh-CN": "启用连接断点",
+                    "zh-TW": "啟用連接斷點",
+                    "en": "Connect Chart Breaks",
+                    "ja": "チャートの断絶を接続"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后图表中的曲线将会跨过断点形成连续的线条，并使用半透明的垂直参考线来标记断点位置"
+                "help": {
+                    "zh-CN": "启用后图表中的曲线将会跨过断点形成连续的线条",
+                    "zh-TW": "啟用後圖表中的曲線將會跨過斷點形成連續的線條",
+                    "en": "Connect breaks in the chart to form a continuous line.",
+                    "ja": "チャートの断絶箇所をまたいで線を連続させます。"
+                }
             },
             {
                 "key": "pingChartMaxPoints",
-                "name": "延迟图表最大渲染点数",
+                "name": {
+                    "zh-CN": "延迟图表最大渲染点数",
+                    "zh-TW": "延遲圖表最大渲染點數",
+                    "en": "Ping Chart Max Points",
+                    "ja": "Pingチャート最大描画点数"
+                },
                 "type": "number",
                 "default": 0,
-                "help": "设置延迟图表的最大渲染点数来优化图表渲染，0 表示不限制，推荐值为 2000 或更小的值"
+                "help": {
+                    "zh-CN": "设置延迟图表的最大渲染点数，0 表示不限制",
+                    "zh-TW": "設置延遲圖表的最大渲染點數，0 表示不限制",
+                    "en": "Max points for ping chart rendering. 0 for unlimited.",
+                    "ja": "Pingチャートの最大描画点数を設定。0は無制限。"
+                }
             },
             {
-                "name": "UI 自定义",
+                "name": {
+                    "zh-CN": "UI 自定义",
+                    "zh-TW": "UI 自定義",
+                    "en": "UI Customization",
+                    "ja": "UI カスタマイズ"
+                },
                 "type": "title"
             },
             {
                 "key": "customTexts",
-                "name": "自定义 UI 文本（实验性，不推荐手动填写任何东西）",
+                "name": {
+                    "zh-CN": "自定义 UI 文本（实验性）",
+                    "zh-TW": "自定義 UI 文本（實驗性）",
+                    "en": "Custom UI Texts (Experimental)",
+                    "ja": "カスタムUIテキスト（実験的）"
+                },
                 "type": "string",
                 "default": "",
-                "help": "使用 key:value,key2:value2 的格式自定义UI文本，value 使用 URL 编码以避免特殊符号。推荐使用管理员登录后的编辑功能而不是手动填写此项，以避免格式错误导致的问题"
+                "help": {
+                    "zh-CN": "格式 key:value,key2:value2。推荐使用编辑功能而非手动填写",
+                    "zh-TW": "格式 key:value,key2:value2。推薦使用編輯功能而非手動填寫",
+                    "en": "Format: key:value,key2:value2. Use editor instead of manual entry.",
+                    "ja": "形式: key:value,key2:value2。手動入力より編集機能の使用を推奨。"
+                }
             },
             {
-                "name": "增强功能",
+                "name": {
+                    "zh-CN": "增强功能",
+                    "zh-TW": "增強功能",
+                    "en": "Enhanced Features",
+                    "ja": "拡張機能"
+                },
                 "type": "title"
             },
             {
                 "key": "enableWelcomeBubble",
-                "name": "启用欢迎气泡",
+                "name": {
+                    "zh-CN": "启用欢迎气泡",
+                    "zh-TW": "啟用歡迎氣泡",
+                    "en": "Enable Welcome Bubble",
+                    "ja": "ウェルカムバブルを有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后将在页面左下角显示欢迎气泡，展示访客的IP、位置、浏览器等信息"
+                "help": {
+                    "zh-CN": "启用后将在页面左下角显示欢迎气泡，展示访客信息",
+                    "zh-TW": "啟用後將在頁面左下角顯示歡迎氣泡，展示訪客信息",
+                    "en": "Show welcome bubble with visitor info at bottom left.",
+                    "ja": "左下に訪問者情報を表示するウェルカムバブルを表示します。"
+                }
             },
             {
                 "key": "welcomeBubbleSiteName",
-                "name": "欢迎气泡站点名称",
+                "name": {
+                    "zh-CN": "欢迎气泡站点名称",
+                    "zh-TW": "歡迎氣泡站點名稱",
+                    "en": "Welcome Bubble Site Name",
+                    "ja": "ウェルカムバブルサイト名"
+                },
                 "type": "string",
                 "default": "阿米诺斯",
-                "help": "欢迎气泡标题栏显示的站点名称，留空则使用站点标题"
+                "help": {
+                    "zh-CN": "欢迎气泡标题栏显示的站点名称，留空则使用站点标题",
+                    "zh-TW": "歡迎氣泡標題欄顯示的站點名稱，留空則使用站點標題",
+                    "en": "Site name displayed in welcome bubble. Uses site title if empty.",
+                    "ja": "ウェルカムバブルに表示するサイト名。空の場合はサイトタイトルを使用。"
+                }
             },
             {
                 "key": "enableFinanceWidget",
-                "name": "启用资产统计",
+                "name": {
+                    "zh-CN": "启用资产统计",
+                    "zh-TW": "啟用資產統計",
+                    "en": "Enable Asset Statistics",
+                    "ja": "資産統計を有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后将在页面右上角显示资产统计悬浮球，可查看服务器总价值、月均支出、剩余价值等信息，并支持服务器交易计算"
+                "help": {
+                    "zh-CN": "启用后将在页面右上角显示资产统计悬浮球",
+                    "zh-TW": "啟用後將在頁面右上角顯示資產統計懸浮球",
+                    "en": "Show asset statistics widget at top right.",
+                    "ja": "右上に資産統計ウィジェットを表示します。"
+                }
             },
             {
                 "key": "enableEarthGlobe",
-                "name": "启用地球组件",
+                "name": {
+                    "zh-CN": "启用地球组件",
+                    "zh-TW": "啟用地球組件",
+                    "en": "Enable Earth Globe",
+                    "ja": "地球儀を有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后将在页面右上角显示地球悬浮球，可查看3D地球展示服务器分布"
+                "help": {
+                    "zh-CN": "启用后将在页面右上角显示 3D 地球",
+                    "zh-TW": "啟用後將在頁面右上角顯示 3D 地球",
+                    "en": "Show 3D Earth globe at top right.",
+                    "ja": "右上に3D地球儀を表示します。"
+                }
             },
             {
                 "key": "earthLightBgImage",
-                "name": "地球组件亮色模式背景图",
+                "name": {
+                    "zh-CN": "地球组件亮色模式背景图",
+                    "zh-TW": "地球組件亮色模式背景圖",
+                    "en": "Earth Light Mode Background",
+                    "ja": "地球儀ライトモード背景"
+                },
                 "type": "string",
                 "default": "",
-                "help": "地球组件亮色模式的背景图片链接，留空则使用透明背景"
+                "help": {
+                    "zh-CN": "地球组件亮色模式的背景图片链接，留空则使用透明背景",
+                    "zh-TW": "地球組件亮色模式的背景圖片連結，留空則使用透明背景",
+                    "en": "Background image for Earth in light mode. Transparent if empty.",
+                    "ja": "地球儀ライトモードの背景画像URL。空の場合は透明。"
+                }
             },
             {
                 "key": "earthDarkBgImage",
-                "name": "地球组件暗色模式背景图",
+                "name": {
+                    "zh-CN": "地球组件暗色模式背景图",
+                    "zh-TW": "地球組件暗色模式背景圖",
+                    "en": "Earth Dark Mode Background",
+                    "ja": "地球儀ダークモード背景"
+                },
                 "type": "string",
                 "default": "//upload.wikimedia.org/wikipedia/commons/6/60/ESO_-_Milky_Way.jpg",
-                "help": "地球组件暗色模式的背景图片链接，留空则使用透明背景"
+                "help": {
+                    "zh-CN": "地球组件暗色模式的背景图片链接",
+                    "zh-TW": "地球組件暗色模式的背景圖片連結",
+                    "en": "Background image for Earth in dark mode.",
+                    "ja": "地球儀ダークモードの背景画像URL。"
+                }
             },
             {
                 "key": "earthLightGlobeImage",
-                "name": "地球组件亮色模式地球贴图",
+                "name": {
+                    "zh-CN": "地球组件亮色模式地球贴图",
+                    "zh-TW": "地球組件亮色模式地球貼圖",
+                    "en": "Earth Light Mode Texture",
+                    "ja": "地球儀ライトモードテクスチャ"
+                },
                 "type": "string",
                 "default": "//upload.wikimedia.org/wikipedia/commons/0/04/Solarsystemscope_texture_8k_earth_daymap.jpg",
-                "help": "地球组件亮色模式的地球贴图链接"
+                "help": {
+                    "zh-CN": "地球组件亮色模式的地球贴图链接",
+                    "zh-TW": "地球組件亮色模式的地球貼圖連結",
+                    "en": "Earth texture image for light mode.",
+                    "ja": "地球儀ライトモードのテクスチャ画像。"
+                }
             },
             {
                 "key": "earthDarkGlobeImage",
-                "name": "地球组件暗色模式地球贴图",
+                "name": {
+                    "zh-CN": "地球组件暗色模式地球贴图",
+                    "zh-TW": "地球組件暗色模式地球貼圖",
+                    "en": "Earth Dark Mode Texture",
+                    "ja": "地球儀ダークモードテクスチャ"
+                },
                 "type": "string",
                 "default": "//upload.wikimedia.org/wikipedia/commons/b/b3/Solarsystemscope_texture_8k_earth_nightmap.jpg",
-                "help": "地球组件暗色模式的地球贴图链接"
+                "help": {
+                    "zh-CN": "地球组件暗色模式的地球贴图链接",
+                    "zh-TW": "地球組件暗色模式的地球貼圖連結",
+                    "en": "Earth texture image for dark mode.",
+                    "ja": "地球儀ダークモードのテクスチャ画像。"
+                }
             },
             {
                 "key": "enableSoloPlay",
-                "name": "启用伪点亮全球效果",
+                "name": {
+                    "zh-CN": "启用伪点亮全球效果",
+                    "zh-TW": "啟用偽點亮全球效果",
+                    "en": "Enable Fake Global Lighting",
+                    "ja": "擬似グローバル点灯を有効化"
+                },
                 "type": "switch",
                 "default": false,
-                "help": "启用后地球组件将使用假数据实现点亮全球"
+                "help": {
+                    "zh-CN": "启用后地球组件将使用假数据实现点亮全球",
+                    "zh-TW": "啟用後地球組件將使用假數據實現點亮全球",
+                    "en": "Use fake data to light up the whole globe.",
+                    "ja": "偽データを使用して地球全体を点灯させます。"
+                }
             },
             {
                 "key": "enableScrollHelpers",
-                "name": "启用滚动辅助按钮",
+                "name": {
+                    "zh-CN": "启用滚动辅助按钮",
+                    "zh-TW": "啟用滾動輔助按鈕",
+                    "en": "Enable Scroll Helpers",
+                    "ja": "スクロール補助を有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后将在页面右下角显示滚动到顶部/底部辅助按钮"
+                "help": {
+                    "zh-CN": "启用后将在页面右下角显示滚动到顶部/底部辅助按钮",
+                    "zh-TW": "啟用後將在頁面右下角顯示滾動到頂部/底部輔助按鈕",
+                    "en": "Show scroll to top/bottom buttons at bottom right.",
+                    "ja": "右下にトップ/ボトムへスクロールするボタンを表示します。"
+                }
             },
             {
                 "key": "enableProtection",
-                "name": "启用访客保护",
+                "name": {
+                    "zh-CN": "启用访客保护",
+                    "zh-TW": "啟用訪客保護",
+                    "en": "Enable Visitor Protection",
+                    "ja": "訪問者保護を有効化"
+                },
                 "type": "switch",
                 "default": true,
-                "help": "启用后将对未登录用户启用反调试保护，禁止右键菜单、开发者工具等操作"
+                "help": {
+                    "zh-CN": "启用后将对未登录用户启用反调试保护（禁止右键等）",
+                    "zh-TW": "啟用後將對未登錄用戶啟用反調試保護（禁止右鍵等）",
+                    "en": "Enable anti-debug protection (disable right-click, etc.) for guests.",
+                    "ja": "未ログインユーザーに対してデバッグ防止保護（右クリック禁止等）を有効にします。"
+                }
             }
         ]
     }

@@ -33,7 +33,7 @@
 .bubble-close {
   background: none;
   border: none;
-  color: var(--gray-20);
+  color: var(--gray-12);
   cursor: pointer;
   font-size: 1.1rem;
   padding: 0;
@@ -813,6 +813,13 @@
   .finance-widget {
     width: calc(100vw - 40px);
     right: 20px;
+    top: 160px;
+  }
+  .finance-ball {
+    top: 160px;
+  }
+  #earth-ball {
+    top: 220px;
   }
   .scroll-helper-btn {
     right: 15px;
@@ -863,6 +870,17 @@
   .earth-user-marker {
     width: 28px;
     height: 28px;
+  }
+  .finance-widget {
+    top: 160px;
+    width: calc(100vw - 40px);
+    right: 20px;
+  }
+  .finance-ball {
+    top: 160px;
+  }
+  #earth-ball {
+    top: 220px;
   }
 }
 
