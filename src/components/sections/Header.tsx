@@ -105,7 +105,7 @@ const ThemeMenuItems = ({
 const ViewModeSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
   const { viewMode, setViewMode } = useTheme();
   const { t } = useLocale();
-  const Icon = ViewModeIcons[viewMode];
+  const Icon = ViewModeIcons[viewMode] || Grid3X3;
 
   if (isMobile) {
     return (
@@ -140,7 +140,7 @@ const ViewModeSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
 const ThemeSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
   const { rawAppearance, setAppearance } = useTheme();
   const { t } = useLocale();
-  const Icon = ThemeIcons[rawAppearance];
+  const Icon = ThemeIcons[rawAppearance] || SunMoon;
 
   if (isMobile) {
     return (

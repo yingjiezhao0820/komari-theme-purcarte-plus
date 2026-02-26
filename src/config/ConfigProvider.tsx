@@ -32,8 +32,15 @@ export function ConfigProvider({ children }: ConfigProviderProps) {
 
       let mergedConfig: ConfigOptions;
       if (publicInfo) {
-        const themeSettings =
-          (publicInfo.theme_settings as ConfigOptions) || {};
+        const rawSettings =
+          (publicInfo.theme_settings as Partial<ConfigOptions>) || {};
+        // 从后端配置中过滤掉 undefined/null 值，以防止
+        // 覆盖 DEFAULT_CONFIG 的默认值（修复 React 错误 #130）
+        const themeSettings = Object.fromEntries(
+          Object.entries(rawSettings).filter(
+            ([, v]) => v !== undefined && v !== null && v !== ""
+          )
+        ) as Partial<ConfigOptions>;
         mergedConfig = {
           ...DEFAULT_CONFIG,
           ...themeSettings,

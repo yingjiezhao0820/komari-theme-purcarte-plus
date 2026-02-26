@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useAppConfig } from "@/config";
-import { DEFAULT_CONFIG, allAppearance } from "@/config/default";
+import { DEFAULT_CONFIG, allAppearance, allViewModes, allColors } from "@/config/default";
 import type { AppearanceType, ColorType, ViewModeType } from "@/config/default";
 
 type themeAppearanceType = "light" | "dark";
@@ -145,12 +145,14 @@ export const useThemeManager = () => {
 
   const [color, setColor] = useStoredState<ColorType>(
     "color",
-    selectThemeColor
+    selectThemeColor,
+    (v): v is ColorType => allColors.includes(v)
   );
 
   const [viewMode, setViewMode] = useStoredState<ViewModeType>(
     "nodeViewMode",
-    selectedDefaultView
+    selectedDefaultView,
+    (v): v is ViewModeType => allViewModes.includes(v)
   );
 
   useEffect(() => {

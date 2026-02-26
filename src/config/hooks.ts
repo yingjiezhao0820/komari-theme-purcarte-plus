@@ -40,7 +40,12 @@ type LocaleKeys = Paths<MergedTexts>;
  */
 export function useAppConfig(): ConfigContextType {
   const config = useContext(ConfigContext);
-  return { ...DEFAULT_CONFIG, ...config };
+  // 从上下文中过滤掉 undefined/null 值，以防止
+  // 覆盖 DEFAULT_CONFIG 的默认值（修复 React 错误 #130）
+  const safeConfig = Object.fromEntries(
+    Object.entries(config).filter(([, v]) => v !== undefined && v !== null)
+  );
+  return { ...DEFAULT_CONFIG, ...safeConfig } as ConfigContextType;
 }
 
 /**
