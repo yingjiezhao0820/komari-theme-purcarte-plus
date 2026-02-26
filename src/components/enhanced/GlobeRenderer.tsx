@@ -89,6 +89,23 @@ export default function GlobeRenderer({
     }
   }, []);
 
+  // 抑制 globe.gl 内部的 THREE.js 弃用警告（THREE.Clock 已弃用）
+  // globe.gl v2.45.0 尚未迁移到 THREE.Timer，此警告无害但刷屏
+  useEffect(() => {
+    const originalWarn = console.warn;
+    console.warn = (...args: any[]) => {
+      if (
+        typeof args[0] === "string" &&
+        args[0].includes("has been deprecated")
+      )
+        return;
+      originalWarn.apply(console, args);
+    };
+    return () => {
+      console.warn = originalWarn;
+    };
+  }, []);
+
   // 初始化 Globe
   useEffect(() => {
     const container = containerRef.current;

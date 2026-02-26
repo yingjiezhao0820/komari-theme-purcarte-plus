@@ -145,7 +145,7 @@ export function EarthGlobe() {
       globeImage:
         earthLightGlobeImage ||
         "//upload.wikimedia.org/wikipedia/commons/0/04/Solarsystemscope_texture_8k_earth_daymap.jpg",
-      atmosphere: "rgba(59, 130, 246, 0.2)",
+      atmosphere: "#3b82f6",
     };
   }, [
     isDark,
