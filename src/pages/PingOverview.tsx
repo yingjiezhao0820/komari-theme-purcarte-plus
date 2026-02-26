@@ -8,6 +8,9 @@ import {
   ArrowRightToLine,
   RefreshCw,
   ArrowLeft,
+  ArrowDownUp,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import {
   LineChart,
@@ -36,6 +39,44 @@ import { CustomTooltip } from "@/components/ui/tooltip";
 import Tips from "@/components/ui/tips";
 import { lableFormatter } from "@/utils/chartHelper";
 import { useLocale } from "@/config/hooks";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/utils";
+
+// 排序类型定义
+type MonitorSortKey = "target" | "name";
+type ServerSortKey = "weight" | "name";
+type SortDirection = "asc" | "desc";
+
+// localStorage 键
+const MONITOR_SORT_KEY = "pingOverview_monitorSort";
+const SERVER_SORT_KEY = "pingOverview_serverSort";
+
+// 读写 localStorage 排序配置
+function loadSort<K extends string>(
+  storageKey: string,
+  defaultKey: K,
+  defaultDir: SortDirection
+): { key: K; dir: SortDirection } {
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed.key && parsed.dir) return parsed;
+    }
+  } catch { /* empty */ }
+  return { key: defaultKey, dir: defaultDir };
+}
+
+function saveSort(storageKey: string, key: string, dir: SortDirection) {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify({ key, dir }));
+  } catch { /* empty */ }
+}
 
 // 类型定义
 interface CombinedLineInfo {
@@ -112,10 +153,75 @@ const PingOverview = memo(() => {
     pingChartMaxPoints,
     publicSettings,
   } = useAppConfig();
-  const { nodes, loading: nodesLoading, getPingHistory } = useNodeData();
+  const { nodes, loading: nodesLoading, getPingHistory, getGroups } = useNodeData();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { t } = useLocale();
+
+  // 排序状态（从 localStorage 恢复）
+  const [monitorSort, setMonitorSort] = useState(() =>
+    loadSort<MonitorSortKey>(MONITOR_SORT_KEY, "name", "asc")
+  );
+  const [serverSort, setServerSort] = useState(() =>
+    loadSort<ServerSortKey>(SERVER_SORT_KEY, "weight", "asc")
+  );
+
+  const handleMonitorSort = (key: MonitorSortKey, dir: SortDirection) => {
+    const newSort = { key, dir };
+    setMonitorSort(newSort);
+    saveSort(MONITOR_SORT_KEY, key, dir);
+  };
+
+  const handleServerSort = (key: ServerSortKey, dir: SortDirection) => {
+    const newSort = { key, dir };
+    setServerSort(newSort);
+    saveSort(SERVER_SORT_KEY, key, dir);
+  };
+
+  // 首页分组
+  const allGroups = useMemo(() => {
+    const groups = getGroups();
+    return [t("group.all"), ...groups];
+  }, [getGroups, t]);
+
+  const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
+
+  // 默认选中所有分组
+  useEffect(() => {
+    if (allGroups.length > 0) {
+      setSelectedGroups((prev) => {
+        if (prev.size === 0) return new Set(allGroups);
+        return prev;
+      });
+    }
+  }, [allGroups]);
+
+  const handleToggleGroup = (group: string) => {
+    setSelectedGroups((prev) => {
+      const next = new Set(prev);
+      if (group === t("group.all")) {
+        // 点击"所有"：如果已全选则取消全选，否则全选
+        if (next.size === allGroups.length) {
+          next.clear();
+        } else {
+          allGroups.forEach((g) => next.add(g));
+        }
+      } else {
+        if (next.has(group)) {
+          next.delete(group);
+          next.delete(t("group.all"));
+        } else {
+          next.add(group);
+          // 检查是否所有非"所有"的分组都选中了
+          const nonAllGroups = allGroups.filter((g) => g !== t("group.all"));
+          if (nonAllGroups.every((g) => next.has(g))) {
+            next.add(t("group.all"));
+          }
+        }
+      }
+      return next;
+    });
+  };
 
   const maxPingRecordPreserveTime =
     publicSettings?.ping_record_preserve_time || 24;
@@ -212,27 +318,59 @@ const PingOverview = memo(() => {
     return lines.sort((a, b) => a.key.localeCompare(b.key));
   }, [nodes, allPingData]);
 
-  // 去重的监测节点（按任务名）
+  // 去重的监测节点（按任务名）+ 排序
   const uniqueMonitorNodes = useMemo(() => {
     const nameSet = new Set<string>();
     for (const line of allLines) {
       nameSet.add(line.taskName);
     }
-    return Array.from(nameSet).sort();
-  }, [allLines]);
+    const arr = Array.from(nameSet);
+    const { dir: sortDir } = monitorSort;
+    arr.sort((a, b) => {
+      const cmp = a.localeCompare(b);
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+    return arr;
+  }, [allLines, monitorSort]);
 
-  // 去重的服务器节点
+  // 去重的服务器节点 + 排序
   const uniqueServerNodes = useMemo(() => {
-    const servers: { uuid: string; name: string }[] = [];
+    const servers: { uuid: string; name: string; weight: number; group: string }[] = [];
     const seen = new Set<string>();
     for (const line of allLines) {
       if (!seen.has(line.uuid)) {
         seen.add(line.uuid);
-        servers.push({ uuid: line.uuid, name: line.serverName });
+        const nodeData = nodes?.find((n) => n.uuid === line.uuid);
+        servers.push({
+          uuid: line.uuid,
+          name: line.serverName,
+          weight: nodeData?.weight ?? 0,
+          group: nodeData?.group ?? "",
+        });
       }
     }
+    const { key: sortKey, dir: sortDir } = serverSort;
+    servers.sort((a, b) => {
+      let cmp: number;
+      if (sortKey === "weight") {
+        cmp = a.weight - b.weight;
+      } else {
+        cmp = a.name.localeCompare(b.name);
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
     return servers;
-  }, [allLines]);
+  }, [allLines, nodes, serverSort]);
+
+  // 按分组过滤后的服务器节点
+  const filteredServerNodes = useMemo(() => {
+    const allLabel = t("group.all");
+    if (selectedGroups.has(allLabel)) return uniqueServerNodes;
+    return uniqueServerNodes.filter((s) => {
+      if (!s.group && selectedGroups.size > 0) return false;
+      return selectedGroups.has(s.group);
+    });
+  }, [uniqueServerNodes, selectedGroups, t]);
 
   // 可见性状态
   const [visibleMonitorNodes, setVisibleMonitorNodes] = useState<Set<string>>(
@@ -253,14 +391,20 @@ const PingOverview = memo(() => {
   }, [uniqueMonitorNodes]);
 
   useEffect(() => {
-    if (uniqueServerNodes.length > 0) {
+    if (filteredServerNodes.length > 0) {
       setVisibleServers((prev) => {
         if (prev.size === 0)
-          return new Set(uniqueServerNodes.map((s) => s.uuid));
+          return new Set(filteredServerNodes.map((s) => s.uuid));
         return prev;
       });
     }
-  }, [uniqueServerNodes]);
+  }, [filteredServerNodes]);
+
+  // 分组变化时同步可见服务器
+  useEffect(() => {
+    const filteredUuids = new Set(filteredServerNodes.map((s) => s.uuid));
+    setVisibleServers(filteredUuids);
+  }, [selectedGroups, filteredServerNodes]);
 
   // 单条线的显隐状态（通过统计卡片点击控制）
   const [hiddenLines, setHiddenLines] = useState<Set<string>>(new Set());
@@ -481,10 +625,10 @@ const PingOverview = memo(() => {
   };
 
   const handleToggleAllServers = () => {
-    if (visibleServers.size === uniqueServerNodes.length) {
+    if (visibleServers.size === filteredServerNodes.length) {
       setVisibleServers(new Set());
     } else {
-      setVisibleServers(new Set(uniqueServerNodes.map((s) => s.uuid)));
+      setVisibleServers(new Set(filteredServerNodes.map((s) => s.uuid)));
     }
   };
 
@@ -547,12 +691,42 @@ const PingOverview = memo(() => {
     });
   }, [allLines, allPingData, timeRange, lineColors]);
 
+  // 根据选中的服务器节点和监测节点过滤统计信息，并按服务器排序 + 监测节点排序
+  const filteredLineStats = useMemo(() => {
+    const filtered = lineStats.filter(
+      (stat) =>
+        visibleServers.has(stat.uuid) && visibleMonitorNodes.has(stat.taskName)
+    );
+
+    // 构建服务器排序索引（复用 filteredServerNodes 的顺序）
+    const serverOrderMap = new Map<string, number>();
+    filteredServerNodes.forEach((s, i) => serverOrderMap.set(s.uuid, i));
+
+    // 构建监测节点排序索引（复用 uniqueMonitorNodes 的顺序）
+    const monitorOrderMap = new Map<string, number>();
+    uniqueMonitorNodes.forEach((name, i) => monitorOrderMap.set(name, i));
+
+    filtered.sort((a, b) => {
+      // 优先按服务器节点排序规则
+      const serverCmp =
+        (serverOrderMap.get(a.uuid) ?? 0) - (serverOrderMap.get(b.uuid) ?? 0);
+      if (serverCmp !== 0) return serverCmp;
+      // 其次按监测节点排序规则
+      return (
+        (monitorOrderMap.get(a.taskName) ?? 0) -
+        (monitorOrderMap.get(b.taskName) ?? 0)
+      );
+    });
+
+    return filtered;
+  }, [lineStats, visibleServers, visibleMonitorNodes, filteredServerNodes, uniqueMonitorNodes]);
+
   // 切换全部线条显隐
   const handleToggleAllLines = () => {
     const allMonitorSelected =
       visibleMonitorNodes.size === uniqueMonitorNodes.length;
     const allServersSelected =
-      visibleServers.size === uniqueServerNodes.length;
+      visibleServers.size === filteredServerNodes.length;
     const noneHidden = hiddenLines.size === 0;
 
     if (allMonitorSelected && allServersSelected && noneHidden) {
@@ -560,14 +734,14 @@ const PingOverview = memo(() => {
       setVisibleServers(new Set());
     } else {
       setVisibleMonitorNodes(new Set(uniqueMonitorNodes));
-      setVisibleServers(new Set(uniqueServerNodes.map((s) => s.uuid)));
+      setVisibleServers(new Set(filteredServerNodes.map((s) => s.uuid)));
       setHiddenLines(new Set());
     }
   };
 
   const allVisible =
     visibleMonitorNodes.size === uniqueMonitorNodes.length &&
-    visibleServers.size === uniqueServerNodes.length &&
+    visibleServers.size === filteredServerNodes.length &&
     hiddenLines.size === 0;
 
   const isLoading = nodesLoading || dataLoading;
@@ -620,9 +794,52 @@ const PingOverview = memo(() => {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-sm">
-                {t("pingOverview.monitorNodes")}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-sm">
+                  {t("pingOverview.monitorNodes")}
+                </span>
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 shrink-0 rounded-full cursor-pointer">
+                      <ArrowDownUp className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    {(
+                      [
+                        { key: "target" as MonitorSortKey, dir: "asc" as SortDirection, label: t("pingOverview.sortByTargetAsc") },
+                        { key: "target" as MonitorSortKey, dir: "desc" as SortDirection, label: t("pingOverview.sortByTargetDesc") },
+                        { key: "name" as MonitorSortKey, dir: "asc" as SortDirection, label: t("pingOverview.sortByNameAsc") },
+                        { key: "name" as MonitorSortKey, dir: "desc" as SortDirection, label: t("pingOverview.sortByNameDesc") },
+                      ] as const
+                    ).map((opt) => (
+                      <DropdownMenuItem
+                        key={`${opt.key}-${opt.dir}`}
+                        className="flex items-center justify-between cursor-pointer"
+                        onSelect={() => handleMonitorSort(opt.key, opt.dir)}>
+                        <span
+                          className={cn(
+                            monitorSort.key === opt.key &&
+                              monitorSort.dir === opt.dir &&
+                              "text-primary font-semibold"
+                          )}>
+                          {opt.label}
+                        </span>
+                        {monitorSort.key === opt.key &&
+                          monitorSort.dir === opt.dir &&
+                          (opt.dir === "asc" ? (
+                            <ArrowUp className="h-4 w-4 ml-2" />
+                          ) : (
+                            <ArrowDown className="h-4 w-4 ml-2" />
+                          ))}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -669,22 +886,83 @@ const PingOverview = memo(() => {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-sm">
-                {t("pingOverview.serverNodes")}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-sm">
+                  {t("pingOverview.serverNodes")}
+                </span>
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 shrink-0 rounded-full cursor-pointer">
+                      <ArrowDownUp className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    {(
+                      [
+                        { key: "weight" as ServerSortKey, dir: "asc" as SortDirection, label: t("pingOverview.sortByWeightAsc") },
+                        { key: "weight" as ServerSortKey, dir: "desc" as SortDirection, label: t("pingOverview.sortByWeightDesc") },
+                        { key: "name" as ServerSortKey, dir: "asc" as SortDirection, label: t("pingOverview.sortByNameAsc") },
+                        { key: "name" as ServerSortKey, dir: "desc" as SortDirection, label: t("pingOverview.sortByNameDesc") },
+                      ] as const
+                    ).map((opt) => (
+                      <DropdownMenuItem
+                        key={`${opt.key}-${opt.dir}`}
+                        className="flex items-center justify-between cursor-pointer"
+                        onSelect={() => handleServerSort(opt.key, opt.dir)}>
+                        <span
+                          className={cn(
+                            serverSort.key === opt.key &&
+                              serverSort.dir === opt.dir &&
+                              "text-primary font-semibold"
+                          )}>
+                          {opt.label}
+                        </span>
+                        {serverSort.key === opt.key &&
+                          serverSort.dir === opt.dir &&
+                          (opt.dir === "asc" ? (
+                            <ArrowUp className="h-4 w-4 ml-2" />
+                          ) : (
+                            <ArrowDown className="h-4 w-4 ml-2" />
+                          ))}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleToggleAllServers}>
-                {visibleServers.size === uniqueServerNodes.length
+                {visibleServers.size === filteredServerNodes.length
                   ? t("pingOverview.deselectAll")
                   : t("pingOverview.selectAll")}
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="pt-0">
+          <CardContent className="pt-0 space-y-3">
+            {/* 分组筛选按钮 */}
+            {allGroups.length > 1 && (
+              <div className="flex flex-wrap gap-2">
+                {allGroups.map((group) => {
+                  const isSelected = selectedGroups.has(group);
+                  return (
+                    <Button
+                      key={group}
+                      variant={isSelected ? "secondary" : "ghost"}
+                      size="sm"
+                      onClick={() => handleToggleGroup(group)}>
+                      {group}
+                    </Button>
+                  );
+                })}
+              </div>
+            )}
+            {/* 服务器节点列表 */}
             <div className="flex flex-wrap gap-2">
-              {uniqueServerNodes.map((server) => {
+              {filteredServerNodes.map((server) => {
                 const isVisible = visibleServers.has(server.uuid);
                 // 取一条代表性线条用于颜色
                 const repLine = allLines.find(
@@ -716,7 +994,7 @@ const PingOverview = memo(() => {
       )}
 
       {/* 线条统计信息摘要 */}
-      {lineStats.length > 0 && (
+      {filteredLineStats.length > 0 && (
         <Card className="relative">
           <div className="absolute top-2 right-2">
             <Tips>
@@ -728,7 +1006,7 @@ const PingOverview = memo(() => {
           </div>
           <CardContent className="p-2">
             <div className="flex flex-wrap gap-2 items-center justify-center">
-              {lineStats.map((stat) => {
+              {filteredLineStats.map((stat) => {
                 const visible = isLineVisible(stat);
                 return (
                   <div

@@ -157,6 +157,12 @@ export const defaultTexts = {
     entry: "延迟总览",
     selectAll: "全选",
     deselectAll: "取消全选",
+    sortByTargetAsc: "按目标正序",
+    sortByTargetDesc: "按目标倒序",
+    sortByNameAsc: "按名称正序",
+    sortByNameDesc: "按名称倒序",
+    sortByWeightAsc: "按权重正序",
+    sortByWeightDesc: "按权重倒序",
   },
   notFoundPage: {
     _: "404页面",
