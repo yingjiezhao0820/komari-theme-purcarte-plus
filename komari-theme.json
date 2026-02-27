@@ -102,20 +102,38 @@
                 }
             },
             {
-                "key": "enableVideoBackground",
+                "key": "backgroundMode",
                 "name": {
-                    "zh-CN": "启用视频背景",
-                    "zh-TW": "啟用視頻背景",
-                    "en": "Enable Video Background",
-                    "ja": "動画背景を有効化"
+                    "zh-CN": "背景模式",
+                    "zh-TW": "背景模式",
+                    "en": "Background Mode",
+                    "ja": "背景モード"
                 },
-                "type": "switch",
-                "default": false,
+                "type": "select",
+                "options": "image,video,solidColor",
+                "default": "image",
                 "help": {
-                    "zh-CN": "启用后将使用视频作为背景",
-                    "zh-TW": "啟用後將使用視頻作為背景",
-                    "en": "Enable to use video as background.",
-                    "ja": "有効にすると動画を背景として使用します。"
+                    "zh-CN": "选择背景模式：image（图片）、video（视频）、solidColor（纯色）",
+                    "zh-TW": "選擇背景模式：image（圖片）、video（視頻）、solidColor（純色）",
+                    "en": "Select background mode: image, video, or solidColor.",
+                    "ja": "背景モードを選択：image（画像）、video（動画）、solidColor（単色）。"
+                }
+            },
+            {
+                "key": "solidColorBackground",
+                "name": {
+                    "zh-CN": "纯色背景颜色值",
+                    "zh-TW": "純色背景顏色值",
+                    "en": "Solid Color Background",
+                    "ja": "単色背景の色"
+                },
+                "type": "string",
+                "default": "",
+                "help": {
+                    "zh-CN": "纯色背景颜色值，支持 rgb（如 rgb(255,0,0)）、rgba（如 rgba(255,0,0,0.5)）、hex（如 #ff0000）、颜色单词（如 red），仅在背景模式为'纯色'时生效",
+                    "zh-TW": "純色背景顏色值，支持 rgb（如 rgb(255,0,0)）、rgba（如 rgba(255,0,0,0.5)）、hex（如 #ff0000）、顏色單詞（如 red），僅在背景模式為'純色'時生效",
+                    "en": "Solid background color. Supports rgb (e.g. rgb(255,0,0)), rgba (e.g. rgba(255,0,0,0.5)), hex (e.g. #ff0000), or color names (e.g. red). Only effective when background mode is solidColor.",
+                    "ja": "単色背景の色値。rgb（例: rgb(255,0,0)）、rgba（例: rgba(255,0,0,0.5)）、hex（例: #ff0000）、色名（例: red）に対応。背景モードが単色の場合のみ有効。"
                 }
             },
             {
@@ -1111,6 +1129,23 @@
                     "zh-TW": "歡迎氣泡標題欄顯示的站點名稱，留空則使用站點標題",
                     "en": "Site name displayed in welcome bubble. Uses site title if empty.",
                     "ja": "ウェルカムバブルに表示するサイト名。空の場合はサイトタイトルを使用。"
+                }
+            },
+            {
+                "key": "welcomeBubbleLogoUrl",
+                "name": {
+                    "zh-CN": "欢迎气泡 Logo",
+                    "zh-TW": "歡迎氣泡 Logo",
+                    "en": "Welcome Bubble Logo",
+                    "ja": "ウェルカムバブルロゴ"
+                },
+                "type": "string",
+                "default": "",
+                "help": {
+                    "zh-CN": "欢迎气泡标题栏的 Logo 图片链接，留空则使用 /assets/logo.png",
+                    "zh-TW": "歡迎氣泡標題欄的 Logo 圖片連結，留空則使用 /assets/logo.png",
+                    "en": "Logo image URL for welcome bubble header. Uses /assets/logo.png if empty.",
+                    "ja": "ウェルカムバブルヘッダーのロゴ画像URL。空の場合は /assets/logo.png を使用。"
                 }
             },
             {

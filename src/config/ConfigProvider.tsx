@@ -49,6 +49,13 @@ export function ConfigProvider({ children }: ConfigProviderProps) {
             publicInfo.sitename ||
             DEFAULT_CONFIG.titleText,
         };
+        // 向后兼容：旧版 enableVideoBackground: true → backgroundMode: "video"
+        if (
+          !themeSettings.backgroundMode &&
+          (rawSettings as Record<string, unknown>).enableVideoBackground === true
+        ) {
+          mergedConfig.backgroundMode = "video";
+        }
       } else {
         mergedConfig = DEFAULT_CONFIG;
       }

@@ -96,12 +96,13 @@ function OsIcon({ os }: { os: string }) {
 
 export function WelcomeBubble() {
   const { geo, loading } = useUserGeo();
-  const { welcomeBubbleSiteName, titleText } = useAppConfig();
+  const { welcomeBubbleSiteName, welcomeBubbleLogoUrl, titleText } = useAppConfig();
   const [visible, setVisible] = useState(false);
   const [ipHidden, setIpHidden] = useState(false);
   const [ispHidden, setIspHidden] = useState(false);
 
   const siteName = welcomeBubbleSiteName || titleText || "Komari";
+  const bubbleLogoSrc = welcomeBubbleLogoUrl || "/assets/logo.png";
   const osName = useMemo(() => getOperatingSystem(navigator.userAgent), []);
   const browserName = useMemo(
     () => getBrowserName(navigator.userAgent) + " 浏览器",
@@ -139,7 +140,7 @@ export function WelcomeBubble() {
       className={`welcome-bubble${visible ? " show" : ""}`}>
       <div className="bubble-header">
         <h3 className="bubble-title">
-          <img src="/favicon.ico" className="bubble-logo-image" alt="logo" />
+          <img src={bubbleLogoSrc} className="bubble-logo-image" alt="logo" />
           {siteName}
         </h3>
         <button className="bubble-close" onClick={() => setVisible(false)}>

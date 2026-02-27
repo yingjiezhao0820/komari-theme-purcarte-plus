@@ -52,10 +52,16 @@
   - **默认值:** `(空)`
   - **说明:** 移动端背景图片链接，与桌面端一样区分亮暗模式，留空则使用桌面端背景
 
-- **启用视频背景** (`enableVideoBackground`)
-  - **类型:** `switch`
-  - **默认值:** `false`
-  - **说明:** 启用后将使用视频作为背景
+- **背景模式** (`backgroundMode`)
+  - **类型:** `select`
+  - **可选项:** `image`, `video`, `solidColor`
+  - **默认值:** `image`
+  - **说明:** 选择背景模式：image（图片背景）、video（视频背景）、solidColor（纯色背景）
+
+- **纯色背景颜色值** (`solidColorBackground`)
+  - **类型:** `string`
+  - **默认值:** `(空)`
+  - **说明:** 纯色背景颜色值，支持 rgb（如 `rgb(255,0,0)`）、rgba（如 `rgba(255,0,0,0.5)`）、hex（如 `#ff0000`）、颜色单词（如 `red`），仅在背景模式为 solidColor 时生效
 
 - **桌面端视频背景链接** (`videoBackgroundUrl`)
   - **类型:** `string`
@@ -353,6 +359,11 @@
   - **类型:** `string`
   - **默认值:** `阿米诺斯`
   - **说明:** 欢迎气泡标题栏显示的站点名称，留空则使用站点标题
+
+- **欢迎气泡 Logo** (`welcomeBubbleLogoUrl`)
+  - **类型:** `string`
+  - **默认值:** `(空)`
+  - **说明:** 欢迎气泡标题栏的 Logo 图片链接，留空则使用 `/assets/logo.png`
 
 - **启用资产统计** (`enableFinanceWidget`)
   - **类型:** `switch`

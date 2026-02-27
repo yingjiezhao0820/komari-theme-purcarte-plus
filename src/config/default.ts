@@ -4,7 +4,8 @@ export interface ConfigOptions {
   mainWidth: number; // 主内容宽度百分比
   backgroundImage: string; // 桌面端背景图片URL
   backgroundImageMobile: string; // 移动端背景图片URL
-  enableVideoBackground: boolean; // 是否启用视频背景
+  backgroundMode: BackgroundMode; // 背景模式：纯色/图片/视频
+  solidColorBackground: string; // 纯色背景颜色值（支持 rgb/rgba/hex/颜色单词）
   videoBackgroundUrl: string; // 桌面端视频背景URL
   videoBackgroundUrlMobile: string; // 移动端视频背景URL
   backgroundAlignment: string; // 背景对齐方式
@@ -64,6 +65,7 @@ export interface ConfigOptions {
   enableProtection: boolean; // 是否启用自定义警告保护
   // 欢迎气泡配置
   welcomeBubbleSiteName: string; // 欢迎气泡站点名称
+  welcomeBubbleLogoUrl: string; // 欢迎气泡Logo图片URL
   // 地球组件配置
   earthLightBgImage: string; // 地球组件亮色模式背景图
   earthDarkBgImage: string; // 地球组件暗色模式背景图
@@ -78,7 +80,8 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   mainWidth: 85,
   backgroundImage: "/assets/default-background-image.jpg",
   backgroundImageMobile: "",
-  enableVideoBackground: false,
+  backgroundMode: "image",
+  solidColorBackground: "",
   videoBackgroundUrl: "/assets/LanternRivers_1080p15fps2Mbps3s.mp4",
   videoBackgroundUrlMobile: "",
   backgroundAlignment: "cover,top",
@@ -140,6 +143,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableProtection: true,
   // 欢迎气泡配置
   welcomeBubbleSiteName: "阿米诺斯",
+  welcomeBubbleLogoUrl: "",
   // 地球组件配置
   earthLightBgImage: "",
   earthDarkBgImage: "//upload.wikimedia.org/wikipedia/commons/6/60/ESO_-_Milky_Way.jpg",
@@ -219,3 +223,4 @@ export type SiteStatus =
 export type HeaderStyle = "fixed" | "levitation";
 export type FooterStyle = "fixed" | "levitation" | "followContent" | "hidden";
 export type DisplayMode = "show" | "hideAll" | "hideUnset";
+export type BackgroundMode = "solidColor" | "image" | "video";

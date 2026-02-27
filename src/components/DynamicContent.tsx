@@ -25,21 +25,28 @@ export function DynamicContent({ children }: { children: ReactNode }) {
     [appearance]
   );
 
+  const backgroundMode = config.backgroundMode || "image";
+
   const imageUrl = useMemo(() => {
-    if (!config) return "";
+    if (!config || backgroundMode !== "image") return "";
     const { backgroundImage, backgroundImageMobile } = config;
     return isMobile && backgroundImageMobile
       ? getUrlFromConfig(backgroundImageMobile)
       : getUrlFromConfig(backgroundImage);
-  }, [config, isMobile, getUrlFromConfig]);
+  }, [config, isMobile, getUrlFromConfig, backgroundMode]);
 
   const videoUrl = useMemo(() => {
-    if (!config || !config.enableVideoBackground) return "";
+    if (!config || backgroundMode !== "video") return "";
     const { videoBackgroundUrl, videoBackgroundUrlMobile } = config;
     return isMobile && videoBackgroundUrlMobile
       ? getUrlFromConfig(videoBackgroundUrlMobile)
       : getUrlFromConfig(videoBackgroundUrl);
-  }, [config, isMobile, getUrlFromConfig]);
+  }, [config, isMobile, getUrlFromConfig, backgroundMode]);
+
+  const solidColor = useMemo(() => {
+    if (!config || backgroundMode !== "solidColor") return "";
+    return config.solidColorBackground || "";
+  }, [config, backgroundMode]);
 
   const dynamicStyles = useMemo(() => {
     if (!config) return "";
@@ -72,26 +79,37 @@ export function DynamicContent({ children }: { children: ReactNode }) {
       .map((s) => s.trim());
 
     if (imageBackground) {
-      imageBackground.style.backgroundImage = `url(${imageUrl})`;
-      imageBackground.style.backgroundSize = size;
-      imageBackground.style.backgroundPosition = position;
+      if (backgroundMode === "solidColor" && solidColor) {
+        imageBackground.style.backgroundImage = "none";
+        imageBackground.style.backgroundColor = solidColor;
+      } else if (backgroundMode === "image" && imageUrl) {
+        imageBackground.style.backgroundColor = "";
+        imageBackground.style.backgroundImage = `url(${imageUrl})`;
+        imageBackground.style.backgroundSize = size;
+        imageBackground.style.backgroundPosition = position;
+      } else {
+        imageBackground.style.backgroundImage = "none";
+        imageBackground.style.backgroundColor = "";
+      }
     }
 
     if (videoBackground) {
-      if (config.enableVideoBackground && videoUrl) {
+      if (backgroundMode === "video" && videoUrl) {
         videoBackground.src = videoUrl;
         videoBackground.style.objectFit = size;
         videoBackground.style.objectPosition = position;
         videoBackground.style.display = "block";
       } else {
+        videoBackground.src = "";
         videoBackground.style.display = "none";
       }
     }
   }, [
     imageUrl,
     videoUrl,
+    solidColor,
+    backgroundMode,
     config.backgroundAlignment,
-    config.enableVideoBackground,
   ]);
 
   return (
