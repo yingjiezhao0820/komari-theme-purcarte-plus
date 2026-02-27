@@ -1,3 +1,5 @@
+import i18next from "i18next";
+
 /**
  * 将 komari-theme.json 中的 i18n 对象解析为当前语言的字符串。
  * 支持两种格式：
@@ -10,7 +12,7 @@ export function resolveI18n(value: unknown): string {
   if (typeof value === "string") return value;
   if (value && typeof value === "object" && !Array.isArray(value)) {
     const record = value as Record<string, string>;
-    const lang = navigator.language; // e.g. "zh-CN"
+    const lang = i18next.language || navigator.language; // 优先使用 i18next 当前语言
     if (record[lang]) return record[lang];
     const prefix = lang.split("-")[0]; // e.g. "zh"
     const fallbackKey = Object.keys(record).find((k) => k.startsWith(prefix));

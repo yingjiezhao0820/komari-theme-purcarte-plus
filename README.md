@@ -27,6 +27,7 @@
 - **3D 地球 (EarthGlobe)** — 集成 globe.gl 可视化节点地理分布，支持亮暗模式独立贴图/背景、"伪点亮全球"演示模式
 - **全局延迟总览 (PingOverview)** — 同时展示所有服务器和监测节点的延迟数据，支持时间范围筛选、排序、分组筛选与统计联动
 - **滚动辅助 (ScrollHelpers)** — 页面右下角回到顶部/底部按钮
+- **多语言支持 (i18n)** — 集成 i18next 国际化框架，标题栏内置语言切换器，支持简中/繁中/英/日/印尼五种语言，增强组件（欢迎气泡、资产统计、交易面板、3D地球、访客保护）全面接入 i18n
 - **访客保护 (Protection)** — 对未登录用户启用反调试保护，禁止右键菜单与开发者工具
 
 </details>
@@ -49,7 +50,7 @@
 <summary><b>⚙️ 配置与架构</b></summary>
 
 - **前端配置编辑** — 支持管理员登录后通过标题栏按钮直接编辑主题配置，无需进入后台
-- **多语言配置声明** — `komari-theme.json` 支持中/繁/英/日四语言
+- **多语言配置声明** — `komari-theme.json` 支持中/繁/英/日/印尼五语言
 - **localStorage 配置** — 视图、外观等偏好设置可存储到浏览器本地，也可强制使用后台配置
 - **JSON-RPC2 API 适配** — 实验性支持 Komari >=1.0.7 的 JSON-RPC2 API
 - **自定义 UI 文本** — 可视化编辑器自定义界面文本，无需手动填写配置
@@ -68,6 +69,7 @@
 - 修复延迟总览 Tooltip 过高的显示问题
 - 修复多视图下服务器节点长名称溢出不换行问题
 - 修复加载动画不垂直居中问题
+- 修复首页切换语言后"所有"分组失效导致显示空数据的问题（分组标识符从翻译文本改为常量）
 
 </details>
 
@@ -233,6 +235,8 @@
   - **类型:** `switch`
   - **默认值:** `true`
   - **说明:** 启用后默认在标题栏右侧显示管理按钮
+
+- **语言切换** — 标题栏内置语言切换按钮，支持简体中文、繁体中文、English、日本語、Bahasa Indonesia 五种语言，选择后自动保存到浏览器
 
 </details>
 
@@ -548,7 +552,8 @@ komari-theme-purcarte-plus/
 │   │   │   └── tooltip.tsx                  # 工具提示组件
 │   │   │
 │   │   ├── sections/                        # 页面区块组件
-│   │   │   ├── Header.tsx                   # 标题栏（Logo、标题、搜索、视图切换、主题切换、管理入口）
+│   │   │   ├── Header.tsx                   # 标题栏（Logo、标题、搜索、视图切换、主题切换、语言切换、管理入口）
+│   │   │   ├── LanguageSwitcher.tsx          # 语言切换组件（i18next 多语言切换）
 │   │   │   ├── Footer.tsx                   # 底栏（自定义内容、服务器运行时间、Markdown 渲染）
 │   │   │   ├── Flag.tsx                     # 国家旗帜展示组件
 │   │   │   ├── NodeGrid.tsx                 # 节点网格视图（卡片式布局）
@@ -589,9 +594,18 @@ komari-theme-purcarte-plus/
 │   │   ├── default.ts                       # 默认配置值与 ConfigOptions 类型定义
 │   │   ├── ConfigContext.ts                 # 配置 React Context 定义
 │   │   ├── ConfigProvider.tsx               # 配置 Provider（从后端 API 加载配置并合并默认值）
-│   │   ├── hooks.ts                         # 配置相关 Hooks（useAppConfig、useLocale）
-│   │   ├── locales.ts                       # 国际化文案（中文/英文）
+│   │   ├── hooks.ts                         # 配置相关 Hooks（useAppConfig、useLocale — 桥接 i18next）
+│   │   ├── locales.ts                       # 国际化文案（中文默认值 & TypeScript 类型定义）
 │   │   └── index.ts                         # 配置模块统一导出
+│   │
+│   ├── i18n/                                # i18next 国际化配置
+│   │   ├── config.ts                        # i18next 初始化（LanguageDetector + 资源注册）
+│   │   └── locales/                         # 多语言翻译文件
+│   │       ├── zh_CN.json                   # 简体中文
+│   │       ├── zh_TW.json                   # 繁体中文
+│   │       ├── en.json                      # English
+│   │       ├── ja_JP.json                   # 日本語
+│   │       └── id_ID.json                   # Bahasa Indonesia
 │   │
 │   ├── contexts/                            # React Context 提供者
 │   │   ├── NodeDataContext.tsx              # 节点数据 Context（REST/RPC API 数据获取与缓存）
@@ -619,7 +633,7 @@ komari-theme-purcarte-plus/
 │       ├── chartHelper.ts                   # 图表工具（OKLCH 颜色生成、标签格式化）
 │       ├── converters.ts                    # 类型转换工具（NodeStats ↔ RpcNodeStatus）
 │       ├── regionHelper.ts                  # 地区 Emoji → 名称映射
-│       ├── localeUtils.ts                   # 国际化工具（深度对象合并）
+│       ├── localeUtils.ts                   # 国际化工具（深度对象合并、扁平化还原）
 │       ├── osImageHelper.ts                 # 操作系统 Logo 查找工具
 │       └── RecordHelper.tsx                 # 图表数据处理（削峰、插值、空值填充）
 │

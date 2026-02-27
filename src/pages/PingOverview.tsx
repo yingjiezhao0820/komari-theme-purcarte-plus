@@ -39,6 +39,7 @@ import { CustomTooltip } from "@/components/ui/tooltip";
 import Tips from "@/components/ui/tips";
 import { lableFormatter } from "@/utils/chartHelper";
 import { useLocale } from "@/config/hooks";
+import { ALL_GROUP } from "@/hooks/useNodeCommons";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -181,8 +182,8 @@ const PingOverview = memo(() => {
   // 首页分组
   const allGroups = useMemo(() => {
     const groups = getGroups();
-    return [t("group.all"), ...groups];
-  }, [getGroups, t]);
+    return [ALL_GROUP, ...groups];
+  }, [getGroups]);
 
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
 
@@ -199,7 +200,7 @@ const PingOverview = memo(() => {
   const handleToggleGroup = (group: string) => {
     setSelectedGroups((prev) => {
       const next = new Set(prev);
-      if (group === t("group.all")) {
+      if (group === ALL_GROUP) {
         // 点击"所有"：如果已全选则取消全选，否则全选
         if (next.size === allGroups.length) {
           next.clear();
@@ -209,13 +210,13 @@ const PingOverview = memo(() => {
       } else {
         if (next.has(group)) {
           next.delete(group);
-          next.delete(t("group.all"));
+          next.delete(ALL_GROUP);
         } else {
           next.add(group);
           // 检查是否所有非"所有"的分组都选中了
-          const nonAllGroups = allGroups.filter((g) => g !== t("group.all"));
+          const nonAllGroups = allGroups.filter((g) => g !== ALL_GROUP);
           if (nonAllGroups.every((g) => next.has(g))) {
-            next.add(t("group.all"));
+            next.add(ALL_GROUP);
           }
         }
       }
@@ -364,13 +365,13 @@ const PingOverview = memo(() => {
 
   // 按分组过滤后的服务器节点
   const filteredServerNodes = useMemo(() => {
-    const allLabel = t("group.all");
+    const allLabel = ALL_GROUP;
     if (selectedGroups.has(allLabel)) return uniqueServerNodes;
     return uniqueServerNodes.filter((s) => {
       if (!s.group && selectedGroups.size > 0) return false;
       return selectedGroups.has(s.group);
     });
-  }, [uniqueServerNodes, selectedGroups, t]);
+  }, [uniqueServerNodes, selectedGroups]);
 
   // 可见性状态
   const [visibleMonitorNodes, setVisibleMonitorNodes] = useState<Set<string>>(
@@ -954,7 +955,7 @@ const PingOverview = memo(() => {
                       variant={isSelected ? "secondary" : "ghost"}
                       size="sm"
                       onClick={() => handleToggleGroup(group)}>
-                      {group}
+                      {group === ALL_GROUP ? t("group.all") : group}
                     </Button>
                   );
                 })}

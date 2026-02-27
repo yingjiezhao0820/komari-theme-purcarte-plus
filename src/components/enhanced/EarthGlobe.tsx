@@ -10,6 +10,7 @@ import { useNodeData } from "@/contexts/NodeDataContext";
 import { useUserGeo } from "./useUserGeo";
 import { useAppConfig } from "@/config";
 import { useTheme } from "@/hooks/useTheme";
+import { useLocale } from "@/config/hooks";
 import { COORD_MAP, resolveCountryCode } from "./emojiMap";
 import type { NodeData } from "@/types/node.d";
 
@@ -99,6 +100,7 @@ export function EarthGlobe() {
     earthDarkGlobeImage,
   } = useAppConfig();
   const { appearance } = useTheme();
+  const { t } = useLocale();
 
   const [ballVisible, setBallVisible] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -221,7 +223,7 @@ export function EarthGlobe() {
             className="custom-alert-modal"
             style={{ transform: "scale(1)" }}>
             <div className="earth-overlay-counter">
-              <span className="counter-label">Total Servers</span>
+              <span className="counter-label">{t("enhanced.earth.totalServers")}</span>
               <span className="counter-value">{totalCount}</span>
             </div>
             <div
@@ -237,7 +239,7 @@ export function EarthGlobe() {
                       height: "100%",
                       color: "var(--gray-11)",
                     }}>
-                    加载地球组件中...
+                    {t("enhanced.earth.loading")}
                   </div>
                 }>
                 <GlobeComponent

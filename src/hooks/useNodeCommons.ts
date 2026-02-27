@@ -11,6 +11,8 @@ import { useLocale, useAppConfig } from "@/config/hooks";
 type SortKey = "trafficUp" | "trafficDown" | "speedUp" | "speedDown" | null;
 type SortOrder = "asc" | "desc";
 
+export const ALL_GROUP = "__all__";
+
 export const useNodeListCommons = (searchTerm: string) => {
   const {
     nodes: staticNodes,
@@ -18,10 +20,9 @@ export const useNodeListCommons = (searchTerm: string) => {
     getGroups,
   } = useNodeData() as NodeDataContextType;
   const { liveData } = useLiveData() as LiveDataContextType;
-  const { t } = useLocale();
   const { isOfflineNodesBehind, defaultSelectedGroup } = useAppConfig();
   const [selectedGroup, setSelectedGroup] = useState(
-    defaultSelectedGroup || t("group.all")
+    defaultSelectedGroup || ALL_GROUP
   );
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
@@ -47,15 +48,15 @@ export const useNodeListCommons = (searchTerm: string) => {
   }, [staticNodes, liveData]);
 
   const groups = useMemo(
-    () => [t("group.all"), ...getGroups()],
-    [getGroups, t]
+    () => [ALL_GROUP, ...getGroups()],
+    [getGroups]
   );
 
   const filteredNodes = useMemo(() => {
     let nodes = combinedNodes
       .filter(
         (node: NodeData & { stats?: any }) =>
-          selectedGroup === t("group.all") || node.group === selectedGroup
+          selectedGroup === ALL_GROUP || node.group === selectedGroup
       )
       .filter((node: NodeData) =>
         node.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -101,7 +102,6 @@ export const useNodeListCommons = (searchTerm: string) => {
     searchTerm,
     sortKey,
     sortOrder,
-    t,
     isOfflineNodesBehind,
   ]);
 

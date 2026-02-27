@@ -9,6 +9,7 @@ import {
   formatTraffic,
   getBillingCycleText,
 } from "./financeUtils";
+import { useLocale } from "@/config/hooks";
 
 interface ServerTradeModalProps {
   node: NodeData;
@@ -23,6 +24,7 @@ export function ServerTradeModal({
   userCurrency,
   onClose,
 }: ServerTradeModalProps) {
+  const { t, i18n } = useLocale();
   const targetRate = rates[userCurrency] || 1;
   const sym = CURRENCY_SYMBOLS[userCurrency] || userCurrency;
   const regionCode = EMOJI_MAP[node.region] || node.region || "UN";
@@ -54,7 +56,7 @@ export function ServerTradeModal({
   let expiredText = "-";
   if (node.expired_at) {
     const expiryDate = new Date(node.expired_at);
-    const dateOnlyString = expiryDate.toLocaleDateString("zh-CN", {
+    const dateOnlyString = expiryDate.toLocaleDateString(i18n.language, {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -63,10 +65,10 @@ export function ServerTradeModal({
     const now = new Date();
     const diffMs = expiryDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-    if (diffDays > 0) expiredText = `${dateOnlyString} (剩余${diffDays}天)`;
-    else if (diffDays === 0) expiredText = `${dateOnlyString} (今日到期)`;
+    if (diffDays > 0) expiredText = `${dateOnlyString} ${t("enhanced.trade.remainingDays", { days: diffDays })}`;
+    else if (diffDays === 0) expiredText = `${dateOnlyString} ${t("enhanced.trade.expiresToday")}`;
     else
-      expiredText = `${dateOnlyString} (已过期${Math.abs(diffDays)}天)`;
+      expiredText = `${dateOnlyString} ${t("enhanced.trade.expiredDays", { days: Math.abs(diffDays) })}`;
   }
 
   // tags & remarks
@@ -187,12 +189,10 @@ export function ServerTradeModal({
               strokeLinejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
-            服务器交易
+            {t("enhanced.trade.title")}
             <span
               className="help-icon show-help"
-              data-tooltip={
-                "计算规则：\n• 使用UTC时间进行精确计算，避免时区问题\n• 剩余价值 = 价格 × (剩余毫秒数/计费周期毫秒数)\n• 超过100年按原价计算\n• 已过期服务器剩余价值为0"
-              }
+              data-tooltip={t("enhanced.trade.calcRules")}
               onClick={(e) => {
                 e.stopPropagation();
                 (e.currentTarget as HTMLElement).classList.toggle("active");
@@ -242,11 +242,11 @@ export function ServerTradeModal({
                 <rect x="2" y="3" width="20" height="14" rx="2" />
                 <path d="M8 21h8M12 17v4" />
               </svg>
-              服务器信息
+              {t("enhanced.trade.serverInfo")}
             </div>
             <div className="server-info-grid">
               <div className="server-info-row">
-                <span className="info-label">地区</span>
+                <span className="info-label">{t("enhanced.trade.region")}</span>
                 <span className="info-value">
                   <img
                     src={`/assets/flags/${regionCode}.svg`}
@@ -256,72 +256,72 @@ export function ServerTradeModal({
                 </span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">名称</span>
+                <span className="info-label">{t("enhanced.trade.name")}</span>
                 <span className="info-value">{node.name}</span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">CPU</span>
+                <span className="info-label">{t("enhanced.trade.cpu")}</span>
                 <span className="info-value">
-                  {node.cpu_name || "未知"}
+                  {node.cpu_name || t("enhanced.trade.unknown")}
                 </span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">核心数</span>
+                <span className="info-label">{t("enhanced.trade.cores")}</span>
                 <span className="info-value">
-                  {node.cpu_cores ? `${node.cpu_cores} 核` : "未知"}
+                  {node.cpu_cores ? t("enhanced.trade.coresUnit", { count: node.cpu_cores }) : t("enhanced.trade.unknown")}
                 </span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">架构</span>
-                <span className="info-value">{node.arch || "未知"}</span>
+                <span className="info-label">{t("enhanced.trade.arch")}</span>
+                <span className="info-value">{node.arch || t("enhanced.trade.unknown")}</span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">虚拟化</span>
+                <span className="info-label">{t("enhanced.trade.virtualization")}</span>
                 <span className="info-value">
-                  {node.virtualization || "未知"}
+                  {node.virtualization || t("enhanced.trade.unknown")}
                 </span>
               </div>
               {node.gpu_name && node.gpu_name !== "None" && (
                 <div className="server-info-row">
-                  <span className="info-label">GPU</span>
+                  <span className="info-label">{t("enhanced.trade.gpu")}</span>
                   <span className="info-value">{node.gpu_name}</span>
                 </div>
               )}
               <div className="server-info-row">
-                <span className="info-label">内存</span>
+                <span className="info-label">{t("enhanced.trade.memory")}</span>
                 <span className="info-value">
-                  {node.mem_total ? formatBytes(node.mem_total) : "未知"}
+                  {node.mem_total ? formatBytes(node.mem_total) : t("enhanced.trade.unknown")}
                 </span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">硬盘</span>
+                <span className="info-label">{t("enhanced.trade.disk")}</span>
                 <span className="info-value">
-                  {node.disk_total ? formatBytes(node.disk_total) : "未知"}
+                  {node.disk_total ? formatBytes(node.disk_total) : t("enhanced.trade.unknown")}
                 </span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">流量</span>
+                <span className="info-label">{t("enhanced.trade.traffic")}</span>
                 <span className="info-value">
                   {node.traffic_limit
-                    ? formatTraffic(node.traffic_limit)
-                    : "未知"}
+                    ? formatTraffic(node.traffic_limit, t)
+                    : t("enhanced.trade.unknown")}
                 </span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">原价</span>
+                <span className="info-label">{t("enhanced.trade.originalPrice")}</span>
                 <span className="info-value">
                   {node.currency || "¥"}{" "}
-                  {node.price === -1 ? "免费" : node.price}
+                  {node.price === -1 ? t("enhanced.trade.free") : node.price}
                 </span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">周期</span>
+                <span className="info-label">{t("enhanced.trade.cycle")}</span>
                 <span className="info-value">
-                  {getBillingCycleText(node.billing_cycle)}
+                  {getBillingCycleText(node.billing_cycle, t)}
                 </span>
               </div>
               <div className="server-info-row">
-                <span className="info-label">到期时间</span>
+                <span className="info-label">{t("enhanced.trade.expiryTime")}</span>
                 <span className="info-value">{expiredText}</span>
               </div>
             </div>
@@ -329,7 +329,7 @@ export function ServerTradeModal({
             {/* Tags */}
             {tags.length > 0 && (
               <div className="trade-tags-container">
-                <span className="trade-tags-label">标签:</span>
+                <span className="trade-tags-label">{t("enhanced.trade.tags")}</span>
                 <div className="trade-tags-list">
                   {tags.map((tag, i) => (
                     <span key={i} className="trade-tag">
@@ -343,7 +343,7 @@ export function ServerTradeModal({
             {/* Remarks */}
             {remarks.length > 0 && (
               <div className="trade-remark-container">
-                <span className="trade-remark-label">备注:</span>
+                <span className="trade-remark-label">{t("enhanced.trade.remarks")}</span>
                 <div className="trade-remark-list">
                   {remarks.map((remark, i) => (
                     <span key={i} className="trade-remark-tag">
@@ -374,11 +374,11 @@ export function ServerTradeModal({
                 <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
                 <path d="M12 18V6" />
               </svg>
-              交易计算
+              {t("enhanced.trade.tradeCalc")}
             </div>
 
             <div className="trade-input-group">
-              <label className="trade-label">交易日期</label>
+              <label className="trade-label">{t("enhanced.trade.tradeDate")}</label>
               <input
                 type="date"
                 className="trade-input"
@@ -388,11 +388,11 @@ export function ServerTradeModal({
             </div>
 
             <div className="trade-input-group">
-              <label className="trade-label">交易金额</label>
+              <label className="trade-label">{t("enhanced.trade.tradeAmount")}</label>
               <input
                 type="number"
                 className="trade-input"
-                placeholder="请输入交易金额"
+                placeholder={t("enhanced.trade.tradeAmountPlaceholder")}
                 step="0.01"
                 min="0"
                 value={tradeAmount}
@@ -402,13 +402,13 @@ export function ServerTradeModal({
 
             <div className="trade-result-box">
               <div className="trade-result-row">
-                <span>剩余价值</span>
+                <span>{t("enhanced.trade.remainValue")}</span>
                 <span className="trade-result-value">
                   {sym} {displayRemainValue.toFixed(2)}
                 </span>
               </div>
               <div className="trade-result-row">
-                <span>溢价金额</span>
+                <span>{t("enhanced.trade.premiumAmount")}</span>
                 <span
                   className={`trade-result-value premium${
                     hasAmount && premium <= 0 ? " positive" : ""
@@ -419,7 +419,7 @@ export function ServerTradeModal({
                 </span>
               </div>
               <div className="trade-result-row">
-                <span>溢价率</span>
+                <span>{t("enhanced.trade.premiumRate")}</span>
                 <span
                   className={`trade-result-value premium${
                     hasAmount && premium <= 0 ? " positive" : ""

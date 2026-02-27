@@ -18,6 +18,7 @@ import {
 import { useIsMobile } from "@/hooks/useMobile";
 import { useLocale } from "@/config/hooks";
 import { cn } from "@/utils";
+import { ALL_GROUP } from "@/hooks/useNodeCommons";
 
 interface HomePageProps {
   searchTerm: string;
@@ -114,7 +115,7 @@ const HomePage: React.FC<HomePageProps> = ({
               variant={selectedGroup === group ? "secondary" : "ghost"}
               size="sm"
               onClick={() => setSelectedGroup?.(group)}>
-              {group}
+              {group === ALL_GROUP ? t("group.all") : group}
             </Button>
           ))}
         </div>

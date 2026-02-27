@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import "@radix-ui/themes/styles.css";
+import "@/i18n/config";
 import { Theme } from "@radix-ui/themes";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Header } from "@/components/sections/Header";

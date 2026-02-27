@@ -175,3 +175,26 @@ export const deepMerge = <T extends object, S extends object>(
 
   return output;
 };
+
+/**
+ * 将扁平化的 dot-path 对象还原为嵌套对象。
+ * @param obj 扁平化对象（键以 . 分隔）
+ * @returns 嵌套对象
+ */
+export const unflattenObject = (
+  obj: Record<string, string>
+): Record<string, any> => {
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    const keys = key.split(".");
+    let current = result;
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (!(keys[i] in current)) {
+        current[keys[i]] = {};
+      }
+      current = current[keys[i]];
+    }
+    current[keys[keys.length - 1]] = value;
+  }
+  return result;
+};

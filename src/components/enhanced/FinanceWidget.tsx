@@ -14,15 +14,17 @@ import {
   calculateMonthlyExpense,
 } from "./financeUtils";
 import { ServerTradeModal } from "./ServerTradeModal";
+import { useLocale } from "@/config/hooks";
 
 type SortBy = "weight_asc" | "weight_desc" | "price_asc" | "price_desc";
 
-const SORT_OPTIONS: { value: SortBy; label: string }[] = [
-  { value: "weight_asc", label: "权重 正序" },
-  { value: "weight_desc", label: "权重 倒序" },
-  { value: "price_asc", label: "价格 正序" },
-  { value: "price_desc", label: "价格 倒序" },
-];
+const SORT_VALUES: SortBy[] = ["weight_asc", "weight_desc", "price_asc", "price_desc"];
+const SORT_LABEL_KEYS: Record<SortBy, string> = {
+  weight_asc: "enhanced.finance.sortWeightAsc",
+  weight_desc: "enhanced.finance.sortWeightDesc",
+  price_asc: "enhanced.finance.sortPriceAsc",
+  price_desc: "enhanced.finance.sortPriceDesc",
+};
 
 function sortNodes(nodes: NodeData[], sortBy: SortBy): NodeData[] {
   return nodes.slice().sort((a, b) => {
@@ -63,7 +65,8 @@ function calculateFinanceData(
   rates: ExchangeRates,
   userCurrency: string,
   excludeFree: boolean,
-  sortBy: SortBy
+  sortBy: SortBy,
+  t: (key: string, params?: Record<string, string | number>) => string
 ): FinanceData {
   const sorted = sortNodes(nodes, sortBy);
   const targetRate = rates[userCurrency] || 1;
@@ -75,7 +78,7 @@ function calculateFinanceData(
   const specialCases: string[] = [];
 
   const items = sorted.map((node) => {
-    const isFreeTag = node.tags ? node.tags.includes("白嫖中") : false;
+    const isFreeTag = node.tags ? node.tags.includes(t("enhanced.finance.freeTag")) : false;
     const { price: priceCNY, isSpecialFree } = parsePriceToCNY(node, rates);
     const { remainingValue, isLongTerm } = calculateRemainingValue(
       node,
@@ -86,14 +89,14 @@ function calculateFinanceData(
 
     let tooltipText = "";
     if (isSpecialFree) {
-      specialCases.push(`${node.name} (免费鸡)`);
-      tooltipText = `${node.name} (免费鸡)`;
+      specialCases.push(`${node.name} (${t("enhanced.finance.freeChicken")})`);
+      tooltipText = `${node.name} (${t("enhanced.finance.freeChicken")})`;
     } else if (isLongTerm) {
-      specialCases.push(`${node.name} (长期鸡，按原价)`);
-      tooltipText = `到期时间 > 100年，按原价计算`;
+      specialCases.push(`${node.name} (${t("enhanced.finance.longTermChicken")})`);
+      tooltipText = t("enhanced.finance.longTermTooltip");
     } else if (isFreeTag && !(excludeFree && isFreeTag)) {
-      specialCases.push(`${node.name} (白嫖中)`);
-      tooltipText = `${node.name} (白嫖中)`;
+      specialCases.push(`${node.name} (${t("enhanced.finance.freeTag")})`);
+      tooltipText = `${node.name} (${t("enhanced.finance.freeTag")})`;
     }
 
     const shouldExclude = excludeFree && isFreeTag;
@@ -127,6 +130,7 @@ function calculateFinanceData(
 export function FinanceWidget() {
   const { nodes } = useNodeData();
   const { rates, lastUpdated, refreshRates } = useExchangeRates();
+  const { t } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [ballVisible, setBallVisible] = useState(false);
   const [userCurrency, setUserCurrency] = useState<string>(
@@ -150,8 +154,8 @@ export function FinanceWidget() {
   }, []);
 
   const financeData = useMemo(
-    () => calculateFinanceData(nodes, rates, userCurrency, excludeFree, sortBy),
-    [nodes, rates, userCurrency, excludeFree, sortBy]
+    () => calculateFinanceData(nodes, rates, userCurrency, excludeFree, sortBy, t),
+    [nodes, rates, userCurrency, excludeFree, sortBy, t]
   );
 
   const sym = CURRENCY_SYMBOLS[userCurrency] || userCurrency;
@@ -252,7 +256,7 @@ export function FinanceWidget() {
               <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
               <path d="M12 18V6" />
             </svg>
-            资产统计
+            {t("enhanced.finance.title")}
           </h3>
           <button className="bubble-close" onClick={handleClose}>
             <svg
@@ -268,23 +272,23 @@ export function FinanceWidget() {
         <div className="bubble-content">
           {/* 汇总 */}
           <div className="finance-row">
-            <span>服务器数量</span>
+            <span>{t("enhanced.finance.serverCount")}</span>
             <span className="finance-value">{financeData.totalNodes}</span>
           </div>
           <div className="finance-row">
-            <span>总价值</span>
+            <span>{t("enhanced.finance.totalValue")}</span>
             <span className="finance-value">
               {sym} {(financeData.totalPriceCNY * targetRate).toFixed(2)}
             </span>
           </div>
           <div className="finance-row">
-            <span>月均支出</span>
+            <span>{t("enhanced.finance.monthlyExpense")}</span>
             <span className="finance-value">
               {sym} {(financeData.monthlyPriceCNY * targetRate).toFixed(2)}
             </span>
           </div>
           <div className="finance-row">
-            <span>剩余总价值</span>
+            <span>{t("enhanced.finance.remainingValue")}</span>
             <div className="item-right">
               <span className="finance-value">
                 {sym}{" "}
@@ -377,9 +381,9 @@ export function FinanceWidget() {
             onClick={() => setShowRatesInfo((p) => !p)}>
             {lastUpdated
               ? lastUpdated === "使用默认汇率"
-                ? "使用默认汇率"
-                : `汇率更新: ${lastUpdated}`
-              : "汇率更新中..."}
+                ? t("enhanced.finance.defaultRates")
+                : t("enhanced.finance.ratesUpdated", { time: lastUpdated })
+              : t("enhanced.finance.ratesUpdating")}
           </div>
 
           {showRatesInfo && (
@@ -415,9 +419,9 @@ export function FinanceWidget() {
                 className="finance-select"
                 value={sortBy}
                 onChange={handleSortChange}>
-                {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
+                {SORT_VALUES.map((val) => (
+                  <option key={val} value={val}>
+                    {t(SORT_LABEL_KEYS[val])}
                   </option>
                 ))}
               </select>
@@ -427,8 +431,8 @@ export function FinanceWidget() {
                 className={`finance-btn${excludeFree ? " active" : ""}`}
                 title={
                   excludeFree
-                    ? "当前：已排除白嫖中标签"
-                    : "当前：包含白嫖中标签"
+                    ? t("enhanced.finance.excludeFreeOn")
+                    : t("enhanced.finance.excludeFreeOff")
                 }
                 onClick={handleToggleFree}>
                 <svg
@@ -446,7 +450,7 @@ export function FinanceWidget() {
               </button>
               <button
                 className="finance-btn"
-                title="刷新数据"
+                title={t("enhanced.finance.refresh")}
                 onClick={handleRefresh}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

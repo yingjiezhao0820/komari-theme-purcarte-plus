@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useUserGeo } from "./useUserGeo";
 import { useAppConfig } from "@/config";
+import { useLocale } from "@/config/hooks";
 
 function getOperatingSystem(userAgent: string): string {
   if (/android/i.test(userAgent)) return "Android";
@@ -9,7 +10,7 @@ function getOperatingSystem(userAgent: string): string {
   if (/windows phone/i.test(userAgent)) return "Windows Phone";
   if (/windows/i.test(userAgent)) return "Windows";
   if (/linux/i.test(userAgent)) return "Linux";
-  return "未知设备";
+  return "";
 }
 
 function getBrowserName(userAgent: string): string {
@@ -17,7 +18,7 @@ function getBrowserName(userAgent: string): string {
   if (userAgent.includes("Firefox")) return "Firefox";
   if (userAgent.includes("Chrome")) return "Chrome";
   if (userAgent.includes("Safari")) return "Safari";
-  return "未知";
+  return "";
 }
 
 function OsIcon({ os }: { os: string }) {
@@ -97,35 +98,39 @@ function OsIcon({ os }: { os: string }) {
 export function WelcomeBubble() {
   const { geo, loading } = useUserGeo();
   const { welcomeBubbleSiteName, welcomeBubbleLogoUrl, titleText } = useAppConfig();
+  const { t, i18n } = useLocale();
   const [visible, setVisible] = useState(false);
   const [ipHidden, setIpHidden] = useState(false);
   const [ispHidden, setIspHidden] = useState(false);
 
   const siteName = welcomeBubbleSiteName || titleText || "Komari";
   const bubbleLogoSrc = welcomeBubbleLogoUrl || "/assets/logo.png";
-  const osName = useMemo(() => getOperatingSystem(navigator.userAgent), []);
-  const browserName = useMemo(
-    () => getBrowserName(navigator.userAgent) + " 浏览器",
-    []
-  );
+  const osName = useMemo(() => {
+    const os = getOperatingSystem(navigator.userAgent);
+    return os || t("enhanced.welcome.unknownDevice");
+  }, [t]);
+  const browserName = useMemo(() => {
+    const browser = getBrowserName(navigator.userAgent);
+    const name = browser || t("enhanced.welcome.unknownBrowser");
+    return name + " " + t("enhanced.welcome.browserSuffix");
+  }, [t]);
   const dateStr = useMemo(
     () =>
-      new Date().toLocaleDateString("zh-CN", {
+      new Date().toLocaleDateString(i18n.language, {
         year: "numeric",
         month: "long",
         day: "numeric",
-        timeZone: "Asia/Shanghai",
       }),
-    []
+    [i18n.language]
   );
 
   const welcomeMessage = useMemo(() => {
-    if (loading) return "欢迎你，朋友！";
+    if (loading) return t("enhanced.welcome.messageDefault");
     if (geo.city && geo.region)
-      return `欢迎来自 ${geo.region}, ${geo.city} 的朋友！`;
-    if (geo.country) return `欢迎来自 ${geo.country} 的朋友！`;
-    return "欢迎你，朋友！";
-  }, [loading, geo]);
+      return t("enhanced.welcome.messageRegion", { region: geo.region, city: geo.city });
+    if (geo.country) return t("enhanced.welcome.messageCountry", { country: geo.country });
+    return t("enhanced.welcome.messageDefault");
+  }, [loading, geo, t]);
 
   useEffect(() => {
     if (!loading) {

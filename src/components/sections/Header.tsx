@@ -31,6 +31,7 @@ import { useLocale } from "@/config/hooks";
 import { StatsBar } from "../sections/StatsBar";
 import type { StatsBarProps } from "../sections/StatsBar";
 import EditButton from "../settings/EditButton";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Card } from "../ui/card";
 import { cn } from "@/utils";
 
@@ -387,6 +388,7 @@ export const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
                     {!isSubPage && <ViewModeSwitcher isMobile />}
                     <PingOverviewButton isMobile />
                     <ThemeSwitcher isMobile />
+                    <LanguageSwitcher isMobile />
                     <AdminButton isMobile />
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -404,6 +406,7 @@ export const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
                 )}
                 <PingOverviewButton />
                 <ThemeSwitcher />
+                <LanguageSwitcher />
                 <AdminButton />
               </>
             )}

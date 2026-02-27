@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { apiService } from "@/services/api";
+import { useLocale } from "@/config/hooks";
 
 export function Protection() {
+  const { t } = useLocale();
   const [isAlertShown, setIsAlertShown] = useState(false);
   const [alertReason, setAlertReason] = useState("");
   const [overlayVisible, setOverlayVisible] = useState(false);
@@ -49,37 +51,37 @@ export function Protection() {
 
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
-      showCustomAlert("右键菜单");
+      showCustomAlert(t("enhanced.protection.contextMenu"));
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
       let reason = "";
 
-      if (e.key === "F12") reason = "异常行为: F12";
+      if (e.key === "F12") reason = t("enhanced.protection.f12");
       else if (
         e.ctrlKey &&
         e.shiftKey &&
         ["I", "J", "C"].includes(e.key.toUpperCase())
       )
-        reason = `异常行为: Ctrl+Shift+${e.key.toUpperCase()}`;
+        reason = t("enhanced.protection.ctrlShift", { key: e.key.toUpperCase() });
       else if (e.ctrlKey && e.key.toUpperCase() === "U")
-        reason = "Ctrl+U 查看源代码";
+        reason = t("enhanced.protection.ctrlU");
       else if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S")
-        reason = "异常行为: Ctrl/Cmd+S";
+        reason = t("enhanced.protection.ctrlCmdS");
       else if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "P")
-        reason = "异常行为: Ctrl/Cmd+P";
+        reason = t("enhanced.protection.ctrlCmdP");
       else if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "A")
-        reason = "异常行为: Ctrl/Cmd+A";
+        reason = t("enhanced.protection.ctrlCmdA");
       else if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "C")
-        reason = "异常行为: Ctrl/Cmd+C";
+        reason = t("enhanced.protection.ctrlCmdC");
       else if (
         isMac &&
         e.metaKey &&
         e.altKey &&
         ["I", "J", "C"].includes(e.key.toUpperCase())
       )
-        reason = `异常行为: Cmd+Option+${e.key.toUpperCase()}`;
+        reason = t("enhanced.protection.cmdOption", { key: e.key.toUpperCase() });
 
       if (reason) {
         e.preventDefault();
@@ -89,16 +91,16 @@ export function Protection() {
 
     const handleCopy = (e: ClipboardEvent) => {
       e.preventDefault();
-      showCustomAlert("异常行为: 复制");
+      showCustomAlert(t("enhanced.protection.copy"));
     };
 
     const handleDragStart = (e: DragEvent) => {
       e.preventDefault();
-      showCustomAlert("异常行为: 拖拽内容");
+      showCustomAlert(t("enhanced.protection.drag"));
     };
 
     const handleBeforePrint = () => {
-      showCustomAlert("异常行为: 打印页面");
+      showCustomAlert(t("enhanced.protection.print"));
     };
 
     document.addEventListener("contextmenu", handleContextMenu);
@@ -113,14 +115,14 @@ export function Protection() {
       // eslint-disable-next-line no-debugger
       debugger;
       if (performance.now() - start > 100) {
-        showCustomAlert("环境异常: 开发者工具窗口");
+        showCustomAlert(t("enhanced.protection.devTools"));
       }
 
       if (
         (navigator as any).webdriver ||
         /HeadlessChrome/.test(navigator.userAgent)
       ) {
-        showCustomAlert("环境异常: 无头浏览器");
+        showCustomAlert(t("enhanced.protection.headless"));
       }
     }, 500);
 
@@ -132,7 +134,7 @@ export function Protection() {
             const el = node as Element;
             const txt = ((el.id || "") + " " + (el.className || "")).toLowerCase();
             if (/supercopy|copy|extension|tamper/i.test(txt)) {
-              showCustomAlert("环境异常: 可疑 DOM 注入");
+              showCustomAlert(t("enhanced.protection.domInjection"));
             }
           }
         });
@@ -154,7 +156,7 @@ export function Protection() {
       if (style.parentNode) style.parentNode.removeChild(style);
       if (redirectTimerRef.current) clearTimeout(redirectTimerRef.current);
     };
-  }, [isLoggedIn, showCustomAlert]);
+  }, [isLoggedIn, showCustomAlert, t]);
 
   // 如果已登录或仍在检查，则不渲染任何内容。
   if (isLoggedIn !== false) return null;
@@ -178,7 +180,7 @@ export function Protection() {
               className="bubble-logo-image"
               alt="logo"
             />
-            警告
+            {t("enhanced.protection.warning")}
           </h3>
           <button className="bubble-close" onClick={handleClose}>
             <svg

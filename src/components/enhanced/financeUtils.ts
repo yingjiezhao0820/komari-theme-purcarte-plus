@@ -151,16 +151,26 @@ export function formatBytes(bytes: number): string {
 /**
  * 格式化流量
  */
-export function formatTraffic(bytes: number): string {
-  if (bytes === 362838837166080) return "∞TB/月";
-  if (bytes === 0) return "无限制";
-  return formatBytes(bytes) + "/月";
+export function formatTraffic(bytes: number, t?: (key: string) => string): string {
+  if (bytes === 362838837166080) return t ? t("enhanced.trade.trafficInfinite") : "∞TB/月";
+  if (bytes === 0) return t ? t("enhanced.trade.trafficUnlimited") : "无限制";
+  return formatBytes(bytes) + (t ? t("enhanced.trade.trafficPerMonth") : "/月");
 }
 
 /**
  * 计费周期文本
  */
-export function getBillingCycleText(days: number): string {
+export function getBillingCycleText(days: number, t?: (key: string, params?: Record<string, string | number>) => string): string {
+  if (t) {
+    const cycleMap: Record<string, string> = {
+      "30": t("enhanced.trade.billingMonthly"),
+      "92": t("enhanced.trade.billingQuarterly"),
+      "365": t("enhanced.trade.billingYearly"),
+      "730": t("enhanced.trade.billingBiennial"),
+      "-1": t("enhanced.trade.billingOneTime"),
+    };
+    return cycleMap[String(days)] || t("enhanced.trade.billingDays", { days });
+  }
   const cycleMap: Record<string, string> = {
     "30": "月付",
     "92": "季付",
