@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,
@@ -91,6 +92,16 @@ const SettingItem = ({
               ))}
             </SelectContent>
           </Select>
+        );
+      case "richtext":
+        return (
+          <Textarea
+            className="theme-card-style"
+            value={localValue as string}
+            onChange={(e) => setLocalValue(e.target.value)}
+            onBlur={handleBlur}
+            rows={5}
+          />
         );
       default:
         return null;
