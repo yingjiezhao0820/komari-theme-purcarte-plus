@@ -17,6 +17,58 @@
 > 
 > **此版本肯定不会满足所有人的需求,我只针对我发现的问题，我用着不好的，或者喜欢的方向开发，如果介意，请使用原版**
 
+## 🆕 相比原版增强了什么
+
+<details>
+<summary><b>✨ 新增功能</b></summary>
+
+- **欢迎气泡 (WelcomeBubble)** — 左下角展示访客 IP、地理位置及 ISP 信息，支持自定义站点名称与 Logo
+- **资产统计 (FinanceWidget)** — 右上角悬浮球，查看服务器总价值、月均支出、剩余价值，支持多币种汇率换算与交易溢价计算
+- **3D 地球 (EarthGlobe)** — 集成 globe.gl 可视化节点地理分布，支持亮暗模式独立贴图/背景、"伪点亮全球"演示模式
+- **全局延迟总览 (PingOverview)** — 同时展示所有服务器和监测节点的延迟数据，支持时间范围筛选、排序、分组筛选与统计联动
+- **滚动辅助 (ScrollHelpers)** — 页面右下角回到顶部/底部按钮
+- **访客保护 (Protection)** — 对未登录用户启用反调试保护，禁止右键菜单与开发者工具
+
+</details>
+
+<details>
+<summary><b>🎨 UI/UX 改进</b></summary>
+
+- **背景系统增强** — 支持图片/视频/纯色三种背景模式互斥切换，支持多张随机背景图（逗号分隔）、亮暗模式独立配置（竖线分隔）、移动端独立背景
+- **底栏增强** — 支持隐藏原始内容、服务器运行时间计时器（可自定义模板）、自定义多行内容（支持 Markdown 链接与图片）
+- **到期/在线时间显示控制** — 网格、表格、紧凑三种视图模式独立控制到期时间与在线时间的显示（显示/隐藏全部/隐藏未设置）
+- **离线节点增强** — 离线节点显示"最后上线: X分钟前"相对时间，而非仅显示"离线"
+- **标签自动解析** — 自动解析 `public_remark`（分号分隔）为可视化标签，支持自定义颜色池
+- **Logo 圆形化** — 标题栏 Logo 改为圆形显示
+- **统一滚动条样式** — 全局 Webkit 滚动条自动适配亮暗模式
+- **移动端优化** — 修复悬浮球遮挡、网速数值换行错位等移动端问题
+
+</details>
+
+<details>
+<summary><b>⚙️ 配置与架构</b></summary>
+
+- **前端配置编辑** — 支持管理员登录后通过标题栏按钮直接编辑主题配置，无需进入后台
+- **多语言配置声明** — `komari-theme.json` 支持中/繁/英/日四语言
+- **localStorage 配置** — 视图、外观等偏好设置可存储到浏览器本地，也可强制使用后台配置
+- **JSON-RPC2 API 适配** — 实验性支持 Komari >=1.0.7 的 JSON-RPC2 API
+- **自定义 UI 文本** — 可视化编辑器自定义界面文本，无需手动填写配置
+- **向后兼容** — 旧版 `enableVideoBackground` 自动映射为新版 `backgroundMode`
+
+</details>
+
+<details>
+<summary><b>🐛 Bug 修复</b></summary>
+
+- 修复部分设备/环境下 React error #130 崩溃问题（配置空值覆盖默认值）
+- 修复进入探针后服务器卡片闪烁问题（WebSocket 数据未到达时的离线误判）
+- 修复 3D 地球 THREE.js 控制台警告（alpha 通道、Clock 弃用）
+- 修复延迟总览 Tooltip 过高的显示问题
+- 修复多视图下服务器节点长名称溢出不换行问题
+- 修复加载动画不垂直居中问题
+
+</details>
+
 ## 🚀 快速开始
 
 ### 安装与启用
@@ -28,14 +80,17 @@
 >
 > 本主题支持通过 Komari 后台或前端进行详细配置，所有可用选项如下
 
-#### 前端管理开关
+<details>
+<summary><b>前端管理开关</b></summary>
 
 - **是否在登录时显示配置编辑按钮** (`isShowConfigEditButtonInLogined`)
-  - **类型:** `switch`
-  - **默认值:** `false`
+  - **类型:** `switch` | **默认值:** `false`
   - **说明:** 启用后将在登录时在标题栏最右侧显示配置编辑按钮，方便管理员进行主题配置
 
-#### 样式调整
+</details>
+
+<details>
+<summary><b>样式调整</b></summary>
 
 - **主要内容宽度** (`mainWidth`)
   - **类型:** `number`
@@ -109,7 +164,10 @@
   - **默认值:** `violet`
   - **说明:** 设置默认主题颜色，颜色对照请参考：[Radix Color](https://www.radix-ui.com/themes/docs/theme/color)
 
-#### 浏览器本地存储配置
+</details>
+
+<details>
+<summary><b>浏览器本地存储配置</b></summary>
 
 - **启用 localStorage 配置** (`enableLocalStorage`)
   - **类型:** `switch`
@@ -133,7 +191,10 @@
   - **默认值:** `currentTime:true,currentOnline:true,regionOverview:true,trafficOverview:true,networkSpeed:true`
   - **说明:** 控制状态卡片的显示与隐藏，格式为 卡片名称:显示状态（true/false），多个卡片使用逗号分隔，支持的卡片名称包括 currentTime（当前时间）, currentOnline（当前在线）, regionOverview（点亮地区）, trafficOverview（流量概览）, networkSpeed（网络速率）
 
-#### 标题栏设置
+</details>
+
+<details>
+<summary><b>标题栏设置</b></summary>
 
 - **标题栏样式** (`selectedHeaderStyle`)
   - **类型:** `select`
@@ -171,7 +232,10 @@
   - **默认值:** `true`
   - **说明:** 启用后默认在标题栏右侧显示管理按钮
 
-#### 底栏设置
+</details>
+
+<details>
+<summary><b>底栏设置</b></summary>
 
 - **底栏样式** (`selectedFooterStyle`)
   - **类型:** `select`
@@ -204,7 +268,10 @@
   - **默认值:** `(空)`
   - **说明:** 自定义底栏内容，支持直接换行，也兼容 ${n} 分割多行，支持Markdown格式的链接 `[文本](链接)` 和图片 `![描述](图片链接)`
 
-#### 内容设置
+</details>
+
+<details>
+<summary><b>内容设置</b></summary>
 
 - **启用 JSON-RPC2 API 适配（实验性，未完全支持特性）** (`enableJsonRPC2Api`)
   - **类型:** `switch`
@@ -319,7 +386,10 @@
   - **默认值:** `hideUnset`
   - **说明:** 控制紧凑视图中在线时间的显示：show（显示）、hideAll（隐藏全部）、hideUnset（隐藏未设置/离线）
 
-#### Instance 设置
+</details>
+
+<details>
+<summary><b>Instance 设置</b></summary>
 
 - **启用 Instance 详情信息** (`enableInstanceDetail`)
   - **类型:** `switch`
@@ -341,14 +411,20 @@
   - **默认值:** `0`
   - **说明:** 设置延迟图表的最大渲染点数来优化图表渲染，0 表示不限制，推荐值为 2000 或更小的值
 
-#### UI 自定义
+</details>
+
+<details>
+<summary><b>UI 自定义</b></summary>
 
 - **自定义 UI 文本（实验性，不推荐手动填写任何东西）** (`customTexts`)
   - **类型:** `string`
   - **默认值:** `(空)`
   - **说明:** 使用 key:value,key2:value2 的格式自定义UI文本，value 使用 URL 编码以避免特殊符号。推荐使用管理员登录后的编辑功能而不是手动填写此项，以避免格式错误导致的问题
 
-#### 增强功能
+</details>
+
+<details>
+<summary><b>增强功能</b></summary>
 
 - **启用欢迎气泡** (`enableWelcomeBubble`)
   - **类型:** `switch`
@@ -410,7 +486,12 @@
   - **默认值:** `true`
   - **说明:** 启用后将对未登录用户启用反调试保护，禁止右键菜单、开发者工具等操作
 
+</details>
+
 ## 📁 项目结构
+
+<details>
+<summary><b>点击展开完整目录树</b></summary>
 
 ```
 komari-theme-purcarte-plus/
@@ -555,6 +636,8 @@ komari-theme-purcarte-plus/
 ├── LICENSE                                  # MIT 开源许可证
 └── README.md                                # 项目说明文档
 ```
+
+</details>
 
 ## 🛠️ 本地开发
 
