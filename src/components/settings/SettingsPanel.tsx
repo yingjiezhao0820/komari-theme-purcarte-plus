@@ -42,25 +42,24 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
           const data = await response.json();
           setSettingsConfig(data.configuration.data);
         } catch (error) {
-          console.error(t("setting.fetchError"), error);
+          console.error("Failed to fetch settings config:", error);
         }
       }
     };
 
     fetchSettingsConfig();
-  }, [publicSettings?.theme, t]);
+  }, [publicSettings?.theme]);
 
   useEffect(() => {
     setEditingConfig(publicSettings?.theme_settings || {});
   }, [publicSettings?.theme_settings]);
 
   useEffect(() => {
-    updatePreviewConfig(editingConfig);
     const hasChanges =
       JSON.stringify(editingConfig) !==
       JSON.stringify(publicSettings?.theme_settings || {});
     setHasUnsavedChanges(hasChanges);
-  }, [editingConfig, publicSettings?.theme_settings, updatePreviewConfig]);
+  }, [editingConfig, publicSettings?.theme_settings]);
 
   useEffect(() => {
     return () => {
@@ -308,13 +307,13 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
           <>
             {settingsConfig
               .slice(
-                settingsConfig.findIndex((item) => item.name === currentPage) +
+                settingsConfig.findIndex((item) => JSON.stringify(item.name) === JSON.stringify(currentPage)) +
                   1,
                 settingsConfig.findIndex(
                   (item, index) =>
                     index >
                       settingsConfig.findIndex(
-                        (item) => item.name === currentPage
+                        (item) => JSON.stringify(item.name) === JSON.stringify(currentPage)
                       ) && item.type === "title"
                 ) === -1
                   ? settingsConfig.length
@@ -322,7 +321,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
                       (item, index) =>
                         index >
                           settingsConfig.findIndex(
-                            (item) => item.name === currentPage
+                            (item) => JSON.stringify(item.name) === JSON.stringify(currentPage)
                           ) && item.type === "title"
                     )
               )

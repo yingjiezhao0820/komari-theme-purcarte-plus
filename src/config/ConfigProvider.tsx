@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState, useMemo } from "react";
+import { type ReactNode, useEffect, useState, useMemo, useCallback } from "react";
 import type { PublicInfo } from "@/types/node.d";
 import { ConfigContext } from "./ConfigContext";
 import { DEFAULT_CONFIG, type ConfigOptions, type SiteStatus } from "./default";
@@ -94,24 +94,22 @@ export function ConfigProvider({ children }: ConfigProviderProps) {
     loadConfig();
   }, []);
 
+  const activeCustomTexts = previewConfig?.customTexts ?? config?.customTexts;
   const texts = useMemo(() => {
-    const activeConfig = previewConfig
-      ? { ...config, ...previewConfig }
-      : config;
-    const baseTexts = activeConfig?.customTexts
-      ? mergeTexts(defaultTexts, activeConfig.customTexts)
+    const baseTexts = activeCustomTexts
+      ? mergeTexts(defaultTexts, activeCustomTexts)
       : defaultTexts;
     return deepMerge(baseTexts, otherTexts);
-  }, [config, previewConfig]);
+  }, [activeCustomTexts]);
 
-  const updatePreviewConfig = (newConfig: Partial<ConfigOptions>) => {
+  const updatePreviewConfig = useCallback((newConfig: Partial<ConfigOptions>) => {
     setPreviewConfig(newConfig);
-  };
+  }, []);
 
-  const reloadConfig = async () => {
+  const reloadConfig = useCallback(async () => {
     setLoading(true);
     await loadConfig();
-  };
+  }, []);
 
   const activeConfig = useMemo(
     () =>
