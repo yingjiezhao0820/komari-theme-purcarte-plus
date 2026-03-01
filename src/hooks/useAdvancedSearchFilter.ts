@@ -15,6 +15,7 @@ import type {
   CpuCoresFilter,
   DateFilter,
   RangeFilter,
+  SwapFilter,
 } from "@/types/advancedSearch";
 import { TEXT_FIELD_KEYS } from "@/types/advancedSearch";
 import type { ExchangeRates } from "@/components/enhanced/useExchangeRates";
@@ -286,6 +287,21 @@ function matchRangeField(
 }
 
 /**
+ * 交换空间匹配
+ * - isDisabledSearch=true：匹配 swap_total === 0（已关闭 SWAP）
+ * - isDisabledSearch=false：使用范围匹配
+ */
+function matchSwapField(
+  nodeValue: number | undefined,
+  filter: SwapFilter
+): boolean {
+  if (filter.isDisabledSearch) {
+    return (nodeValue || 0) === 0;
+  }
+  return matchRangeField(nodeValue, filter);
+}
+
+/**
  * 主过滤函数：应用所有高级搜索条件过滤节点数组
  * @param rates 可选汇率数据，用于价格字段的跨币种匹配
  */
@@ -325,7 +341,7 @@ export function applyAdvancedFilters(
     // 7. 范围字段匹配
     if (!matchRangeField(node.mem_total, state.mem_total)) return false;
     if (!matchRangeField(node.disk_total, state.disk_total)) return false;
-    if (!matchRangeField(node.swap_total, state.swap_total)) return false;
+    if (!matchSwapField(node.swap_total, state.swap_total)) return false;
     if (!matchRangeField(node.traffic_limit, state.traffic_limit)) return false;
 
     return true;

@@ -119,6 +119,8 @@
     "rangeFrom": "最小值",
     "rangeTo": "最大值",
     "rangeUnit": "單位",
+    "swapDisabledToggle": "搜尋已關閉 SWAP",
+    "swapHelp": "開啟開關搜尋已關閉交換空間（swap=0）的節點；關閉開關則使用範圍搜尋",
     "trafficType": {
       "sum": "總和",
       "max": "取最大",

@@ -119,6 +119,8 @@
     "rangeFrom": "Min",
     "rangeTo": "Max",
     "rangeUnit": "Unit",
+    "swapDisabledToggle": "Search Disabled SWAP",
+    "swapHelp": "Toggle ON to search for nodes with disabled swap (swap=0); toggle OFF for range search",
     "trafficType": {
       "sum": "Sum",
       "max": "Max",

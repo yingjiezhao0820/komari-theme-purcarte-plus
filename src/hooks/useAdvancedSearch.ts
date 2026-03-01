@@ -90,16 +90,19 @@ function serializeStateToUrl(state: AdvancedSearchState): string {
   // 价格字段
   if (state.price.isFreeSearch) {
     params.set(`${URL_PREFIX.price}free`, "1");
-  } else if (!state.price.isExact) {
-    params.set(`${URL_PREFIX.price}mode`, "range");
+  } else if (state.price.isExact) {
+    // 精确模式（非默认）
+    if (state.price.exactValue.trim()) {
+      params.set(`${URL_PREFIX.price}val`, state.price.exactValue.trim());
+    }
+  } else {
+    // 范围模式（默认）
     if (state.price.rangeFrom.trim()) {
       params.set(`${URL_PREFIX.price}from`, state.price.rangeFrom.trim());
     }
     if (state.price.rangeTo.trim()) {
       params.set(`${URL_PREFIX.price}to`, state.price.rangeTo.trim());
     }
-  } else if (state.price.exactValue.trim()) {
-    params.set(`${URL_PREFIX.price}val`, state.price.exactValue.trim());
   }
   // 价格货币（非 CNY 时才写入）
   if (state.price.currency && state.price.currency !== "CNY") {
@@ -107,37 +110,42 @@ function serializeStateToUrl(state: AdvancedSearchState): string {
   }
 
   // CPU 核心数
-  if (!state.cpu_cores.isExact) {
-    params.set(`${URL_PREFIX.number}cpu_mode`, "range");
+  if (state.cpu_cores.isExact) {
+    // 精确模式（非默认）
+    if (state.cpu_cores.exactValue.trim()) {
+      params.set(`${URL_PREFIX.number}cpu`, state.cpu_cores.exactValue.trim());
+    }
+  } else {
+    // 范围模式（默认）
     if (state.cpu_cores.rangeFrom.trim()) {
       params.set(`${URL_PREFIX.number}cpu_from`, state.cpu_cores.rangeFrom.trim());
     }
     if (state.cpu_cores.rangeTo.trim()) {
       params.set(`${URL_PREFIX.number}cpu_to`, state.cpu_cores.rangeTo.trim());
     }
-  } else if (state.cpu_cores.exactValue.trim()) {
-    params.set(`${URL_PREFIX.number}cpu`, state.cpu_cores.exactValue.trim());
   }
 
   // 日期字段
-  if (state.expired_at.mode !== "exact") {
-    params.set(`${URL_PREFIX.date}mode`, state.expired_at.mode);
-  }
-  if (state.expired_at.exactDate.trim()) {
-    params.set(`${URL_PREFIX.date}exact`, state.expired_at.exactDate.trim());
-  }
-  if (state.expired_at.rangeFrom.trim()) {
-    params.set(`${URL_PREFIX.date}from`, state.expired_at.rangeFrom.trim());
-  }
-  if (state.expired_at.rangeTo.trim()) {
-    params.set(`${URL_PREFIX.date}to`, state.expired_at.rangeTo.trim());
+  if (state.expired_at.mode === "exact") {
+    // 精确模式（非默认）
+    params.set(`${URL_PREFIX.date}mode`, "exact");
+    if (state.expired_at.exactDate.trim()) {
+      params.set(`${URL_PREFIX.date}exact`, state.expired_at.exactDate.trim());
+    }
+  } else {
+    // 范围模式（默认）
+    if (state.expired_at.rangeFrom.trim()) {
+      params.set(`${URL_PREFIX.date}from`, state.expired_at.rangeFrom.trim());
+    }
+    if (state.expired_at.rangeTo.trim()) {
+      params.set(`${URL_PREFIX.date}to`, state.expired_at.rangeTo.trim());
+    }
   }
 
-  // 范围字段
+  // 范围字段（不含 swap，swap 单独处理）
   const rangeFields = [
     "mem_total",
     "disk_total",
-    "swap_total",
     "traffic_limit",
   ] as const;
   for (const key of rangeFields) {
@@ -153,6 +161,24 @@ function serializeStateToUrl(state: AdvancedSearchState): string {
       (filter.from.trim() || filter.to.trim())
     ) {
       params.set(`${URL_PREFIX.range}${key}_u`, filter.unit);
+    }
+  }
+
+  // 交换空间（单独处理：支持关闭搜索开关）
+  if (state.swap_total.isDisabledSearch) {
+    params.set(`${URL_PREFIX.range}swap_total_disabled`, "1");
+  } else {
+    if (state.swap_total.from.trim()) {
+      params.set(`${URL_PREFIX.range}swap_total_from`, state.swap_total.from.trim());
+    }
+    if (state.swap_total.to.trim()) {
+      params.set(`${URL_PREFIX.range}swap_total_to`, state.swap_total.to.trim());
+    }
+    if (
+      state.swap_total.unit !== "MB" &&
+      (state.swap_total.from.trim() || state.swap_total.to.trim())
+    ) {
+      params.set(`${URL_PREFIX.range}swap_total_u`, state.swap_total.unit);
     }
   }
 
@@ -199,7 +225,11 @@ function parseUrlToState(search: string): AdvancedSearchState {
   const pTo = params.get(`${URL_PREFIX.price}to`);
   if (pFree === "1") {
     state.price = { ...state.price, isFreeSearch: true };
-  } else if (pMode === "range") {
+  } else if (pVal !== null && pVal.trim() && !isNaN(parseFloat(pVal))) {
+    // p_val 存在 → 精确模式（兼容旧URL）
+    state.price = { ...state.price, isExact: true, exactValue: pVal.trim() };
+  } else if (pMode === "range" || pFrom !== null || pTo !== null) {
+    // 显式范围模式或有范围值（兼容旧URL的 p_mode=range）
     state.price = { ...state.price, isExact: false };
     if (pFrom !== null && pFrom.trim() && !isNaN(parseFloat(pFrom))) {
       state.price.rangeFrom = pFrom.trim();
@@ -207,8 +237,6 @@ function parseUrlToState(search: string): AdvancedSearchState {
     if (pTo !== null && pTo.trim() && !isNaN(parseFloat(pTo))) {
       state.price.rangeTo = pTo.trim();
     }
-  } else if (pVal !== null && pVal.trim() && !isNaN(parseFloat(pVal))) {
-    state.price = { ...state.price, exactValue: pVal.trim() };
   }
   // 价格货币
   const pCur = params.get(`${URL_PREFIX.price}cur`);
@@ -221,7 +249,11 @@ function parseUrlToState(search: string): AdvancedSearchState {
   const nCpu = params.get(`${URL_PREFIX.number}cpu`);
   const nCpuFrom = params.get(`${URL_PREFIX.number}cpu_from`);
   const nCpuTo = params.get(`${URL_PREFIX.number}cpu_to`);
-  if (nCpuMode === "range") {
+  if (nCpu !== null && nCpu.trim() && !isNaN(parseInt(nCpu, 10))) {
+    // n_cpu 存在 → 精确模式（兼容旧URL）
+    state.cpu_cores = { ...state.cpu_cores, isExact: true, exactValue: nCpu.trim() };
+  } else if (nCpuMode === "range" || nCpuFrom !== null || nCpuTo !== null) {
+    // 显式范围模式或有范围值（兼容旧URL的 n_cpu_mode=range）
     state.cpu_cores = { ...state.cpu_cores, isExact: false };
     if (nCpuFrom !== null && nCpuFrom.trim() && !isNaN(parseInt(nCpuFrom, 10))) {
       state.cpu_cores.rangeFrom = nCpuFrom.trim();
@@ -229,8 +261,6 @@ function parseUrlToState(search: string): AdvancedSearchState {
     if (nCpuTo !== null && nCpuTo.trim() && !isNaN(parseInt(nCpuTo, 10))) {
       state.cpu_cores.rangeTo = nCpuTo.trim();
     }
-  } else if (nCpu !== null && nCpu.trim() && !isNaN(parseInt(nCpu, 10))) {
-    state.cpu_cores = { ...state.cpu_cores, exactValue: nCpu.trim() };
   }
 
   // 日期字段
@@ -241,6 +271,8 @@ function parseUrlToState(search: string): AdvancedSearchState {
   const dExact = params.get(`${URL_PREFIX.date}exact`);
   if (dExact !== null && DATE_REGEX.test(dExact)) {
     state.expired_at.exactDate = dExact;
+    // d_exact 存在则隐式设为精确模式（兼容旧URL）
+    if (!dMode) state.expired_at.mode = "exact";
   }
   const dFrom = params.get(`${URL_PREFIX.date}from`);
   if (dFrom !== null && DATE_REGEX.test(dFrom)) {
@@ -251,11 +283,10 @@ function parseUrlToState(search: string): AdvancedSearchState {
     state.expired_at.rangeTo = dTo;
   }
 
-  // 范围字段
+  // 范围字段（不含 swap，swap 单独处理）
   const rangeFields = [
     "mem_total",
     "disk_total",
-    "swap_total",
     "traffic_limit",
   ] as const;
   for (const key of rangeFields) {
@@ -271,6 +302,25 @@ function parseUrlToState(search: string): AdvancedSearchState {
     }
     if (unit !== null && VALID_UNITS[key]?.has(unit)) {
       (state[key] as { unit: string }).unit = unit;
+    }
+  }
+
+  // 交换空间（单独处理：支持关闭搜索开关）
+  const swapDisabled = params.get(`${URL_PREFIX.range}swap_total_disabled`);
+  if (swapDisabled === "1") {
+    state.swap_total.isDisabledSearch = true;
+  } else {
+    const swapFrom = params.get(`${URL_PREFIX.range}swap_total_from`);
+    const swapTo = params.get(`${URL_PREFIX.range}swap_total_to`);
+    const swapUnit = params.get(`${URL_PREFIX.range}swap_total_u`);
+    if (swapFrom !== null && swapFrom.trim() && !isNaN(parseFloat(swapFrom))) {
+      state.swap_total.from = swapFrom.trim();
+    }
+    if (swapTo !== null && swapTo.trim() && !isNaN(parseFloat(swapTo))) {
+      state.swap_total.to = swapTo.trim();
+    }
+    if (swapUnit !== null && VALID_UNITS.swap_total?.has(swapUnit)) {
+      state.swap_total.unit = swapUnit as "MB" | "GB";
     }
   }
 
@@ -407,11 +457,10 @@ function validateState(state: AdvancedSearchState): ValidationErrors {
     }
   }
 
-  // 5. 范围字段校验
+  // 5. 范围字段校验（不含 swap，swap 单独处理）
   const rangeFieldsConfig = [
     { key: "mem_total", allowZero: false },
     { key: "disk_total", allowZero: false },
-    { key: "swap_total", allowZero: true },
     { key: "traffic_limit", allowZero: true },
   ] as const;
 
@@ -465,6 +514,49 @@ function validateState(state: AdvancedSearchState): ValidationErrors {
       const toNum = parseFloat(to);
       if (!isNaN(fromNum) && !isNaN(toNum) && toNum <= fromNum) {
         errors[`${key}`] = "rangeEndLessOrEqual";
+      }
+    }
+  }
+
+  // 6. 交换空间校验（仅在非关闭搜索模式下校验范围值）
+  if (!state.swap_total.isDisabledSearch) {
+    const swapFrom = state.swap_total.from.trim();
+    const swapTo = state.swap_total.to.trim();
+    if (swapFrom) {
+      if (swapFrom.length > MAX_INPUT_LENGTH) {
+        errors.swap_total_from = "inputTooLong";
+      } else {
+        const num = parseFloat(swapFrom);
+        if (isNaN(num)) {
+          errors.swap_total_from = "invalidNumber";
+        } else {
+          const decimalPart = swapFrom.split(".")[1];
+          if (decimalPart && decimalPart.length > 2) {
+            errors.swap_total_from = "tooManyDecimals";
+          }
+        }
+      }
+    }
+    if (swapTo) {
+      if (swapTo.length > MAX_INPUT_LENGTH) {
+        errors.swap_total_to = "inputTooLong";
+      } else {
+        const num = parseFloat(swapTo);
+        if (isNaN(num)) {
+          errors.swap_total_to = "invalidNumber";
+        } else {
+          const decimalPart = swapTo.split(".")[1];
+          if (decimalPart && decimalPart.length > 2) {
+            errors.swap_total_to = "tooManyDecimals";
+          }
+        }
+      }
+    }
+    if (swapFrom && swapTo && !errors.swap_total_from && !errors.swap_total_to) {
+      const fromNum = parseFloat(swapFrom);
+      const toNum = parseFloat(swapTo);
+      if (!isNaN(fromNum) && !isNaN(toNum) && toNum <= fromNum) {
+        errors.swap_total = "rangeEndLessOrEqual";
       }
     }
   }

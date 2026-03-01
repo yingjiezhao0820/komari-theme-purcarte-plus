@@ -37,7 +37,7 @@ export type TrafficLimitTypeFilter =
 /** 价格字段过滤器 */
 export interface PriceFilter {
   isFreeSearch: boolean; // 开关：ON = 搜索免费 (price=-1)
-  isExact: boolean; // 开关：ON = 精确匹配（默认），OFF = 范围搜索
+  isExact: boolean; // 开关：ON = 精确匹配，OFF = 范围搜索（默认）
   exactValue: string; // 精确价格匹配值
   rangeFrom: string; // 范围模式：最低价格
   rangeTo: string; // 范围模式：最高价格
@@ -76,10 +76,15 @@ export interface RangeFilter<U extends string = string> {
 
 /** CPU 核心数过滤器 */
 export interface CpuCoresFilter {
-  isExact: boolean; // 开关：ON = 精确匹配（默认），OFF = 范围搜索
+  isExact: boolean; // 开关：ON = 精确匹配，OFF = 范围搜索（默认）
   exactValue: string; // 精确核心数
   rangeFrom: string; // 范围模式：最少核心
   rangeTo: string; // 范围模式：最多核心
+}
+
+/** 交换空间过滤器（扩展范围过滤器，新增关闭搜索开关） */
+export interface SwapFilter extends RangeFilter<SwapUnit> {
+  isDisabledSearch: boolean; // ON = 搜索已关闭 SWAP 的节点 (swap_total === 0)
 }
 
 /** 所有文本类型的字段名称 */
@@ -126,7 +131,7 @@ export interface AdvancedSearchState {
   // 范围字段
   mem_total: RangeFilter<MemoryUnit>;
   disk_total: RangeFilter<DiskUnit>;
-  swap_total: RangeFilter<SwapUnit>;
+  swap_total: SwapFilter;
   traffic_limit: RangeFilter<TrafficUnit>;
 }
 
@@ -145,12 +150,12 @@ export function createDefaultAdvancedSearchState(): AdvancedSearchState {
     auto_renewal: "any",
     hidden: "any",
     traffic_limit_type: "any",
-    price: { isFreeSearch: false, isExact: true, exactValue: "", rangeFrom: "", rangeTo: "", currency: "CNY" },
-    cpu_cores: { isExact: true, exactValue: "", rangeFrom: "", rangeTo: "" },
-    expired_at: { mode: "exact", exactDate: "", rangeFrom: "", rangeTo: "" },
+    price: { isFreeSearch: false, isExact: false, exactValue: "", rangeFrom: "", rangeTo: "", currency: "CNY" },
+    cpu_cores: { isExact: false, exactValue: "", rangeFrom: "", rangeTo: "" },
+    expired_at: { mode: "range", exactDate: "", rangeFrom: "", rangeTo: "" },
     mem_total: { from: "", to: "", unit: "MB" },
     disk_total: { from: "", to: "", unit: "MB" },
-    swap_total: { from: "", to: "", unit: "MB" },
+    swap_total: { from: "", to: "", unit: "MB", isDisabledSearch: false },
     traffic_limit: { from: "", to: "", unit: "MB" },
   };
 }
@@ -210,11 +215,13 @@ export function isStateDefault(state: AdvancedSearchState): boolean {
   if (state.expired_at.exactDate.trim() !== "") return false;
   if (state.expired_at.rangeFrom.trim() !== "") return false;
   if (state.expired_at.rangeTo.trim() !== "") return false;
+  // 检查交换空间
+  if (state.swap_total.isDisabledSearch) return false;
+  if (state.swap_total.from.trim() !== "" || state.swap_total.to.trim() !== "") return false;
   // 检查范围字段
   const rangeFields = [
     "mem_total",
     "disk_total",
-    "swap_total",
     "traffic_limit",
   ] as const;
   for (const key of rangeFields) {

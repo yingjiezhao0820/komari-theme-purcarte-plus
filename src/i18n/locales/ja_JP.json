@@ -119,6 +119,8 @@
     "rangeFrom": "最小値",
     "rangeTo": "最大値",
     "rangeUnit": "単位",
+    "swapDisabledToggle": "無効SWAPを検索",
+    "swapHelp": "ONにするとSWAPが無効（swap=0）のノードを検索；OFFにすると範囲検索",
     "trafficType": {
       "sum": "合計",
       "max": "最大値",

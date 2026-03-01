@@ -3,6 +3,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 import { Theme } from "@radix-ui/themes";
 import { cn } from "@/utils";
+import "./select.css";
 
 const Select = SelectPrimitive.Root;
 
@@ -38,7 +39,7 @@ const SelectContent = React.forwardRef<
       <SelectPrimitive.Content
         ref={ref}
         className={cn(
-          "relative z-50 min-w-[8rem] purcarte-blur theme-card-style text-popover-foreground animate-in fade-in-80",
+          "relative z-50 min-w-[8rem] purcarte-blur theme-card-style text-popover-foreground select-dropdown-animate",
           position === "popper" && "translate-y-1",
           className
         )}

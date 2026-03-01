@@ -119,6 +119,8 @@
     "rangeFrom": "Min",
     "rangeTo": "Maks",
     "rangeUnit": "Satuan",
+    "swapDisabledToggle": "Cari SWAP Nonaktif",
+    "swapHelp": "Aktifkan untuk mencari node dengan swap nonaktif (swap=0); nonaktifkan untuk pencarian rentang",
     "trafficType": {
       "sum": "Total",
       "max": "Maksimum",
