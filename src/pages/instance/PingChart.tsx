@@ -38,7 +38,7 @@ interface PingChartProps {
 }
 
 const PingChart = memo(({ node, hours }: PingChartProps) => {
-  const { enableConnectBreaks, pingChartMaxPoints } = useAppConfig();
+  const { enableCutPeak, enableConnectBreaks, pingChartMaxPoints } = useAppConfig();
   const { loading, error, pingHistory } = usePingChart(node, hours);
   const [visiblePingTasks, setVisiblePingTasks] = useState<number[]>([]);
   const [timeRange, setTimeRange] = useState<[number, number] | null>(null);
@@ -46,7 +46,7 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
     startIndex?: number;
     endIndex?: number;
   }>({});
-  const [cutPeak, setCutPeak] = useState(false);
+  const [cutPeak, setCutPeak] = useState(enableCutPeak);
   const [connectBreaks, setConnectBreaks] = useState(enableConnectBreaks);
   const [isResetting, setIsResetting] = useState(false);
   const isMobile = useIsMobile();

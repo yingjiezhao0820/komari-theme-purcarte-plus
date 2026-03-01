@@ -45,6 +45,7 @@ export interface ConfigOptions {
   pingChartTimeInPreview: number; // 预览详情的延迟图表时间范围，单位为小时
   enableInstanceDetail: boolean; // 是否启用实例详情
   enablePingChart: boolean; // 是否启用延迟图表
+  enableCutPeak: boolean; // 是否启用平滑
   enableConnectBreaks: boolean; // 是否启用连接断点
   pingChartMaxPoints: number; // 延迟图表最大点数
   isShowHWBarInCard: boolean; // 是否在卡片中显示硬件信息栏
@@ -124,6 +125,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   pingChartTimeInPreview: 1,
   enableInstanceDetail: true,
   enablePingChart: true,
+  enableCutPeak: true,
   enableConnectBreaks: false,
   pingChartMaxPoints: 0,
   isShowHWBarInCard: true,

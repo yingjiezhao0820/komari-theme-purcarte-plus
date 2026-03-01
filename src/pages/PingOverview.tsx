@@ -137,6 +137,7 @@ const generateCombinedColor = (
 // 组件
 const PingOverview = memo(() => {
   const {
+    enableCutPeak,
     enableConnectBreaks,
     pingChartMaxPoints,
     publicSettings,
@@ -440,7 +441,7 @@ const PingOverview = memo(() => {
     startIndex?: number;
     endIndex?: number;
   }>({});
-  const [cutPeak, setCutPeak] = useState(false);
+  const [cutPeak, setCutPeak] = useState(enableCutPeak);
   const [connectBreaks, setConnectBreaks] = useState(enableConnectBreaks);
   const [isResetting, setIsResetting] = useState(false);
 

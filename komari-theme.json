@@ -1166,6 +1166,25 @@
                 }
             },
             {
+                "key": "enableCutPeak",
+                "name": {
+                    "zh-CN": "启用平滑",
+                    "zh-TW": "啟用平滑",
+                    "en": "Enable Smoothing",
+                    "ja": "スムージングを有効化",
+                    "id": "Aktifkan Pemulusan"
+                },
+                "type": "switch",
+                "default": true,
+                "help": {
+                    "zh-CN": "启用后延迟图表将使用 EWMA 平滑算法消除毛刺和突变值",
+                    "zh-TW": "啟用後延遲圖表將使用 EWMA 平滑演算法消除毛刺和突變值",
+                    "en": "Smooth the latency chart using EWMA to remove spikes and outliers.",
+                    "ja": "EWMAスムージングで遅延チャートのスパイクと外れ値を除去します。",
+                    "id": "Haluskan grafik latensi menggunakan EWMA untuk menghapus lonjakan dan pencilan."
+                }
+            },
+            {
                 "key": "enableConnectBreaks",
                 "name": {
                     "zh-CN": "启用连接断点",
