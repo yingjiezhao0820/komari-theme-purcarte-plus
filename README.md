@@ -720,3 +720,8 @@ komari-theme-purcarte-plus/
 ## 📄 许可证
 
 本项目采用 [MIT License](LICENSE) 授权。
+
+
+## ⭐ Star History
+
+![](https://api.star-history.com/svg?repos=YoungYannick/komari-theme-purcarte-plus&type=date&legend=top-left)
