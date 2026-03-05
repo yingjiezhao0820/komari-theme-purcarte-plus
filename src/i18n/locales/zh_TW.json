@@ -430,7 +430,7 @@
       "freeTag": "白嫖中",
       "freeChicken": "免費雞",
       "longTermChicken": "長期雞，按原價",
-      "longTermTooltip": "到期時間 > 100年，按原價計算",
+      "longTermTooltip": "到期時間>100年/長期機器，按原價計算",
       "defaultRates": "使用預設匯率",
       "ratesUpdated": "匯率更新: {{time}}",
       "ratesUpdating": "匯率更新中...",

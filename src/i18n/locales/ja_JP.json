@@ -430,7 +430,7 @@
       "freeTag": "無料利用中",
       "freeChicken": "無料サーバー",
       "longTermChicken": "長期、定価で計算",
-      "longTermTooltip": "有効期限 > 100年、定価で計算",
+      "longTermTooltip": "有効期限>100年/長期マシン、定価で計算",
       "defaultRates": "デフォルト為替レート使用中",
       "ratesUpdated": "為替レート更新: {{time}}",
       "ratesUpdating": "為替レート更新中...",

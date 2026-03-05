@@ -430,7 +430,7 @@
       "freeTag": "Gratis",
       "freeChicken": "Server Gratis",
       "longTermChicken": "Jangka panjang, harga asli",
-      "longTermTooltip": "Masa berlaku > 100 tahun, dihitung dengan harga asli",
+      "longTermTooltip": "Masa berlaku >100 tahun / pembayaran sekali, dihitung dengan harga asli",
       "defaultRates": "Menggunakan kurs default",
       "ratesUpdated": "Kurs diperbarui: {{time}}",
       "ratesUpdating": "Memperbarui kurs...",

@@ -49,6 +49,12 @@ export function calculateRemainingValue(
   if (!node.expired_at) return { remainingValue: 0, isLongTerm: false };
 
   const { price: priceCNY } = parsePriceToCNY(node, rates);
+
+  // 一次性付费（billing_cycle = -1）视为长期机器，按原价计算
+  if (node.billing_cycle === -1) {
+    return { remainingValue: priceCNY, isLongTerm: true };
+  }
+
   const exp = new Date(node.expired_at);
   const nowUTC = new Date(date.toISOString());
   const diffMs = exp.getTime() - nowUTC.getTime();
@@ -73,6 +79,9 @@ export function calculateMonthlyExpense(
   priceCNY: number,
   billingCycleDays: number
 ): number {
+  // 一次性付费不计入月均支出
+  if (billingCycleDays === -1) return 0;
+
   let cycleMonths = 1;
   if (billingCycleDays === 365) cycleMonths = 12;
   else if (billingCycleDays === 30) cycleMonths = 1;
@@ -120,6 +129,12 @@ export function calculateRemainValueForDate(
   if (!node.expired_at) return 0;
 
   const { price: priceCNY } = parsePriceToCNY(node, rates);
+
+  // 一次性付费（billing_cycle = -1）视为长期机器，按原价计算
+  if (node.billing_cycle === -1) {
+    return priceCNY;
+  }
+
   const exp = new Date(node.expired_at);
   const nowUTC = new Date(calculationTime.toISOString());
   const diffMs = exp.getTime() - nowUTC.getTime();

@@ -45,6 +45,7 @@ export const NodeCompact = ({ node, onShowDetails }: NodeCompactProps) => {
   const {
     stats,
     isOnline,
+    isConfirmedOffline,
     tagList,
     cpuUsage,
     memUsage,
@@ -58,7 +59,7 @@ export const NodeCompact = ({ node, onShowDetails }: NodeCompactProps) => {
   return (
     <Card
       className={`flex flex-col mx-auto w-full max-w-sm ${
-        stats && !isOnline
+        isConfirmedOffline
           ? "striped-bg-red-translucent-diagonal ring-2 ring-red-500/50"
           : ""
       }`}>

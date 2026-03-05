@@ -41,6 +41,8 @@ export const useNodeListCommons = (searchTerm: string, advancedSearchState?: Adv
     }
   };
 
+  const liveDataReady = liveData !== null;
+
   const combinedNodes = useMemo(() => {
     if (!staticNodes) return [];
     return staticNodes.map((node: NodeData) => {
@@ -48,9 +50,10 @@ export const useNodeListCommons = (searchTerm: string, advancedSearchState?: Adv
       return {
         ...node,
         stats: stats,
+        _liveDataReady: liveDataReady,
       };
     });
-  }, [staticNodes, liveData]);
+  }, [staticNodes, liveData, liveDataReady]);
 
   const groups = useMemo(
     () => [ALL_GROUP, ...getGroups()],
@@ -156,10 +159,12 @@ export const useNodeListCommons = (searchTerm: string, advancedSearchState?: Adv
   };
 };
 
-export const useNodeCommons = (node: NodeData & { stats?: any }) => {
-  const { stats } = node;
+export const useNodeCommons = (node: NodeData & { stats?: any; _liveDataReady?: boolean }) => {
+  const { stats, _liveDataReady } = node;
   const { t } = useLocale();
   const isOnline = stats ? stats.online : false;
+  // 离线确认：liveData 已到达且节点不在线（包括 stats 为 undefined 的从未上线节点）
+  const isConfirmedOffline = _liveDataReady ? !isOnline : false;
   const price = formatPrice(node.price, node.currency, node.billing_cycle);
 
   const cpuUsage = stats && isOnline ? stats.cpu : 0;
@@ -265,6 +270,7 @@ export const useNodeCommons = (node: NodeData & { stats?: any }) => {
   return {
     stats,
     isOnline,
+    isConfirmedOffline,
     tagList,
     cpuUsage,
     memUsage,

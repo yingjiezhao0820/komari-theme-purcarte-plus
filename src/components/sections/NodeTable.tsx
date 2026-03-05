@@ -91,6 +91,7 @@ const NodeTableRow = ({
   const {
     stats,
     isOnline,
+    isConfirmedOffline,
     tagList,
     cpuUsage,
     memUsage,
@@ -108,7 +109,7 @@ const NodeTableRow = ({
   return (
     <Card
       className={
-        stats && !isOnline
+        isConfirmedOffline
           ? "striped-bg-red-translucent-diagonal ring-2 ring-red-500/50"
           : ""
       }>

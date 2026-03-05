@@ -430,7 +430,7 @@
       "freeTag": "Freeloading",
       "freeChicken": "Free Server",
       "longTermChicken": "Long-term, at original price",
-      "longTermTooltip": "Expiry > 100 years, calculated at original price",
+      "longTermTooltip": "Expiry >100 years / one-time billing, calculated at original price",
       "defaultRates": "Using default rates",
       "ratesUpdated": "Rates updated: {{time}}",
       "ratesUpdating": "Updating rates...",

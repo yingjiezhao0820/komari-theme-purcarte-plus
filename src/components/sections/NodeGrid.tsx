@@ -60,6 +60,7 @@ export const NodeGrid = ({
   const {
     stats,
     isOnline,
+    isConfirmedOffline,
     tagList,
     cpuUsage,
     memUsage,
@@ -75,7 +76,7 @@ export const NodeGrid = ({
   return (
     <Card
       className={`flex flex-col mx-auto w-full max-w-sm ${
-        stats && !isOnline
+        isConfirmedOffline
           ? "striped-bg-red-translucent-diagonal ring-2 ring-red-500/50"
           : ""
       }`}>
