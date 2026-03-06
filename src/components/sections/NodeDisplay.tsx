@@ -39,10 +39,10 @@ export const NodeDetailModal = ({ node, onClose }: NodeDetailModalProps) => {
         onClick={(e) => e.stopPropagation()}
         onAnimationEnd={handleAnimationEnd}>
         <div className="flex justify-between items-center mb-2 h-full">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl font-bold truncate md:whitespace-normal md:break-words min-w-0 pr-4">
             {t("node.details", { name: node.name })}
           </h2>
-          <button onClick={handleClose}>
+          <button onClick={handleClose} className="flex-shrink-0">
             <X className="h-6 w-6" />
           </button>
         </div>

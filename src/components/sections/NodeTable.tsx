@@ -116,19 +116,19 @@ const NodeTableRow = ({
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={`grid ${gridCols} text-center gap-4 p-2 text-nowrap items-center text-primary transition-colors duration-200 cursor-pointer`}>
-        <div className="col-span-2 flex items-center text-left">
+        <div className="col-span-2 flex items-center text-left min-w-0">
           <ChevronRight
             className={`transition-transform size-5 duration-300 flex-shrink-0 ${
               isOpen ? "rotate-90" : ""
             }`}
           />
           <Flag flag={node.region} />
-          <div className="ml-2 w-[85%] space-y-1">
+          <div className="ml-2 w-[85%] space-y-1 min-w-0">
             <Link
               to={`/instance/${node.uuid}`}
               onClick={(e) => e.stopPropagation()}
               className="hover:underline hover:text-(--accent-11)">
-              <div className="text-base font-bold whitespace-normal break-all">{node.name}</div>
+              <div className="text-base font-bold truncate md:whitespace-normal md:break-words">{node.name}</div>
             </Link>
             <Tag className="text-xs" tags={tagList} />
             {(() => {

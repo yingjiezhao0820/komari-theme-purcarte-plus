@@ -83,19 +83,19 @@ export const NodeGrid = ({
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <Link
           to={`/instance/${node.uuid}`}
-          className="hover:underline hover:text-(--accent-11)">
+          className="hover:underline hover:text-(--accent-11) min-w-0">
           <div className="flex items-center gap-2">
             <Flag flag={node.region}></Flag>
             <img
               src={getOSImage(node.os)}
               alt={node.os}
-              className="w-6 h-6 object-contain"
+              className="w-6 h-6 object-contain flex-shrink-0"
               loading="lazy"
             />
-            <CardTitle className="text-base font-bold whitespace-normal break-all">{node.name}</CardTitle>
+            <CardTitle className="text-base font-bold truncate md:whitespace-normal md:break-words">{node.name}</CardTitle>
           </div>
         </Link>
-        <button onClick={onShowDetails}>
+        <button onClick={onShowDetails} className="flex-shrink-0">
           <Info className="h-5 w-5" />
         </button>
       </CardHeader>

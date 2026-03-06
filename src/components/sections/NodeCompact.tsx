@@ -67,18 +67,18 @@ export const NodeCompact = ({ node, onShowDetails }: NodeCompactProps) => {
         <Link
           to={`/instance/${node.uuid}`}
           className="hover:underline hover:text-(--accent-11)">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <Flag flag={node.region} size={"4"}></Flag>
             <img
               src={getOSImage(node.os)}
               alt={node.os}
-              className="size-4 object-contain"
+              className="size-4 object-contain flex-shrink-0"
               loading="lazy"
             />
-            <CardTitle className="text-sm font-bold whitespace-normal break-all">{node.name}</CardTitle>
+            <CardTitle className="text-sm font-bold truncate md:whitespace-normal md:break-words">{node.name}</CardTitle>
           </div>
         </Link>
-        <button onClick={onShowDetails}>
+        <button onClick={onShowDetails} className="flex-shrink-0">
           <Info className="size-4" />
         </button>
       </CardHeader>

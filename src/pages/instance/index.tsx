@@ -192,7 +192,7 @@ const InstancePage = () => {
           </Button>
           <div className="flex items-center gap-2 min-w-0">
             <Flag flag={node.region}></Flag>
-            <span className="text-xl md:text-2xl font-bold">{node.name}</span>
+            <span className="text-xl md:text-2xl font-bold truncate md:whitespace-normal md:break-words">{node.name}</span>
           </div>
           <span className="text-sm text-secondary-foreground flex-shrink-0">
             {isOnline ? t("node.online") : t("node.offline")}
