@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
 import { resources } from "@/i18n/config";
+import { useAppConfig } from "@/config";
 
 // 仅显示配置了 name 字段的语言
 const availableLanguages = Object.entries(resources)
@@ -45,6 +46,9 @@ const LanguageMenuItems = ({
 
 export const LanguageSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
   const { i18n } = useTranslation();
+  const { enableLanguageSwitcher } = useAppConfig();
+
+  if (!enableLanguageSwitcher) return null;
 
   if (isMobile) {
     return (

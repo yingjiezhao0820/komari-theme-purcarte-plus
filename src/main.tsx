@@ -81,7 +81,7 @@ const AppRoutes = ({
     handleSort,
   } = useNodeListCommons(searchTerm, advancedSearchState);
   const { statusCardsVisibility, setStatusCardsVisibility } = useTheme();
-  const { enableGroupedBar, selectedHeaderStyle, selectedFooterStyle } =
+  const { enableGroupedBar, selectedHeaderStyle, selectedFooterStyle, enablePingOverview } =
     useAppConfig();
 
   const statsBarProps: StatsBarProps = {
@@ -208,6 +208,7 @@ const AppRoutes = ({
                 </ScrollArea>
               }
             />
+            {enablePingOverview && (
             <Route
               path="/ping-overview"
               element={
@@ -234,6 +235,7 @@ const AppRoutes = ({
                 </ScrollArea>
               }
             />
+            )}
             <Route
               path="*"
               element={

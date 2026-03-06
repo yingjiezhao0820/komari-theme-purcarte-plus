@@ -26,6 +26,10 @@ export interface ConfigOptions {
   enableSearchButton: boolean; // 是否启用搜索按钮
   enableAdvancedSearch: boolean; // 是否启用高级搜索
   enableAdminButton: boolean; // 是否启用管理员按钮
+  enableViewModeSwitcher: boolean; // 是否在标题栏显示视图模式切换
+  enablePingOverview: boolean; // 是否在标题栏显示全局延迟监测总览入口
+  enableThemeColorSwitcher: boolean; // 是否在标题栏显示主题颜色模式切换
+  enableLanguageSwitcher: boolean; // 是否在标题栏显示语言切换
   selectedFooterStyle: FooterStyle; // 页脚样式
   hideFooterOriginal: boolean; // 是否隐藏底栏原始内容（Powered by...）
   enableServerUptime: boolean; // 是否启用服务器运行时间显示
@@ -108,6 +112,10 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableSearchButton: true,
   enableAdvancedSearch: true,
   enableAdminButton: true,
+  enableViewModeSwitcher: true,
+  enablePingOverview: true,
+  enableThemeColorSwitcher: true,
+  enableLanguageSwitcher: true,
   selectedFooterStyle: "followContent",
   hideFooterOriginal: false,
   enableServerUptime: false,

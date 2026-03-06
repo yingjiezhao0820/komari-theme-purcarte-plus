@@ -576,6 +576,82 @@
                 }
             },
             {
+                "key": "enableViewModeSwitcher",
+                "name": {
+                    "zh-CN": "启用视图模式切换",
+                    "zh-TW": "啟用視圖模式切換",
+                    "en": "Enable View Mode Switcher",
+                    "ja": "ビューモード切替を有効化",
+                    "id": "Aktifkan Pengalih Mode Tampilan"
+                },
+                "type": "switch",
+                "default": true,
+                "help": {
+                    "zh-CN": "启用后在标题栏显示视图模式切换按钮（网格/表格/紧凑）",
+                    "zh-TW": "啟用後在標題欄顯示視圖模式切換按鈕（網格/表格/緊湊）",
+                    "en": "Enable to show view mode switcher button in the header (grid/table/compact).",
+                    "ja": "有効にすると、ヘッダーにビューモード切替ボタン（グリッド/テーブル/コンパクト）が表示されます。",
+                    "id": "Aktifkan untuk menampilkan tombol pengalih mode tampilan di header (grid/tabel/kompak)."
+                }
+            },
+            {
+                "key": "enablePingOverview",
+                "name": {
+                    "zh-CN": "启用全局延迟监测总览",
+                    "zh-TW": "啟用全局延遲監測總覽",
+                    "en": "Enable Ping Overview",
+                    "ja": "Ping概要を有効化",
+                    "id": "Aktifkan Ikhtisar Ping"
+                },
+                "type": "switch",
+                "default": true,
+                "help": {
+                    "zh-CN": "启用后在标题栏显示全局延迟监测总览入口按钮，关闭后 /ping-overview 页面也将无法访问",
+                    "zh-TW": "啟用後在標題欄顯示全局延遲監測總覽入口按鈕，關閉後 /ping-overview 頁面也將無法訪問",
+                    "en": "Enable to show ping overview entry button in the header. When disabled, /ping-overview page will also be inaccessible.",
+                    "ja": "有効にすると、ヘッダーにPing概要入口ボタンが表示されます。無効にすると /ping-overview ページもアクセスできなくなります。",
+                    "id": "Aktifkan untuk menampilkan tombol ikhtisar ping di header. Jika dinonaktifkan, halaman /ping-overview juga tidak dapat diakses."
+                }
+            },
+            {
+                "key": "enableThemeColorSwitcher",
+                "name": {
+                    "zh-CN": "启用主题颜色模式切换",
+                    "zh-TW": "啟用主題顏色模式切換",
+                    "en": "Enable Theme Color Switcher",
+                    "ja": "テーマカラー切替を有効化",
+                    "id": "Aktifkan Pengalih Tema Warna"
+                },
+                "type": "switch",
+                "default": true,
+                "help": {
+                    "zh-CN": "启用后在标题栏显示主题颜色模式切换按钮（亮色/暗色/跟随系统）",
+                    "zh-TW": "啟用後在標題欄顯示主題顏色模式切換按鈕（亮色/暗色/跟隨系統）",
+                    "en": "Enable to show theme color mode switcher button in the header (light/dark/system).",
+                    "ja": "有効にすると、ヘッダーにテーマカラーモード切替ボタン（ライト/ダーク/システム）が表示されます。",
+                    "id": "Aktifkan untuk menampilkan tombol pengalih tema warna di header (terang/gelap/sistem)."
+                }
+            },
+            {
+                "key": "enableLanguageSwitcher",
+                "name": {
+                    "zh-CN": "启用语言切换",
+                    "zh-TW": "啟用語言切換",
+                    "en": "Enable Language Switcher",
+                    "ja": "言語切替を有効化",
+                    "id": "Aktifkan Pengalih Bahasa"
+                },
+                "type": "switch",
+                "default": true,
+                "help": {
+                    "zh-CN": "启用后在标题栏显示语言切换按钮",
+                    "zh-TW": "啟用後在標題欄顯示語言切換按鈕",
+                    "en": "Enable to show language switcher button in the header.",
+                    "ja": "有効にすると、ヘッダーに言語切替ボタンが表示されます。",
+                    "id": "Aktifkan untuk menampilkan tombol pengalih bahasa di header."
+                }
+            },
+            {
                 "name": {
                     "zh-CN": "底栏设置",
                     "zh-TW": "底欄設置",
@@ -1369,11 +1445,11 @@
                 "type": "switch",
                 "default": true,
                 "help": {
-                    "zh-CN": "启用后将在页面右上角显示资产统计悬浮球",
-                    "zh-TW": "啟用後將在頁面右上角顯示資產統計懸浮球",
-                    "en": "Show asset statistics widget at top right.",
-                    "ja": "右上に資産統計ウィジェットを表示します。",
-                    "id": "Tampilkan widget statistik aset di kanan atas."
+                    "zh-CN": "启用后将在标题栏显示资产统计入口按钮，可查看服务器总价值、月均支出、剩余价值等信息",
+                    "zh-TW": "啟用後將在標題欄顯示資產統計入口按鈕，可查看伺服器總價值、月均支出、剩餘價值等資訊",
+                    "en": "Enable to show asset statistics entry button in the header for viewing server total value, monthly expenses, remaining value, etc.",
+                    "ja": "有効にすると、ヘッダーに資産統計入口ボタンが表示され、サーバーの総価値、月額支出、残存価値などを確認できます。",
+                    "id": "Aktifkan untuk menampilkan tombol statistik aset di header untuk melihat total nilai server, pengeluaran bulanan, nilai sisa, dll."
                 }
             },
             {
@@ -1388,11 +1464,11 @@
                 "type": "switch",
                 "default": true,
                 "help": {
-                    "zh-CN": "启用后将在页面右上角显示 3D 地球",
-                    "zh-TW": "啟用後將在頁面右上角顯示 3D 地球",
-                    "en": "Show 3D Earth globe at top right.",
-                    "ja": "右上に3D地球儀を表示します。",
-                    "id": "Tampilkan globe Bumi 3D di kanan atas."
+                    "zh-CN": "启用后将在标题栏显示 3D 地球入口按钮，可查看服务器地理分布",
+                    "zh-TW": "啟用後將在標題欄顯示 3D 地球入口按鈕，可查看伺服器地理分佈",
+                    "en": "Enable to show 3D Earth globe entry button in the header for viewing server geographic distribution.",
+                    "ja": "有効にすると、ヘッダーに3D地球儀入口ボタンが表示され、サーバーの地理的分布を確認できます。",
+                    "id": "Aktifkan untuk menampilkan tombol globe Bumi 3D di header untuk melihat distribusi geografis server."
                 }
             },
             {

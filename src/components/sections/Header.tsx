@@ -112,7 +112,10 @@ const ThemeMenuItems = ({
 const ViewModeSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
   const { viewMode, setViewMode } = useTheme();
   const { t } = useLocale();
+  const { enableViewModeSwitcher } = useAppConfig();
   const Icon = ViewModeIcons[viewMode] || Grid3X3;
+
+  if (!enableViewModeSwitcher) return null;
 
   if (isMobile) {
     return (
@@ -147,7 +150,10 @@ const ViewModeSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
 const ThemeSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
   const { rawAppearance, setAppearance } = useTheme();
   const { t } = useLocale();
+  const { enableThemeColorSwitcher } = useAppConfig();
   const Icon = ThemeIcons[rawAppearance] || SunMoon;
+
+  if (!enableThemeColorSwitcher) return null;
 
   if (isMobile) {
     return (
@@ -264,6 +270,9 @@ const EarthGlobeButton = ({ isMobile }: { isMobile?: boolean }) => {
 const PingOverviewButton = ({ isMobile }: { isMobile?: boolean }) => {
   const { t } = useLocale();
   const navigate = useNavigate();
+  const { enablePingOverview } = useAppConfig();
+
+  if (!enablePingOverview) return null;
 
   if (isMobile) {
     return (
