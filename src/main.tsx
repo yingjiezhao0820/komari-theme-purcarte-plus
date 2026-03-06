@@ -323,7 +323,7 @@ export const AppContent = () => {
       <Toaster />
       <DynamicContent>
         <div
-          className={`grid h-dvh transition-all duration-300 ${
+          className={`main-content-layer grid h-dvh transition-all duration-300 ${
             isSettingsOpen && !isMobile
               ? "grid-cols-[1fr_auto]"
               : "grid-cols-[1fr]"

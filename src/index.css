@@ -165,6 +165,8 @@
 
   .purcarte-blur {
     @apply bg-(--purcarte-card-color)! backdrop-blur-(--purcarte-blur)!;
+    will-change: backdrop-filter;
+    backface-visibility: hidden;
   }
 
   .rt-Badge-tag-transparent {
@@ -211,6 +213,14 @@
 /* 动画效果 */
 .fade-in {
   animation: fadeIn 0.5s ease-out;
+}
+
+/* 主内容层隔离：将服务器卡片实时更新的重绘限制在此层内，
+   避免触发兄弟增强组件的 backdrop-filter 重合成导致闪烁 */
+.main-content-layer {
+  isolation: isolate;
+  contain: layout style;
+  will-change: transform;
 }
 
 .fade-out {

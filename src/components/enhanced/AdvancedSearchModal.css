@@ -16,6 +16,8 @@
   align-items: center;
   justify-content: center;
   animation: advSearchFadeIn 0.2s ease-out;
+  will-change: backdrop-filter;
+  backface-visibility: hidden;
 }
 
 @keyframes advSearchFadeIn {
