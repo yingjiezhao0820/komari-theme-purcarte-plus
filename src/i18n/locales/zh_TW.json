@@ -440,7 +440,7 @@
     },
     "trade": {
       "title": "伺服器交易",
-      "calcRules": "計算規則：\n• 使用UTC時間進行精確計算，避免時區問題\n• 剩餘價值 = 價格 × (剩餘毫秒數/計費週期毫秒數)\n• 超過100年按原價計算\n• 已過期伺服器剩餘價值為0",
+      "calcRules": "計算規則：\n• 使用UTC時間進行精確計算，避免時區問題\n• 剩餘價值 = 價格 × (剩餘毫秒數/計費週期毫秒數)\n• 超過100年/長期機器 按原價計算\n• 已過期伺服器剩餘價值為0",
       "serverInfo": "伺服器資訊",
       "region": "地區",
       "name": "名稱",
@@ -478,7 +478,9 @@
       "billingDays": "{{days}}天",
       "trafficUnlimited": "無限制",
       "trafficPerMonth": "/月",
-      "trafficInfinite": "∞TB/月"
+      "trafficInfinite": "∞TB/月",
+      "share": "分享連結",
+      "shareCopied": "分享連結已複製到剪貼簿"
     },
     "earth": {
       "totalServers": "伺服器總數",

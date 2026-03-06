@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useNodeData } from "@/contexts/NodeDataContext";
 import {
   useExchangeRates,
@@ -146,12 +146,44 @@ export function FinanceWidget() {
   const [tradeNode, setTradeNode] = useState<NodeData | null>(null);
   const [showRatesInfo, setShowRatesInfo] = useState(false);
 
+  // URL 分享参数：交易日期和金额
+  const [initialTradeDate, setInitialTradeDate] = useState<string | undefined>();
+  const [initialTradeAmount, setInitialTradeAmount] = useState<string | undefined>();
+  const urlTradeHandled = useRef(false);
+
   // 监听来自 Header 按钮的自定义事件
   useEffect(() => {
     const handler = () => setIsOpen((prev) => !prev);
     window.addEventListener("toggle-finance-widget", handler);
     return () => window.removeEventListener("toggle-finance-widget", handler);
   }, []);
+
+  // 从 URL 加载交易模态框参数（仅在首次加载时执行）
+  useEffect(() => {
+    if (urlTradeHandled.current || nodes.length === 0) return;
+    const params = new URLSearchParams(window.location.search);
+    const tmCur = params.get("tm_cur");
+    const tmDate = params.get("tm_date");
+    const tmAmount = params.get("tm_amount");
+    const tq = params.get("t_q");
+
+    // 如果有 tm_cur，更新货币单位到 localStorage 和状态
+    if (tmCur && ["CNY", "USD", "HKD", "EUR", "GBP", "JPY"].includes(tmCur)) {
+      setUserCurrency(tmCur);
+      localStorage.setItem("fin_currency", tmCur);
+    }
+
+    // 如果有 t_q（UUID搜索），尝试打开交易模态框
+    if (tq && (tmDate || tmAmount || tmCur)) {
+      const targetNode = nodes.find((n) => n.uuid === tq);
+      if (targetNode) {
+        urlTradeHandled.current = true;
+        setInitialTradeDate(tmDate || undefined);
+        setInitialTradeAmount(tmAmount || undefined);
+        setTradeNode(targetNode);
+      }
+    }
+  }, [nodes]);
 
   const financeData = useMemo(
     () => calculateFinanceData(nodes, rates, userCurrency, excludeFree, sortBy, t),
@@ -449,7 +481,13 @@ export function FinanceWidget() {
           node={tradeNode}
           rates={rates}
           userCurrency={userCurrency}
-          onClose={() => setTradeNode(null)}
+          onClose={() => {
+            setTradeNode(null);
+            setInitialTradeDate(undefined);
+            setInitialTradeAmount(undefined);
+          }}
+          initialTradeDate={initialTradeDate}
+          initialTradeAmount={initialTradeAmount}
         />
       )}
     </>

@@ -440,7 +440,7 @@
     },
     "trade": {
       "title": "Perdagangan Server",
-      "calcRules": "Aturan Perhitungan:\n• Menggunakan waktu UTC untuk perhitungan akurat\n• Sisa Nilai = Harga × (Sisa ms / Periode tagihan ms)\n• Lebih dari 100 tahun dihitung dengan harga asli\n• Server kedaluwarsa memiliki sisa nilai 0",
+      "calcRules": "Aturan Perhitungan:\n• Menggunakan waktu UTC untuk perhitungan akurat\n• Sisa Nilai = Harga × (Sisa ms / Periode tagihan ms)\n• Lebih dari 100 tahun / pembayaran sekali dihitung dengan harga asli\n• Server kedaluwarsa memiliki sisa nilai 0",
       "serverInfo": "Info Server",
       "region": "Wilayah",
       "name": "Nama",
@@ -478,7 +478,9 @@
       "billingDays": "{{days}} hari",
       "trafficUnlimited": "Tidak terbatas",
       "trafficPerMonth": "/bln",
-      "trafficInfinite": "∞TB/bln"
+      "trafficInfinite": "∞TB/bln",
+      "share": "Bagikan Tautan",
+      "shareCopied": "Tautan dibagikan telah disalin ke clipboard"
     },
     "earth": {
       "totalServers": "Total Server",

@@ -10,12 +10,15 @@ import {
   getBillingCycleText,
 } from "./financeUtils";
 import { useLocale } from "@/config/hooks";
+import { toast } from "sonner";
 
 interface ServerTradeModalProps {
   node: NodeData;
   rates: ExchangeRates;
   userCurrency: string;
   onClose: () => void;
+  initialTradeDate?: string;
+  initialTradeAmount?: string;
 }
 
 export function ServerTradeModal({
@@ -23,6 +26,8 @@ export function ServerTradeModal({
   rates,
   userCurrency,
   onClose,
+  initialTradeDate,
+  initialTradeAmount,
 }: ServerTradeModalProps) {
   const { t, i18n } = useLocale();
   const targetRate = rates[userCurrency] || 1;
@@ -34,8 +39,8 @@ export function ServerTradeModal({
     new Date().toLocaleString("en-US", { timeZone: "Asia/Shanghai" })
   );
   const todayStr = today.toISOString().split("T")[0];
-  const [tradeDate, setTradeDate] = useState(todayStr);
-  const [tradeAmount, setTradeAmount] = useState("");
+  const [tradeDate, setTradeDate] = useState(initialTradeDate || todayStr);
+  const [tradeAmount, setTradeAmount] = useState(initialTradeAmount || "");
 
   // 计算剩余价值
   const remainValueCNY = calculateRemainValueForDate(node, rates, tradeDate);
@@ -151,6 +156,38 @@ export function ServerTradeModal({
     [onClose]
   );
 
+  const handleShare = useCallback(() => {
+    const params = new URLSearchParams();
+    // 使用 t_q=uuid 实现唯一搜索
+    params.set("t_q", node.uuid);
+    // 交易模态框参数
+    if (tradeDate) {
+      params.set("tm_date", tradeDate);
+    }
+    if (tradeAmount) {
+      params.set("tm_amount", tradeAmount);
+    }
+    // 货币单位
+    if (userCurrency && userCurrency !== "CNY") {
+      params.set("tm_cur", userCurrency);
+    }
+    const shareUrl = `${window.location.origin}/?${params.toString()}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      toast.success(t("enhanced.trade.shareCopied"));
+    }).catch(() => {
+      // 回退方案：创建临时输入框复制
+      const textarea = document.createElement("textarea");
+      textarea.value = shareUrl;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      toast.success(t("enhanced.trade.shareCopied"));
+    });
+  }, [node.uuid, tradeDate, tradeAmount, userCurrency, t]);
+
   return (
     <div
       id="server-trade-overlay"
@@ -213,16 +250,40 @@ export function ServerTradeModal({
               </svg>
             </span>
           </h3>
-          <button className="bubble-close" onClick={onClose}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              viewBox="0 0 16 16">
-              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
-            </svg>
-          </button>
+          <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+            <button
+              className="bubble-close"
+              title={t("enhanced.trade.share")}
+              onClick={handleShare}
+              style={{ position: "relative" }}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round">
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+              </svg>
+            </button>
+            <button className="bubble-close" onClick={onClose}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16">
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div className="bubble-content server-trade-content">

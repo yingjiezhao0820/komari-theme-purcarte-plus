@@ -440,7 +440,7 @@
     },
     "trade": {
       "title": "サーバー取引",
-      "calcRules": "計算ルール：\n• UTC時間で精密計算\n• 残存価値 = 価格 × (残りミリ秒/課金周期ミリ秒)\n• 100年超は定価で計算\n• 期限切れサーバーの残存価値は0",
+      "calcRules": "計算ルール：\n• UTC時間で精密計算\n• 残存価値 = 価格 × (残りミリ秒/課金周期ミリ秒)\n• 100年超/長期マシンは定価で計算\n• 期限切れサーバーの残存価値は0",
       "serverInfo": "サーバー情報",
       "region": "地域",
       "name": "名前",
@@ -478,7 +478,9 @@
       "billingDays": "{{days}}日",
       "trafficUnlimited": "無制限",
       "trafficPerMonth": "/月",
-      "trafficInfinite": "∞TB/月"
+      "trafficInfinite": "∞TB/月",
+      "share": "リンクを共有",
+      "shareCopied": "共有リンクがクリップボードにコピーされました"
     },
     "earth": {
       "totalServers": "サーバー総数",

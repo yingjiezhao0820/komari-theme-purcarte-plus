@@ -440,7 +440,7 @@
     },
     "trade": {
       "title": "Server Trade",
-      "calcRules": "Calculation Rules:\n• Uses UTC time for precise calculation\n• Remaining Value = Price × (Remaining ms / Billing cycle ms)\n• Over 100 years calculated at original price\n• Expired servers have 0 remaining value",
+      "calcRules": "Calculation Rules:\n• Uses UTC time for precise calculation\n• Remaining Value = Price × (Remaining ms / Billing cycle ms)\n• Over 100 years / one-time billing calculated at original price\n• Expired servers have 0 remaining value",
       "serverInfo": "Server Info",
       "region": "Region",
       "name": "Name",
@@ -478,7 +478,9 @@
       "billingDays": "{{days}} days",
       "trafficUnlimited": "Unlimited",
       "trafficPerMonth": "/mo",
-      "trafficInfinite": "∞TB/mo"
+      "trafficInfinite": "∞TB/mo",
+      "share": "Share Link",
+      "shareCopied": "Share link copied to clipboard"
     },
     "earth": {
       "totalServers": "Total Servers",

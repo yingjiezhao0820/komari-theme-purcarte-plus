@@ -440,7 +440,7 @@
     },
     "trade": {
       "title": "服务器交易",
-      "calcRules": "计算规则：\n• 使用UTC时间进行精确计算，避免时区问题\n• 剩余价值 = 价格 × (剩余毫秒数/计费周期毫秒数)\n• 超过100年按原价计算\n• 已过期服务器剩余价值为0",
+      "calcRules": "计算规则：\n• 使用UTC时间进行精确计算，避免时区问题\n• 剩余价值 = 价格 × (剩余毫秒数/计费周期毫秒数)\n• 超过100年/长期机器 按原价计算\n• 已过期服务器剩余价值为0",
       "serverInfo": "服务器信息",
       "region": "地区",
       "name": "名称",
@@ -478,7 +478,9 @@
       "billingDays": "{{days}}天",
       "trafficUnlimited": "无限制",
       "trafficPerMonth": "/月",
-      "trafficInfinite": "∞TB/月"
+      "trafficInfinite": "∞TB/月",
+      "share": "分享链接",
+      "shareCopied": "分享链接已复制到剪贴板"
     },
     "earth": {
       "totalServers": "服务器总数",
