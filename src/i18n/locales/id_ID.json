@@ -480,7 +480,10 @@
       "trafficPerMonth": "/bln",
       "trafficInfinite": "∞TB/bln",
       "share": "Bagikan Tautan",
-      "shareCopied": "Tautan dibagikan telah disalin ke clipboard"
+      "shareCopied": "Tautan dibagikan telah disalin ke clipboard",
+      "exportImage": "Ekspor Gambar",
+      "exportSuccess": "Gambar disimpan",
+      "exportFail": "Ekspor gagal"
     },
     "earth": {
       "totalServers": "Total Server",

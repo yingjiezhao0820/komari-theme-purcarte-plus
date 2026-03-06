@@ -11,6 +11,7 @@ import {
 } from "./financeUtils";
 import { useLocale } from "@/config/hooks";
 import { toast } from "sonner";
+import html2canvas from "html2canvas-pro";
 
 interface ServerTradeModalProps {
   node: NodeData;
@@ -188,6 +189,173 @@ export function ServerTradeModal({
     });
   }, [node.uuid, tradeDate, tradeAmount, userCurrency, t]);
 
+  const handleExportImage = useCallback(async () => {
+    const modal = modalRef.current;
+    if (!modal) return;
+
+    const isDark = !!document.querySelector(".radix-themes.dark");
+    const opaqueBg = isDark ? "#000000" : "#ffffff";
+
+    const contentEl = modal.querySelector(".server-trade-content") as HTMLElement | null;
+
+    const headerBtnGroup = modal.querySelector(
+      ".bubble-header > div:last-child"
+    ) as HTMLElement | null;
+    const origBtnDisplay = headerBtnGroup?.style.display;
+
+    // 覆盖半透明子元素
+    const semiEls = Array.from(
+      modal.querySelectorAll<HTMLElement>(".trade-input, .trade-result-box")
+    );
+
+    const inputPairs: { input: HTMLInputElement; placeholder: HTMLDivElement }[] = [];
+    // 旗帜：用内联 <svg> 替换 <img>，截图后再换回
+    const flagPairs: { img: HTMLImageElement; svgEl: Element; parent: Node }[] = [];
+
+    try {
+      // 1) 将 SVG flag <img> 替换为内联 <svg> 元素
+      //    html2canvas 无法渲染外部 SVG <img>，但能渲染内联 <svg>
+      const flagImgs = modal.querySelectorAll<HTMLImageElement>('img[src$=".svg"]');
+      await Promise.all(
+        Array.from(flagImgs).map(async (img) => {
+          try {
+            const resp = await fetch(img.src);
+            const svgText = await resp.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(svgText, "image/svg+xml");
+            const svgEl = doc.documentElement;
+            svgEl.setAttribute("width", String(img.width || 20));
+            svgEl.setAttribute("height", String(img.height || 15));
+            svgEl.style.display = "inline-block";
+            svgEl.style.verticalAlign = "middle";
+            const parent = img.parentNode!;
+            parent.replaceChild(svgEl, img);
+            flagPairs.push({ img, svgEl, parent });
+          } catch {
+            // 加载失败则保持原样
+          }
+        })
+      );
+
+      // 2) 将 <input> 替换为文本 <div>（html2canvas 渲染 input value 有偏移）
+      const inputs = modal.querySelectorAll<HTMLInputElement>("input.trade-input");
+      inputs.forEach((input) => {
+        const computed = window.getComputedStyle(input);
+        const div = document.createElement("div");
+        div.className = input.className;
+        div.textContent = input.value || input.placeholder || "";
+        div.style.cssText = input.style.cssText;
+        div.style.padding = computed.padding;
+        div.style.fontSize = computed.fontSize;
+        div.style.lineHeight = computed.lineHeight;
+        div.style.height = computed.height;
+        div.style.display = "flex";
+        div.style.alignItems = "center";
+        div.style.color = input.value
+          ? computed.color
+          : computed.color.replace(")", ", 0.5)").replace("rgb(", "rgba(");
+        input.parentNode!.insertBefore(div, input);
+        input.style.display = "none";
+        inputPairs.push({ input, placeholder: div });
+      });
+
+      // 3) 样式覆盖 — CSS 用了 !important，必须用 setProperty 才能覆盖
+      modal.style.setProperty("background-color", opaqueBg, "important");
+      modal.style.setProperty("backdrop-filter", "none", "important");
+      modal.style.setProperty("-webkit-backdrop-filter", "none", "important");
+      modal.style.setProperty("box-shadow", "none", "important");
+      modal.style.setProperty("max-height", "none", "important");
+      modal.style.setProperty("overflow", "visible", "important");
+
+      // 子元素不透明背景
+      const subBg = isDark ? "#1a1a1a" : "#f5f5f5";
+      const subBorder = isDark ? "#333333" : "#e0e0e0";
+      semiEls.forEach((el) => {
+        el.style.setProperty("background", subBg, "important");
+        el.style.setProperty("border-color", subBorder, "important");
+      });
+
+      if (headerBtnGroup) headerBtnGroup.style.display = "none";
+      if (contentEl) {
+        contentEl.style.setProperty("max-height", "none", "important");
+        contentEl.style.setProperty("overflow", "visible", "important");
+      }
+
+      const canvas = await html2canvas(modal, {
+        backgroundColor: opaqueBg,
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        scrollY: -window.scrollY,
+      });
+
+      // 二次绘制：给截图添加圆角
+      const radius = 16 * 2; // 匹配 CSS border-radius: 16px，scale: 2
+      const w = canvas.width;
+      const h = canvas.height;
+      const rounded = document.createElement("canvas");
+      rounded.width = w;
+      rounded.height = h;
+      const rCtx = rounded.getContext("2d")!;
+      rCtx.beginPath();
+      rCtx.moveTo(radius, 0);
+      rCtx.lineTo(w - radius, 0);
+      rCtx.quadraticCurveTo(w, 0, w, radius);
+      rCtx.lineTo(w, h - radius);
+      rCtx.quadraticCurveTo(w, h, w - radius, h);
+      rCtx.lineTo(radius, h);
+      rCtx.quadraticCurveTo(0, h, 0, h - radius);
+      rCtx.lineTo(0, radius);
+      rCtx.quadraticCurveTo(0, 0, radius, 0);
+      rCtx.closePath();
+      rCtx.clip();
+      rCtx.drawImage(canvas, 0, 0);
+
+      rounded.toBlob((blob) => {
+        if (!blob) {
+          toast.error(t("enhanced.trade.exportFail"));
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        const safeName = (node.name || "server").replace(/[^\w\u4e00-\u9fff-]/g, "_");
+        a.download = `trade-${safeName}-${tradeDate}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast.success(t("enhanced.trade.exportSuccess"));
+      }, "image/png");
+    } catch {
+      toast.error(t("enhanced.trade.exportFail"));
+    } finally {
+      // removeProperty 让 CSS !important 规则重新生效
+      modal.style.removeProperty("background-color");
+      modal.style.removeProperty("backdrop-filter");
+      modal.style.removeProperty("-webkit-backdrop-filter");
+      modal.style.removeProperty("box-shadow");
+      modal.style.removeProperty("max-height");
+      modal.style.removeProperty("overflow");
+      semiEls.forEach((el) => {
+        el.style.removeProperty("background");
+        el.style.removeProperty("border-color");
+      });
+      if (headerBtnGroup) headerBtnGroup.style.display = origBtnDisplay || "";
+      if (contentEl) {
+        contentEl.style.removeProperty("max-height");
+        contentEl.style.removeProperty("overflow");
+      }
+      // 恢复 input
+      inputPairs.forEach(({ input, placeholder }) => {
+        input.style.display = "";
+        placeholder.remove();
+      });
+      // 恢复旗帜：内联 <svg> 换回 <img>
+      flagPairs.forEach(({ img, svgEl, parent }) => {
+        parent.replaceChild(img, svgEl);
+      });
+    }
+  }, [node.name, tradeDate, t]);
+
   return (
     <div
       id="server-trade-overlay"
@@ -271,6 +439,25 @@ export function ServerTradeModal({
                 <circle cx="18" cy="19" r="3" />
                 <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
                 <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+              </svg>
+            </button>
+            <button
+              className="bubble-close"
+              title={t("enhanced.trade.exportImage")}
+              onClick={handleExportImage}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
             </button>
             <button className="bubble-close" onClick={onClose}>

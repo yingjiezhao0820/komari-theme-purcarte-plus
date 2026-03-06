@@ -480,7 +480,10 @@
       "trafficPerMonth": "/月",
       "trafficInfinite": "∞TB/月",
       "share": "分享連結",
-      "shareCopied": "分享連結已複製到剪貼簿"
+      "shareCopied": "分享連結已複製到剪貼簿",
+      "exportImage": "匯出圖片",
+      "exportSuccess": "圖片已儲存",
+      "exportFail": "匯出失敗"
     },
     "earth": {
       "totalServers": "伺服器總數",
