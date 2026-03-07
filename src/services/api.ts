@@ -5,6 +5,8 @@ import type {
   PublicInfo,
   HistoryRecord,
   PingHistoryResponse,
+  PingHistoryRecord,
+  PingTask,
   PingTaskFull,
   Me,
   NodeStats,
@@ -134,13 +136,16 @@ class ApiService {
         type: "load",
       });
       if (response.status === "success" && response.data) {
-        if (response.data.records[uuid]) {
-          return {
-            count: response.data.count,
-            records: response.data.records[uuid],
-          };
-        }
-        return response.data;
+        const data = response.data;
+        // RPC common:getRecords 函数使用 uuid 直接返回 StatusRecord[] 类型的记录
+        // 如果未提供 uuid，则 records 为 { [uuid]: StatusRecord[] }
+        const records = Array.isArray(data.records)
+          ? data.records
+          : data.records?.[uuid] || [];
+        return {
+          count: data.count ?? records.length,
+          records,
+        };
       }
       return null;
     }
@@ -163,14 +168,46 @@ class ApiService {
         type: "ping",
       });
       if (response.status === "success" && response.data) {
-        if (response.data[uuid]) {
-          return {
-            count: response.data[uuid].length,
-            records: response.data[uuid],
-            tasks: response.data.tasks,
-          };
+        const data = response.data;
+        // RPC type=ping 返回值：{ count, basic_info: BasicInfo[], records: PingRecord[], from, to }
+        // PingRecord 包含 { task_id, time, value, client }
+        const records: PingHistoryRecord[] = Array.isArray(data.records)
+          ? data.records
+          : [];
+
+        // 尝试使用响应中的任务（某些服务器版本包含此功能）
+        let tasks: PingTask[] = Array.isArray(data.tasks)
+          ? data.tasks
+          : [];
+
+        // 如果服务器未提供任务，则根据记录中的唯一 task_id 构建任务
+        if (tasks.length === 0 && records.length > 0) {
+          const taskIdSet = new Set<number>();
+          records.forEach((r: PingHistoryRecord) => taskIdSet.add(r.task_id));
+
+          // 如果 basic_info 可用，尝试从中推导出损失
+          const basicInfo: Array<{ client: string; loss: number }> =
+            Array.isArray(data.basic_info) ? data.basic_info : [];
+          const avgLoss =
+            basicInfo.length > 0
+              ? basicInfo.reduce((sum: number, b: { loss: number }) => sum + (b.loss || 0), 0) / basicInfo.length
+              : 0;
+
+          tasks = Array.from(taskIdSet)
+            .sort((a, b) => a - b)
+            .map((id) => ({
+              id,
+              name: `Task ${id}`,
+              interval: 30,
+              loss: Math.round(avgLoss * 100) / 100,
+            }));
         }
-        return response.data;
+
+        return {
+          count: data.count ?? records.length,
+          records,
+          tasks,
+        };
       }
       return null;
     }
@@ -223,6 +260,10 @@ class ApiService {
 
   // 获取用户信息
   async getUserInfo(): Promise<Me | null> {
+    if (this.useRpc) {
+      const response = await this.rpcCall<Me>("common:getMe");
+      return response.status === "success" ? response.data : null;
+    }
     try {
       const response = await fetch(`${this.baseUrl}/api/me`);
       if (!response.ok) {

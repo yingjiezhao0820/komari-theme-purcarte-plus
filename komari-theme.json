@@ -798,11 +798,11 @@
                 "type": "switch",
                 "default": false,
                 "help": {
-                    "zh-CN": "实验性功能：优先使用 JSON-RPC2 API 获取数据（需 Komari >=1.0.7）",
-                    "zh-TW": "實驗性功能：優先使用 JSON-RPC2 API 獲取數據（需 Komari >=1.0.7）",
-                    "en": "Experimental: Prioritize JSON-RPC2 API for data (Requires Komari >=1.0.7).",
-                    "ja": "実験的：データ取得にJSON-RPC2 APIを優先使用（Komari >=1.0.7が必要）。",
-                    "id": "Eksperimental: Prioritaskan API JSON-RPC2 untuk data (Memerlukan Komari >=1.0.7)."
+                    "zh-CN": "启用后将在支持的 Komari 版本（>=1.0.7）优先使用 JSON-RPC2 API 获取数据，以提升兼容性和性能，若出现问题请关闭此选项",
+                    "zh-TW": "啟用後將在支持的 Komari 版本（>=1.0.7）優先使用 JSON-RPC2 API 獲取數據，以提升兼容性和性能，若出現問題請關閉此選項",
+                    "en": "When enabled, prioritizes JSON-RPC2 API for data retrieval on supported Komari versions (>=1.0.7), improving compatibility and performance. Disable if issues occur.",
+                    "ja": "有効にすると、対応する Komari バージョン（>=1.0.7）で JSON-RPC2 API を優先使用してデータを取得し、互換性とパフォーマンスを向上させます。問題が発生した場合は無効にしてください。",
+                    "id": "Saat diaktifkan, mengutamakan API JSON-RPC2 untuk pengambilan data pada versi Komari yang didukung (>=1.0.7), meningkatkan kompatibilitas dan performa. Nonaktifkan jika terjadi masalah."
                 }
             },
             {
