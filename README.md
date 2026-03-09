@@ -10,6 +10,19 @@
 
 ---
 
+> [!WARNING]
+> ### 🚨 使用前请务必阅读
+> **本项目是个人兴趣驱动的开源作品，不是商业产品，不是外包项目，更不欠任何人**
+>
+> - 我只针对 **我自己发现的问题**、**我自己用着不爽的地方**、**我自己喜欢的方向** 进行开发和修复
+> - 我没有义务兼容每一种设备、每一个浏览器、每一个奇葩环境
+> - 我不会因为你「不用但是喜欢到处说不行」就去改任何东西
+> - **觉得有 BUG？** 善意反馈我很欢迎；阴阳怪气、到处抹黑，恕不奉陪
+>
+> **开源 ≠ 免费客服 ≠ 有求必应。尊重是双向的**
+
+---
+
 > [!NOTE]
 > 本主题在 [原作者:Montia37 v1.2.5](https://github.com/Montia37/komari-theme-purcarte/releases/tag/v1.2.5) 版本基础上进行二次开发的主题，且是在 Claude 的辅助下完成
 >
@@ -740,8 +753,3 @@ komari-theme-purcarte-plus/
 ## 📄 许可证
 
 本项目采用 [MIT License](LICENSE) 授权。
-
-
-## ⭐ Star History
-
-![](https://api.star-history.com/svg?repos=YoungYannick/komari-theme-purcarte-plus&type=date&legend=top-left)
