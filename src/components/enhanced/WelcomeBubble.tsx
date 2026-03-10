@@ -97,7 +97,7 @@ function OsIcon({ os }: { os: string }) {
 
 export function WelcomeBubble() {
   const { geo, loading } = useUserGeo();
-  const { welcomeBubbleSiteName, welcomeBubbleLogoUrl, titleText } = useAppConfig();
+  const { welcomeBubbleSiteName, welcomeBubbleLogoUrl, welcomeBubbleLogoShape, titleText } = useAppConfig();
   const { t, i18n } = useLocale();
   const [visible, setVisible] = useState(false);
   const [ipHidden, setIpHidden] = useState(false);
@@ -144,7 +144,7 @@ export function WelcomeBubble() {
       className={`welcome-bubble${visible ? " show" : ""}`}>
       <div className="bubble-header">
         <h3 className="bubble-title">
-          {welcomeBubbleLogoUrl && <img src={welcomeBubbleLogoUrl} className="bubble-logo-image" alt="logo" />}
+          {welcomeBubbleLogoUrl && <img src={welcomeBubbleLogoUrl} className={welcomeBubbleLogoShape === "original" ? "bubble-logo-image bubble-logo-original" : "bubble-logo-image"} alt="logo" />}
           {siteName}
         </h3>
         <button className="bubble-close" onClick={() => setVisible(false)}>

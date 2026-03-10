@@ -21,6 +21,7 @@ export interface ConfigOptions {
   selectedHeaderStyle: HeaderStyle; // 标题栏样式
   enableLogo: boolean; // 是否启用Logo
   logoUrl: string; // Logo图片URL
+  logoShape: LogoShapeType; // 标题栏Logo样式
   enableTitle: boolean; // 是否启用标题
   titleText: string; // 标题文本
   enableSearchButton: boolean; // 是否启用搜索按钮
@@ -71,9 +72,12 @@ export interface ConfigOptions {
   enableEarthGlobe: boolean; // 是否启用地球组件
   enableScrollHelpers: boolean; // 是否启用滚动辅助按钮
   enableProtection: boolean; // 是否启用自定义警告保护
+  protectionLogoUrl: string; // 访客保护弹窗Logo图片URL
+  protectionLogoShape: LogoShapeType; // 访客保护弹窗Logo样式
   // 欢迎气泡配置
   welcomeBubbleSiteName: string; // 欢迎气泡站点名称
   welcomeBubbleLogoUrl: string; // 欢迎气泡Logo图片URL
+  welcomeBubbleLogoShape: LogoShapeType; // 欢迎气泡Logo样式
   // 地球组件配置
   earthLightBgImage: string; // 地球组件亮色模式背景图
   earthDarkBgImage: string; // 地球组件暗色模式背景图
@@ -107,6 +111,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   selectedHeaderStyle: "fixed",
   enableLogo: true,
   logoUrl: "/assets/logo.png",
+  logoShape: "circle",
   enableTitle: true,
   titleText: "",
   enableSearchButton: true,
@@ -157,9 +162,12 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableEarthGlobe: true,
   enableScrollHelpers: true,
   enableProtection: true,
+  protectionLogoUrl: "/assets/logo.png",
+  protectionLogoShape: "circle",
   // 欢迎气泡配置
   welcomeBubbleSiteName: "阿米诺斯",
   welcomeBubbleLogoUrl: "/assets/logo.png",
+  welcomeBubbleLogoShape: "circle",
   // 地球组件配置
   earthLightBgImage: "",
   earthDarkBgImage: "//upload.wikimedia.org/wikipedia/commons/6/60/ESO_-_Milky_Way.jpg",
@@ -241,3 +249,4 @@ export type FooterStyle = "fixed" | "levitation" | "followContent" | "hidden";
 export type DisplayMode = "show" | "hideAll" | "hideUnset";
 export type BackgroundMode = "solidColor" | "image" | "video";
 export type MonitorNodeSortMode = "name_asc" | "name_desc" | "id_asc" | "id_desc" | "target_asc" | "target_desc" | "type_asc" | "type_desc" | "custom";
+export type LogoShapeType = "circle" | "original";

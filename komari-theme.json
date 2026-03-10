@@ -481,6 +481,26 @@
                 }
             },
             {
+                "key": "logoShape",
+                "name": {
+                    "zh-CN": "标题栏 Logo 样式",
+                    "zh-TW": "標題欄 Logo 樣式",
+                    "en": "Header Logo Shape",
+                    "ja": "ヘッダーロゴスタイル",
+                    "id": "Bentuk Logo Header"
+                },
+                "type": "select",
+                "options": "circle,original",
+                "default": "circle",
+                "help": {
+                    "zh-CN": "circle: 圆形固定缩放（32×32）；original: 原图等比缩放（高32px，宽度自适应）",
+                    "zh-TW": "circle: 圓形固定縮放（32×32）；original: 原圖等比縮放（高32px，寬度自適應）",
+                    "en": "circle: Circular fixed scale (32×32); original: Proportional scale (height 32px, auto width).",
+                    "ja": "circle: 円形固定スケール（32×32）；original: 等比スケール（高さ32px、幅自動）。",
+                    "id": "circle: Skala tetap bulat (32×32); original: Skala proporsional (tinggi 32px, lebar otomatis)."
+                }
+            },
+            {
                 "key": "enableTitle",
                 "name": {
                     "zh-CN": "启用标题栏标题",
@@ -1434,6 +1454,26 @@
                 }
             },
             {
+                "key": "welcomeBubbleLogoShape",
+                "name": {
+                    "zh-CN": "欢迎气泡 Logo 样式",
+                    "zh-TW": "歡迎氣泡 Logo 樣式",
+                    "en": "Welcome Bubble Logo Shape",
+                    "ja": "ウェルカムバブルロゴスタイル",
+                    "id": "Bentuk Logo Gelembung Selamat Datang"
+                },
+                "type": "select",
+                "options": "circle,original",
+                "default": "circle",
+                "help": {
+                    "zh-CN": "circle: 圆形固定缩放（32×32）；original: 原图等比缩放（高32px，宽度自适应）",
+                    "zh-TW": "circle: 圓形固定縮放（32×32）；original: 原圖等比縮放（高32px，寬度自適應）",
+                    "en": "circle: Circular fixed scale (32×32); original: Proportional scale (height 32px, auto width).",
+                    "ja": "circle: 円形固定スケール（32×32）；original: 等比スケール（高さ32px、幅自動）。",
+                    "id": "circle: Skala tetap bulat (32×32); original: Skala proporsional (tinggi 32px, lebar otomatis)."
+                }
+            },
+            {
                 "key": "enableFinanceWidget",
                 "name": {
                     "zh-CN": "启用资产统计",
@@ -1602,6 +1642,46 @@
                     "en": "Enable anti-debug protection (disable right-click, etc.) for guests.",
                     "ja": "未ログインユーザーに対してデバッグ防止保護（右クリック禁止等）を有効にします。",
                     "id": "Aktifkan perlindungan anti-debug (nonaktifkan klik kanan, dll.) untuk pengunjung."
+                }
+            },
+            {
+                "key": "protectionLogoUrl",
+                "name": {
+                    "zh-CN": "访客保护弹窗 Logo",
+                    "zh-TW": "訪客保護彈窗 Logo",
+                    "en": "Protection Modal Logo",
+                    "ja": "訪問者保護モーダルロゴ",
+                    "id": "Logo Modal Perlindungan"
+                },
+                "type": "string",
+                "required": false,
+                "default": "/assets/logo.png",
+                "help": {
+                    "zh-CN": "访客保护弹窗标题栏的 Logo 图片链接，留空则不展示",
+                    "zh-TW": "訪客保護彈窗標題欄的 Logo 圖片連結，留空則不展示",
+                    "en": "Logo image URL for protection modal header. Leave empty to hide.",
+                    "ja": "訪問者保護モーダルヘッダーのロゴ画像URL。空の場合は非表示。",
+                    "id": "URL gambar logo untuk header modal perlindungan. Kosongkan untuk menyembunyikan."
+                }
+            },
+            {
+                "key": "protectionLogoShape",
+                "name": {
+                    "zh-CN": "访客保护弹窗 Logo 样式",
+                    "zh-TW": "訪客保護彈窗 Logo 樣式",
+                    "en": "Protection Modal Logo Shape",
+                    "ja": "訪問者保護モーダルロゴスタイル",
+                    "id": "Bentuk Logo Modal Perlindungan"
+                },
+                "type": "select",
+                "options": "circle,original",
+                "default": "circle",
+                "help": {
+                    "zh-CN": "circle: 圆形固定缩放（32×32）；original: 原图等比缩放（高32px，宽度自适应）",
+                    "zh-TW": "circle: 圓形固定縮放（32×32）；original: 原圖等比縮放（高32px，寬度自適應）",
+                    "en": "circle: Circular fixed scale (32×32); original: Proportional scale (height 32px, auto width).",
+                    "ja": "circle: 円形固定スケール（32×32）；original: 等比スケール（高さ32px、幅自動）。",
+                    "id": "circle: Skala tetap bulat (32×32); original: Skala proporsional (tinggi 32px, lebar otomatis)."
                 }
             }
         ]

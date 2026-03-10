@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { apiService } from "@/services/api";
-import { useLocale } from "@/config/hooks";
+import { useLocale, useAppConfig } from "@/config/hooks";
 
 export function Protection() {
   const { t } = useLocale();
+  const { protectionLogoUrl, protectionLogoShape } = useAppConfig();
   const [isAlertShown, setIsAlertShown] = useState(false);
   const [alertReason, setAlertReason] = useState("");
   const [overlayVisible, setOverlayVisible] = useState(false);
@@ -175,11 +176,13 @@ export function Protection() {
         style={{ transform: overlayVisible ? "scale(1)" : "scale(0.95)" }}>
         <div className="bubble-header">
           <h3 className="bubble-title">
-            <img
-              src="/favicon.ico"
-              className="bubble-logo-image"
-              alt="logo"
-            />
+            {protectionLogoUrl && (
+              <img
+                src={protectionLogoUrl}
+                className={protectionLogoShape === "original" ? "bubble-logo-image bubble-logo-original" : "bubble-logo-image"}
+                alt="logo"
+              />
+            )}
             {t("enhanced.protection.warning")}
           </h3>
           <button className="bubble-close" onClick={handleClose}>

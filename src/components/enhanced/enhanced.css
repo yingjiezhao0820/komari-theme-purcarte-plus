@@ -73,6 +73,14 @@
   height: 32px;
   width: 32px;
   border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Logo 原图等比缩放样式 */
+.bubble-logo-image.bubble-logo-original {
+  width: auto;
+  border-radius: 0;
+  object-fit: contain;
 }
 
 /* 剧透文本 */

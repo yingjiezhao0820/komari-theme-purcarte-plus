@@ -36,9 +36,10 @@ export function ConfigProvider({ children }: ConfigProviderProps) {
           (publicInfo.theme_settings as Partial<ConfigOptions>) || {};
         // 从后端配置中过滤掉 undefined/null 值，以防止
         // 覆盖 DEFAULT_CONFIG 的默认值（修复 React 错误 #130）
+        // 对于 string 类型的配置项，允许空字符串通过（用户可能故意清空）
         const themeSettings = Object.fromEntries(
           Object.entries(rawSettings).filter(
-            ([, v]) => v !== undefined && v !== null && v !== ""
+            ([k, v]) => v !== undefined && v !== null && (v !== "" || typeof DEFAULT_CONFIG[k as keyof ConfigOptions] === "string")
           )
         ) as Partial<ConfigOptions>;
         mergedConfig = {
