@@ -5,6 +5,7 @@ on:
   push:
     tags:
       - "v*"
+      - "𝙫*"
 
 jobs:
   build-and-release:
@@ -35,8 +36,9 @@ jobs:
 
       - name: Update theme configuration
         run: |
-          # Extract version from tag (remove 'v' prefix)
+          # Extract version from tag (remove 'v' or '𝙫' prefix)
           ORIGINAL_VERSION=${GITHUB_REF_NAME#v}
+          ORIGINAL_VERSION=${ORIGINAL_VERSION#𝙫}
 
           # Normalize Unicode fancy/bold digits to ASCII (e.g. 𝟮𝟬𝟮𝟲 → 2026) for validation only
           VERSION=$(echo "$ORIGINAL_VERSION" | python3 -c "import sys, unicodedata; print(unicodedata.normalize('NFKC', sys.stdin.read().strip()))")
@@ -90,7 +92,7 @@ jobs:
           ls -la ${ZIP_NAME}
 
       - name: Generate Changelog
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/tags/𝙫'))
         id: changelog
         run: |
           git fetch --prune
@@ -102,7 +104,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Create Release
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/tags/𝙫'))
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
