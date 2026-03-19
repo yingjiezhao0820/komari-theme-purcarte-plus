@@ -17,14 +17,22 @@ import { useNodeCommons } from "@/hooks/useNodeCommons";
 import { useLocale } from "@/config/hooks";
 import { NodeDisplayContainer } from "./NodeDisplay";
 import { useAppConfig } from "@/config";
+import { useRowHeightAlignment } from "@/hooks/useRowHeightAlignment";
 
 interface NodeCompactContainerProps {
   nodes: NodeData[];
 }
 
 export const NodeCompactContainer = ({ nodes }: NodeCompactContainerProps) => {
+  useRowHeightAlignment({
+    containerSelector: '[data-view-type="compact"]',
+    cardSelector: '[data-card-type="compact"]',
+    tagsSelector: '[data-section="tags"]',
+    enabled: true,
+  });
+
   return (
-    <NodeDisplayContainer nodes={nodes}>
+    <NodeDisplayContainer nodes={nodes} viewType="compact">
       {(node, onShowDetails) => (
         <NodeCompact
           key={node.uuid}
@@ -58,6 +66,7 @@ export const NodeCompact = ({ node, onShowDetails }: NodeCompactProps) => {
 
   return (
     <Card
+      data-card-type="compact"
       className={`flex flex-col mx-auto w-full max-w-sm ${
         isConfirmedOffline
           ? "striped-bg-red-translucent-diagonal ring-2 ring-red-500/50"
@@ -83,7 +92,7 @@ export const NodeCompact = ({ node, onShowDetails }: NodeCompactProps) => {
         </button>
       </CardHeader>
       <CardContent className="flex-grow space-y-1 text-xs flex-shrink-0">
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1" data-section="tags">
           <Tag tags={tagList} />
         </div>
         <div className="border-t border-(--accent-4)/50 my-1"></div>

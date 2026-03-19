@@ -71,17 +71,19 @@ export const NodeDetailModal = ({ node, onClose }: NodeDetailModalProps) => {
 interface NodeDisplayContainerProps {
   nodes: NodeData[];
   children: (node: NodeData, onShowDetails: () => void) => React.ReactNode;
+  viewType?: "grid" | "compact";
 }
 
 export const NodeDisplayContainer = ({
   nodes,
   children,
+  viewType = "grid",
 }: NodeDisplayContainerProps) => {
   const [selectedNode, setSelectedNode] = useState<NodeData | null>(null);
 
   return (
     <>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4" data-view-type={viewType}>
         {nodes.map((node) => children(node, () => setSelectedNode(node)))}
       </div>
       {selectedNode && (

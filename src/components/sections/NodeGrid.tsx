@@ -17,6 +17,7 @@ import { CircleProgress } from "../ui/progress-circle";
 import { useAppConfig } from "@/config";
 import { useLocale } from "@/config/hooks";
 import { NodeDisplayContainer } from "./NodeDisplay";
+import { useRowHeightAlignment } from "@/hooks/useRowHeightAlignment";
 
 interface NodeGridContainerProps {
   nodes: NodeData[];
@@ -29,8 +30,16 @@ export const NodeGridContainer = ({
   enableSwap,
   selectTrafficProgressStyle,
 }: NodeGridContainerProps) => {
+  useRowHeightAlignment({
+    containerSelector: '[data-view-type="grid"]',
+    cardSelector: '[data-card-type="grid"]',
+    tagsSelector: '[data-section="tags"]',
+    trafficSelector: '[data-section="traffic"]',
+    enabled: true,
+  });
+
   return (
-    <NodeDisplayContainer nodes={nodes}>
+    <NodeDisplayContainer nodes={nodes} viewType="grid">
       {(node, onShowDetails) => (
         <NodeGrid
           key={node.uuid}
@@ -75,6 +84,7 @@ export const NodeGrid = ({
 
   return (
     <Card
+      data-card-type="grid"
       className={`flex flex-col mx-auto w-full max-w-sm ${
         isConfirmedOffline
           ? "striped-bg-red-translucent-diagonal ring-2 ring-red-500/50"
@@ -100,7 +110,7 @@ export const NodeGrid = ({
         </button>
       </CardHeader>
       <CardContent className="flex-grow space-y-3 text-sm text-nowrap">
-        <div className="flex flex-wrap gap-1 mb-2">
+        <div className="flex flex-wrap gap-1 mb-2" data-section="tags">
           <Tag tags={tagList} />
         </div>
         <div className="border-t border-(--accent-4)/50 my-2"></div>
@@ -244,63 +254,65 @@ export const NodeGrid = ({
           </div>
         )}
         <div className="border-t border-(--accent-4)/50 my-2"></div>
-        <div className="flex justify-between text-xs">
-          <span>{t("node.network")}</span>
-          <div>
-            <span>
-              {t("node.uploadPrefix")}{" "}
-              {stats
-                ? formatBytes(stats.net_out, true)
-                : t("node.notAvailable")}
-            </span>
-            <span className="ml-2">
-              {t("node.downloadPrefix")}{" "}
-              {stats ? formatBytes(stats.net_in, true) : t("node.notAvailable")}
-            </span>
-          </div>
-        </div>
-        {selectTrafficProgressStyle === "circular" && (
-          <div className="flex items-center justify-between text-xs">
-            <span className="w-1/5">{t("node.traffic")}</span>
-            <div className="flex items-center justify-between w-4/5">
-              <div className="flex items-center w-1/4">
-                {node.traffic_limit !== 0 && (
-                  <CircleProgress
-                    value={trafficPercentage}
-                    maxValue={100}
-                    size={32}
-                    strokeWidth={4}
-                    showPercentage={true}
-                  />
-                )}
-              </div>
-              <div className="w-3/4 text-right">
-                <div>
-                  <span>
-                    {t("node.uploadPrefix")}{" "}
-                    {stats
-                      ? formatBytes(stats.net_total_up)
-                      : t("node.notAvailable")}
-                  </span>
-                  <span className="ml-2">
-                    {t("node.downloadPrefix")}{" "}
-                    {stats
-                      ? formatBytes(stats.net_total_down)
-                      : t("node.notAvailable")}
-                  </span>
-                </div>
-                {node.traffic_limit !== 0 && isOnline && stats && (
-                  <div className="text-right">
-                    {formatTrafficLimit(
-                      node.traffic_limit,
-                      node.traffic_limit_type
-                    )}
-                  </div>
-                )}
-              </div>
+        <div data-section="traffic">
+          <div className="flex justify-between text-xs">
+            <span>{t("node.network")}</span>
+            <div>
+              <span>
+                {t("node.uploadPrefix")}{" "}
+                {stats
+                  ? formatBytes(stats.net_out, true)
+                  : t("node.notAvailable")}
+              </span>
+              <span className="ml-2">
+                {t("node.downloadPrefix")}{" "}
+                {stats ? formatBytes(stats.net_in, true) : t("node.notAvailable")}
+              </span>
             </div>
           </div>
-        )}
+          {selectTrafficProgressStyle === "circular" && (
+            <div className="flex items-center justify-between text-xs mt-2">
+              <span className="w-1/5">{t("node.traffic")}</span>
+              <div className="flex items-center justify-between w-4/5">
+                <div className="flex items-center justify-center w-1/4 h-8">
+                  {node.traffic_limit !== 0 && (
+                    <CircleProgress
+                      value={trafficPercentage}
+                      maxValue={100}
+                      size={32}
+                      strokeWidth={4}
+                      showPercentage={true}
+                    />
+                  )}
+                </div>
+                <div className="w-3/4 text-right">
+                  <div>
+                    <span>
+                      {t("node.uploadPrefix")}{" "}
+                      {stats
+                        ? formatBytes(stats.net_total_up)
+                        : t("node.notAvailable")}
+                    </span>
+                    <span className="ml-2">
+                      {t("node.downloadPrefix")}{" "}
+                      {stats
+                        ? formatBytes(stats.net_total_down)
+                        : t("node.notAvailable")}
+                    </span>
+                  </div>
+                  {node.traffic_limit !== 0 && isOnline && stats && (
+                    <div className="text-right">
+                      {formatTrafficLimit(
+                        node.traffic_limit,
+                        node.traffic_limit_type
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
         <div className="flex justify-between text-xs">
           <span>{t("node.load")}</span>
           <span>{load}</span>
