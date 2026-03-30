@@ -145,7 +145,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableCutPeak: true,
   enableConnectBreaks: false,
   pingChartMaxPoints: 0,
-  monitorNodeSortMode: "id_asc",
+  monitorNodeSortMode: "weight_asc",
   monitorNodeCustomOrder: "",
   isShowHWBarInCard: true,
   isShowValueUnderProgressBar: true,
@@ -252,5 +252,5 @@ export type HeaderStyle = "fixed" | "levitation";
 export type FooterStyle = "fixed" | "levitation" | "followContent" | "hidden";
 export type DisplayMode = "show" | "hideAll" | "hideUnset";
 export type BackgroundMode = "solidColor" | "image" | "video";
-export type MonitorNodeSortMode = "name_asc" | "name_desc" | "id_asc" | "id_desc" | "target_asc" | "target_desc" | "type_asc" | "type_desc" | "custom";
+export type MonitorNodeSortMode = "name_asc" | "name_desc" | "id_asc" | "id_desc" | "weight_asc" | "weight_desc" | "target_asc" | "target_desc" | "type_asc" | "type_desc" | "custom";
 export type LogoShapeType = "circle" | "original";

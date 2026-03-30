@@ -159,10 +159,10 @@ const PingOverview = memo(() => {
     saveSort(SERVER_SORT_KEY, key, dir);
   };
 
-  // 管理员 Ping 任务数据（用于按 target/type 排序）
+  // 管理员 Ping 任务数据（用于按 target/type/weight 排序）
   const [pingTasksFull, setPingTasksFull] = useState<PingTaskFull[]>([]);
   useEffect(() => {
-    const needsAdminData = ["target_asc", "target_desc", "type_asc", "type_desc"].includes(monitorNodeSortMode);
+    const needsAdminData = ["target_asc", "target_desc", "type_asc", "type_desc", "weight_asc", "weight_desc"].includes(monitorNodeSortMode);
     if (needsAdminData) {
       apiService.getPingTasks().then((tasks) => setPingTasksFull(tasks));
     }
@@ -329,7 +329,7 @@ const PingOverview = memo(() => {
     }
     const arr = Array.from(taskMap.entries()).map(([name, taskId]) => ({ name, taskId }));
 
-    // 构建 admin API 数据查找表（用于 target/type 排序）
+    // 构建 admin API 数据查找表（用于 target/type/weight 排序）
     const adminTaskMap = new Map<number, PingTaskFull>();
     for (const task of pingTasksFull) {
       adminTaskMap.set(task.id, task);
@@ -360,6 +360,18 @@ const PingOverview = memo(() => {
     } else if (mode === "id_asc" || mode === "id_desc") {
       const dir = mode === "id_asc" ? 1 : -1;
       arr.sort((a, b) => dir * (a.taskId - b.taskId));
+    } else if (mode === "weight_asc" || mode === "weight_desc") {
+      const dir = mode === "weight_asc" ? 1 : -1;
+      if (adminTaskMap.size > 0) {
+        arr.sort((a, b) => {
+          const aw = adminTaskMap.get(a.taskId)?.weight ?? 0;
+          const bw = adminTaskMap.get(b.taskId)?.weight ?? 0;
+          if (aw === bw) return dir * (a.taskId - b.taskId);
+          return dir * (aw - bw);
+        });
+      } else {
+        arr.sort((a, b) => dir * (a.taskId - b.taskId));
+      }
     } else if (mode === "target_asc" || mode === "target_desc") {
       const dir = mode === "target_asc" ? 1 : -1;
       if (adminTaskMap.size > 0) {

@@ -107,6 +107,7 @@ export interface PingTask {
 
 export interface PingTaskFull {
   id: number;
+  weight: number;
   name: string;
   clients: string[];
   type: string;

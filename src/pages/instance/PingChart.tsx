@@ -54,10 +54,10 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
   const { t } = useLocale();
   const { chartContentRef, handleChartMouseMove, tooltipProps } = useTooltipScrollLock();
 
-  // 管理员 Ping 任务数据（用于按 target/type 排序）
+  // 管理员 Ping 任务数据（用于按 target/type/weight 排序）
   const [pingTasksFull, setPingTasksFull] = useState<PingTaskFull[]>([]);
   useEffect(() => {
-    const needsAdminData = ["target_asc", "target_desc", "type_asc", "type_desc"].includes(monitorNodeSortMode);
+    const needsAdminData = ["target_asc", "target_desc", "type_asc", "type_desc", "weight_asc", "weight_desc"].includes(monitorNodeSortMode);
     if (needsAdminData) {
       apiService.getPingTasks().then((tasks) => setPingTasksFull(tasks));
     }
@@ -254,6 +254,18 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
     } else if (mode === "id_asc" || mode === "id_desc") {
       const dir = mode === "id_asc" ? 1 : -1;
       tasks.sort((a, b) => dir * (a.id - b.id));
+    } else if (mode === "weight_asc" || mode === "weight_desc") {
+      const dir = mode === "weight_asc" ? 1 : -1;
+      if (adminTaskMap.size > 0) {
+        tasks.sort((a, b) => {
+          const aw = adminTaskMap.get(a.id)?.weight ?? 0;
+          const bw = adminTaskMap.get(b.id)?.weight ?? 0;
+          if (aw === bw) return dir * (a.id - b.id);
+          return dir * (aw - bw);
+        });
+      } else {
+        tasks.sort((a, b) => dir * (a.id - b.id));
+      }
     } else if (mode === "target_asc" || mode === "target_desc") {
       const dir = mode === "target_asc" ? 1 : -1;
       if (adminTaskMap.size > 0) {
