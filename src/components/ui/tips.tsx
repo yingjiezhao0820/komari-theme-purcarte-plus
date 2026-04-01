@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Info } from "lucide-react";
 import { Popover, Dialog } from "@radix-ui/themes";
 import { useIsMobile } from "@/hooks/useMobile";
@@ -10,6 +10,12 @@ interface TipsProps {
   trigger?: React.ReactNode;
   mode?: "popup" | "dialog" | "auto";
   side?: "top" | "right" | "bottom" | "left";
+  contentMinWidth?: string;
+  contentMaxWidth?: string;
+  openDelayMs?: number;
+  closeDelayMs?: number;
+  contentClassName?: string;
+  contentStyle?: React.CSSProperties;
 }
 
 const Tips: React.FC<TipsProps & React.HTMLAttributes<HTMLDivElement>> = ({
@@ -19,6 +25,12 @@ const Tips: React.FC<TipsProps & React.HTMLAttributes<HTMLDivElement>> = ({
   children,
   side = "bottom",
   mode = "popup",
+  contentMinWidth,
+  contentMaxWidth,
+  openDelayMs = 80,
+  closeDelayMs = 240,
+  contentClassName,
+  contentStyle,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,11 +39,36 @@ const Tips: React.FC<TipsProps & React.HTMLAttributes<HTMLDivElement>> = ({
   // determine whether to render a Dialog instead of a Popover
   const isDialog = mode === "dialog" || (mode === "auto" && isMobile);
 
-  const handleInteraction = () => {
-    // toggle when using Dialog (click) or on mobile (click)
-    if (isDialog || isMobile) {
-      setIsOpen(!isOpen);
+  const openTimer = useRef<number | null>(null);
+  const closeTimer = useRef<number | null>(null);
+
+  const clearTimers = () => {
+    if (openTimer.current) {
+      window.clearTimeout(openTimer.current);
+      openTimer.current = null;
     }
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => clearTimers();
+  }, []);
+
+  const scheduleOpen = () => {
+    clearTimers();
+    openTimer.current = window.setTimeout(() => setIsOpen(true), openDelayMs);
+  };
+
+  const scheduleClose = () => {
+    clearTimers();
+    closeTimer.current = window.setTimeout(() => setIsOpen(false), closeDelayMs);
+  };
+
+  const handleInteraction = () => {
+    setIsOpen((prev) => !prev);
   };
 
   return (
@@ -57,22 +94,23 @@ const Tips: React.FC<TipsProps & React.HTMLAttributes<HTMLDivElement>> = ({
           <Popover.Trigger>
             <div
               className={`flex items-center justify-center rounded-full font-bold cursor-pointer `}
-              onClick={isMobile ? handleInteraction : undefined}
-              onMouseEnter={!isMobile ? () => setIsOpen(true) : undefined}
-              onMouseLeave={!isMobile ? () => setIsOpen(false) : undefined}>
+              onClick={handleInteraction}
+              onMouseEnter={!isMobile ? scheduleOpen : undefined}
+              onMouseLeave={!isMobile ? scheduleClose : undefined}>
               {trigger ?? <Info color={color} size={size} />}
             </div>
           </Popover.Trigger>
           <Popover.Content
             side={side}
             sideOffset={5}
-            onMouseEnter={!isMobile ? () => setIsOpen(true) : undefined}
-            onMouseLeave={!isMobile ? () => setIsOpen(false) : undefined}
-            className="purcarte-blur theme-card-style z-50"
+            onMouseEnter={!isMobile ? scheduleOpen : undefined}
+            onMouseLeave={!isMobile ? scheduleClose : undefined}
+            className={`purcarte-blur theme-card-style z-[2100] ${contentClassName ?? ""}`.trim()}
             style={{
-              minWidth: isMobile ? "12rem" : "16rem",
-              maxWidth: isMobile ? "80vw" : "16rem",
+              minWidth: contentMinWidth ?? (isMobile ? "12rem" : "20rem"),
+              maxWidth: contentMaxWidth ?? (isMobile ? "85vw" : "28rem"),
               backgroundColor: "var(--card)",
+              ...contentStyle,
             }}>
             <div className="relative text-sm text-secondary-foreground">
               {children}

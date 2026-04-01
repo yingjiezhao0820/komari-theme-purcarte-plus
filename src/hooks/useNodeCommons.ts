@@ -11,6 +11,7 @@ import type { AdvancedSearchState } from "@/types/advancedSearch";
 import { isStateDefault } from "@/types/advancedSearch";
 import { applyAdvancedFilters } from "@/hooks/useAdvancedSearchFilter";
 import { useExchangeRates } from "@/components/enhanced/useExchangeRates";
+import type { TagItem } from "@/types/tags";
 
 type SortKey = "trafficUp" | "trafficDown" | "speedUp" | "speedDown" | null;
 type SortOrder = "asc" | "desc";
@@ -165,7 +166,20 @@ export const useNodeCommons = (node: NodeData & { stats?: any; _liveDataReady?: 
   const isOnline = stats ? stats.online : false;
   // 离线确认：liveData 已到达且节点不在线（包括 stats 为 undefined 的从未上线节点）
   const isConfirmedOffline = _liveDataReady ? !isOnline : false;
-  const price = formatPrice(node.price, node.currency, node.billing_cycle);
+  let priceTag: TagItem | null = null;
+  if (node.price && node.billing_cycle) {
+    priceTag = {
+      type: "price",
+      text: formatPrice(node.price, node.currency, node.billing_cycle),
+      color: null,
+      payload: {
+        price: node.price,
+        currency: node.currency,
+        billingCycle: node.billing_cycle,
+        expiredAt: node.expired_at,
+      },
+    };
+  }
 
   const cpuUsage = stats && isOnline ? stats.cpu : 0;
   const memUsage =
@@ -224,14 +238,14 @@ export const useNodeCommons = (node: NodeData & { stats?: any; _liveDataReady?: 
       : t("node.notSet");
 
   const tagList = [
+    ...(priceTag ? [priceTag] : []),
+    ...(daysLeftTag ? [daysLeftTag] : []),
     ...(node.public_remark
       ? node.public_remark
           .split(";")
           .map((tag) => tag.trim())
           .filter(Boolean)
       : []),
-    ...(price ? [price] : []),
-    ...(daysLeftTag ? [daysLeftTag] : []),
     ...(typeof node.tags === "string"
       ? node.tags
           .split(";")

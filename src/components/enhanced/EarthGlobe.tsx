@@ -125,11 +125,11 @@ export function EarthGlobe() {
   // 获取主题色
   const themeColor = useMemo(() => {
     const cssColor = getComputedStyle(document.documentElement)
-        .getPropertyValue("--accent-9")
+        .getPropertyValue(appearance ? "--accent-9" : "--accent-9")
         .trim();
     const storedColor = localStorage.getItem('color')?.replace(/"/g, '');
     return cssColor || storedColor || "#3b82f6";
-  }, [isDark, modalOpen]);
+  }, [appearance]);
 
   // 背景配置
   const bgConfig = useMemo(() => {

@@ -1,8 +1,66 @@
 import type { NodeData } from "@/types/node.d";
 import type { ExchangeRates } from "./useExchangeRates";
 
+export type FinanceNode = Pick<
+  NodeData,
+  "price" | "currency" | "billing_cycle" | "expired_at"
+>;
+
 // 到期时间超过多少年视为无限期（按原价计算）
 const LONG_TERM_YEARS = 100;
+
+function normalizeNodePriceValue(priceValue: FinanceNode["price"]): number {
+  const parsed = parseFloat(String(priceValue));
+  if (parsed === -1 || Number.isNaN(parsed)) return 0;
+  return parsed;
+}
+
+function buildCalculationTime(selectedDateStr: string): Date {
+  const now = new Date();
+  const todayStr = new Date(
+    now.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })
+  )
+    .toISOString()
+    .split("T")[0];
+
+  if (selectedDateStr === todayStr) {
+    return now;
+  }
+
+  return new Date(`${selectedDateStr}T00:00:00+08:00`);
+}
+
+function calculateRemainingValueFromPrice(
+  price: number,
+  billingCycle: number,
+  expiredAt: string | null,
+  date: Date
+): { remainingValue: number; isLongTerm: boolean } {
+  if (!expiredAt) return { remainingValue: 0, isLongTerm: false };
+
+  if (billingCycle === -1) {
+    return { remainingValue: price, isLongTerm: true };
+  }
+
+  const exp = new Date(expiredAt);
+  const nowUTC = new Date(date.toISOString());
+  const diffMs = exp.getTime() - nowUTC.getTime();
+  const diffYears = diffMs / (1000 * 60 * 60 * 24 * 365);
+
+  if (diffYears > LONG_TERM_YEARS) {
+    return { remainingValue: price, isLongTerm: true };
+  }
+
+  const billingCycleMs = billingCycle * 24 * 60 * 60 * 1000;
+  if (diffMs > 0 && billingCycleMs > 0) {
+    return {
+      remainingValue: price * (diffMs / billingCycleMs),
+      isLongTerm: false,
+    };
+  }
+
+  return { remainingValue: 0, isLongTerm: false };
+}
 
 /**
  * 将货币符号或代码统一标准化为货币代码
@@ -54,7 +112,7 @@ export function normalizeCurrencyToCode(cur: string): string {
  *   → 100 / 7.2 = 13.89 USD ✓
  */
 export function parsePriceToBase(
-  node: NodeData,
+  node: FinanceNode,
   rates: ExchangeRates
 ): { price: number; isSpecialFree: boolean } {
   let price = parseFloat(String(node.price));
@@ -84,34 +142,18 @@ export const parsePriceToCNY = parsePriceToBase;
  * 计算节点剩余价值（以 rates 基准货币计）
  */
 export function calculateRemainingValue(
-  node: NodeData,
+  node: FinanceNode,
   rates: ExchangeRates,
   date: Date = new Date()
 ): { remainingValue: number; isLongTerm: boolean } {
-  if (!node.expired_at) return { remainingValue: 0, isLongTerm: false };
-
   const { price: priceBase } = parsePriceToBase(node, rates);
 
-  // 一次性付费（billing_cycle = -1）视为长期机器，按原价计算
-  if (node.billing_cycle === -1) {
-    return { remainingValue: priceBase, isLongTerm: true };
-  }
-
-  const exp = new Date(node.expired_at);
-  const nowUTC = new Date(date.toISOString());
-  const diffMs = exp.getTime() - nowUTC.getTime();
-  const diffYears = diffMs / (1000 * 60 * 60 * 24 * 365);
-
-  if (diffYears > LONG_TERM_YEARS) {
-    return { remainingValue: priceBase, isLongTerm: true };
-  }
-
-  const billingCycleMs = node.billing_cycle * 24 * 60 * 60 * 1000;
-  if (diffMs > 0 && billingCycleMs > 0) {
-    return { remainingValue: priceBase * (diffMs / billingCycleMs), isLongTerm: false };
-  }
-
-  return { remainingValue: 0, isLongTerm: false };
+  return calculateRemainingValueFromPrice(
+    priceBase,
+    node.billing_cycle,
+    node.expired_at,
+    date
+  );
 }
 
 /**
@@ -140,47 +182,33 @@ export function calculateMonthlyExpense(
  * 根据选择的日期计算剩余价值（以 rates 基准货币计）
  */
 export function calculateRemainValueForDate(
-  node: NodeData,
+  node: FinanceNode,
   rates: ExchangeRates,
   selectedDateStr: string
 ): number {
-  const now = new Date();
-  const todayStr = new Date(
-    now.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })
-  )
-    .toISOString()
-    .split("T")[0];
-
-  let calculationTime: Date;
-  if (selectedDateStr === todayStr) {
-    calculationTime = now;
-  } else {
-    calculationTime = new Date(selectedDateStr + "T00:00:00+08:00");
-  }
-
-  if (!node.expired_at) return 0;
-
   const { price: priceBase } = parsePriceToBase(node, rates);
 
-  if (node.billing_cycle === -1) {
-    return priceBase;
-  }
+  return calculateRemainingValueFromPrice(
+    priceBase,
+    node.billing_cycle,
+    node.expired_at,
+    buildCalculationTime(selectedDateStr)
+  ).remainingValue;
+}
 
-  const exp = new Date(node.expired_at);
-  const nowUTC = new Date(calculationTime.toISOString());
-  const diffMs = exp.getTime() - nowUTC.getTime();
-  const diffYears = diffMs / (1000 * 60 * 60 * 24 * 365);
-
-  if (diffYears > LONG_TERM_YEARS) {
-    return priceBase;
-  }
-
-  const billingCycleMs = node.billing_cycle * 24 * 60 * 60 * 1000;
-  if (diffMs > 0 && billingCycleMs > 0) {
-    return priceBase * (diffMs / billingCycleMs);
-  }
-
-  return 0;
+/**
+ * 根据选择的日期计算原始货币剩余价值（未做汇率换算）
+ */
+export function calculateOriginalRemainValueForDate(
+  node: FinanceNode,
+  selectedDateStr: string
+): number {
+  return calculateRemainingValueFromPrice(
+    normalizeNodePriceValue(node.price),
+    node.billing_cycle,
+    node.expired_at,
+    buildCalculationTime(selectedDateStr)
+  ).remainingValue;
 }
 
 /**

@@ -15,7 +15,9 @@ import {
   normalizeCurrencyToCode,
 } from "./financeUtils";
 import { ServerTradeModal } from "./ServerTradeModal";
+import { RemainingValuePanel } from "./RemainingValuePanel";
 import { useLocale } from "@/config/hooks";
+import Tips from "@/components/ui/tips";
 
 type SortBy = "weight_asc" | "weight_desc" | "price_asc" | "price_desc";
 
@@ -151,6 +153,7 @@ export function FinanceWidget() {
   // URL 分享参数：交易日期和金额
   const [initialTradeDate, setInitialTradeDate] = useState<string | undefined>();
   const [initialTradeAmount, setInitialTradeAmount] = useState<string | undefined>();
+  const [initialTradeRate, setInitialTradeRate] = useState<string | undefined>();
   const urlTradeHandled = useRef(false);
 
   // 监听来自 Header 按钮的自定义事件
@@ -172,6 +175,7 @@ export function FinanceWidget() {
     const tmCur = params.get("tm_cur");
     const tmDate = params.get("tm_date");
     const tmAmount = params.get("tm_amount");
+    const tmRate = params.get("tm_rate");
     const tq = params.get("t_q");
 
     // 如果有 tm_cur，更新货币单位到 localStorage 和状态
@@ -181,16 +185,17 @@ export function FinanceWidget() {
     }
 
     // 如果有 t_q（UUID搜索），尝试打开交易模态框
-    if (tq && (tmDate || tmAmount || tmCur)) {
+    if (tq && (tmDate || tmAmount || tmCur || tmRate)) {
       const targetNode = nodes.find((n) => n.uuid === tq);
       if (targetNode) {
         urlTradeHandled.current = true;
         setInitialTradeDate(tmDate || undefined);
         setInitialTradeAmount(tmAmount || undefined);
+        setInitialTradeRate(tmRate || undefined);
         setTradeNode(targetNode);
       }
     }
-  }, [nodes]);
+  }, [isAdvancedSearchEnabled, nodes]);
 
   const financeData = useMemo(
     () => calculateFinanceData(nodes, rates, excludeFree, sortBy, t),
@@ -356,7 +361,12 @@ export function FinanceWidget() {
                 className="finance-list-item"
                 style={{ cursor: "pointer" }}
                 onClick={(e) => {
-                  if ((e.target as HTMLElement).closest(".help-icon")) return;
+                  if (
+                    (e.target as HTMLElement).closest(".help-icon") ||
+                    (e.target as HTMLElement).closest(".remaining-value-tip-trigger")
+                  ) {
+                    return;
+                  }
                   setTradeNode(item.node);
                 }}>
                 <span
@@ -365,9 +375,21 @@ export function FinanceWidget() {
                   {item.node.name}
                 </span>
                 <div className="item-right">
-                  <span className="item-value">
-                    {sym} {item.displayVal.toFixed(2)}
-                  </span>
+                  <Tips
+                    className="remaining-value-tip-trigger"
+                    mode="auto"
+                    side="bottom"
+                    contentStyle={{ minWidth: "20rem", maxWidth: "24rem" }}
+                    trigger={
+                      <span className="item-value remaining-value-tip-trigger">
+                        {sym} {item.displayVal.toFixed(2)}
+                      </span>
+                    }>
+                    <RemainingValuePanel
+                      node={item.node}
+                      initialCurrency={userCurrency}
+                    />
+                  </Tips>
                   {item.tooltipText && (
                     <div
                       className="help-icon"
@@ -505,9 +527,11 @@ export function FinanceWidget() {
             setTradeNode(null);
             setInitialTradeDate(undefined);
             setInitialTradeAmount(undefined);
+            setInitialTradeRate(undefined);
           }}
           initialTradeDate={initialTradeDate}
           initialTradeAmount={initialTradeAmount}
+          initialTradeRate={initialTradeRate}
         />
       )}
     </>

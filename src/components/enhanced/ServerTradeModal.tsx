@@ -1,11 +1,11 @@
 import { useAppConfig } from "@/config";
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import type { NodeData } from "@/types/node.d";
 import type { ExchangeRates } from "./useExchangeRates";
 import { CURRENCY_SYMBOLS } from "./useExchangeRates";
 import { EMOJI_MAP } from "./emojiMap";
 import {
-  calculateRemainValueForDate,
+  calculateOriginalRemainValueForDate,
   formatBytes,
   formatTraffic,
   getBillingCycleText,
@@ -23,6 +23,12 @@ interface ServerTradeModalProps {
   onClose: () => void;
   initialTradeDate?: string;
   initialTradeAmount?: string;
+  initialTradeRate?: string;
+}
+
+function formatRateInput(rate: number): string {
+  if (!Number.isFinite(rate) || rate <= 0) return "1";
+  return String(Number(rate.toFixed(6)));
 }
 
 export function ServerTradeModal({
@@ -32,6 +38,7 @@ export function ServerTradeModal({
   onClose,
   initialTradeDate,
   initialTradeAmount,
+  initialTradeRate,
 }: ServerTradeModalProps) {
   const { t, i18n } = useLocale();
   const { enableSearchButton, enableAdvancedSearch } = useAppConfig();
@@ -47,9 +54,45 @@ export function ServerTradeModal({
   const [tradeDate, setTradeDate] = useState(initialTradeDate || todayStr);
   const [tradeAmount, setTradeAmount] = useState(initialTradeAmount || "");
 
-  // 计算剩余价值（已经是用户选择的基准货币）
+  const sourceCurrencyCode = useMemo(
+    () => normalizeCurrencyToCode(node.currency || "¥"),
+    [node.currency]
+  );
+  const sourceCurrencySymbol =
+    CURRENCY_SYMBOLS[sourceCurrencyCode] || node.currency || sourceCurrencyCode;
+  const referenceRate = useMemo(() => {
+    if (sourceCurrencyCode === userCurrency) return 1;
+    const rate = rates[sourceCurrencyCode];
+    if (Number.isFinite(rate) && rate > 0) {
+      return 1 / rate;
+    }
+    return 1;
+  }, [rates, sourceCurrencyCode, userCurrency]);
+  const [customRateInput, setCustomRateInput] = useState(
+    initialTradeRate || formatRateInput(referenceRate)
+  );
+  const [isCustomRateDirty, setIsCustomRateDirty] = useState(
+    Boolean(initialTradeRate)
+  );
+
+  useEffect(() => {
+    if (!isCustomRateDirty) {
+      setCustomRateInput(formatRateInput(referenceRate));
+    }
+  }, [referenceRate, isCustomRateDirty]);
+
+  const parsedCustomRate = parseFloat(customRateInput);
+  const appliedRate =
+    Number.isFinite(parsedCustomRate) && parsedCustomRate > 0
+      ? parsedCustomRate
+      : referenceRate;
+  const isCustomRateApplied = Math.abs(appliedRate - referenceRate) > 1e-9;
+  const originalRemainValue = useMemo(
+    () => calculateOriginalRemainValueForDate(node, tradeDate),
+    [node, tradeDate]
+  );
   const displayRemainValue = parseFloat(
-    calculateRemainValueForDate(node, rates, tradeDate).toFixed(2)
+    (originalRemainValue * appliedRate).toFixed(2)
   );
 
   // 溢价计算
@@ -171,6 +214,27 @@ export function ServerTradeModal({
     [handleClose]
   );
 
+  const handleRateChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setIsCustomRateDirty(true);
+      setCustomRateInput(e.target.value);
+    },
+    []
+  );
+
+  const handleRateBlur = useCallback(() => {
+    const parsed = parseFloat(customRateInput);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      setCustomRateInput(formatRateInput(referenceRate));
+      setIsCustomRateDirty(false);
+    }
+  }, [customRateInput, referenceRate]);
+
+  const handleResetRate = useCallback(() => {
+    setCustomRateInput(formatRateInput(referenceRate));
+    setIsCustomRateDirty(false);
+  }, [referenceRate]);
+
   const handleShare = useCallback(() => {
     // 如果没有开启高级搜索功能，禁止分享并弹出 Toast 提示
     if (!isAdvancedSearchEnabled) {
@@ -186,6 +250,9 @@ export function ServerTradeModal({
     }
     if (tradeAmount) {
       params.set("tm_amount", tradeAmount);
+    }
+    if (isCustomRateApplied) {
+      params.set("tm_rate", formatRateInput(appliedRate));
     }
     // 货币单位
     if (userCurrency && userCurrency !== "CNY") {
@@ -206,7 +273,16 @@ export function ServerTradeModal({
       document.body.removeChild(textarea);
       toast.success(t("enhanced.trade.shareCopied"));
     });
-  }, [isAdvancedSearchEnabled, node.uuid, tradeDate, tradeAmount, userCurrency, t]);
+  }, [
+    isAdvancedSearchEnabled,
+    node.uuid,
+    tradeDate,
+    tradeAmount,
+    isCustomRateApplied,
+    appliedRate,
+    userCurrency,
+    t,
+  ]);
 
   const handleExportImage = useCallback(async () => {
     const modal = modalRef.current;
@@ -662,6 +738,28 @@ export function ServerTradeModal({
             </div>
 
             <div className="trade-input-group">
+              <label className="trade-label">{t("enhanced.trade.customRate")}</label>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <input
+                  type="number"
+                  className="trade-input"
+                  placeholder={t("enhanced.trade.customRatePlaceholder")}
+                  step="0.0001"
+                  min="0"
+                  value={customRateInput}
+                  onChange={handleRateChange}
+                  onBlur={handleRateBlur}
+                />
+                <button className="finance-btn" type="button" onClick={handleResetRate}>
+                  {t("enhanced.trade.resetRate")}
+                </button>
+              </div>
+              <div className="finance-tooltip" style={{ marginTop: 6 }}>
+                {t("enhanced.trade.referenceRate")}: 1 {sourceCurrencySymbol} ≈ {referenceRate.toFixed(6)} {sym}
+              </div>
+            </div>
+
+            <div className="trade-input-group">
               <label className="trade-label">{t("enhanced.trade.tradeAmount")}</label>
               <input
                 type="number"
@@ -675,6 +773,12 @@ export function ServerTradeModal({
             </div>
 
             <div className="trade-result-box">
+              <div className="trade-result-row">
+                <span>{t("enhanced.trade.appliedRate")}</span>
+                <span className="trade-result-value">
+                  1 {sourceCurrencySymbol} ≈ {appliedRate.toFixed(6)} {sym}
+                </span>
+              </div>
               <div className="trade-result-row">
                 <span>{t("enhanced.trade.remainValue")}</span>
                 <span className="trade-result-value">

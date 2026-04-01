@@ -4,10 +4,12 @@ import { cn } from "@/utils";
 import { useAppConfig } from "@/config";
 import { allColors } from "@/config/default";
 import type { ColorType } from "@/config/default";
+import type { TagItem } from "@/types/tags";
 import Tips from "./tips";
+import { RemainingValuePanel } from "@/components/enhanced/RemainingValuePanel";
 
 interface TagProps extends React.HTMLAttributes<HTMLDivElement> {
-  tags: string[];
+  tags: Array<string | TagItem>;
 }
 
 // 解析带颜色的标签
@@ -25,7 +27,7 @@ const parseTagWithColor = (tag: string) => {
 };
 
 interface TagItemProps {
-  tag: string;
+  tag: string | TagItem;
   badgeColor: ColorType;
   enableTransparentTags: boolean;
 }
@@ -37,7 +39,14 @@ const TagItem: React.FC<TagItemProps> = ({
 }) => {
   const [isOverflow, setIsOverflow] = useState(false);
   const tagRef = useRef<HTMLDivElement>(null);
-  const { text } = parseTagWithColor(tag);
+  const parsed: TagItem =
+    typeof tag === "string"
+      ? {
+          text: parseTagWithColor(tag).text,
+          color: parseTagWithColor(tag).color,
+        }
+      : tag;
+  const { text } = parsed;
 
   useLayoutEffect(() => {
     const element = tagRef.current;
@@ -64,6 +73,26 @@ const TagItem: React.FC<TagItemProps> = ({
       {text}
     </div>
   );
+
+  if (parsed.type === "price" && parsed.payload) {
+    return (
+      <Tips
+        mode="auto"
+        side="bottom"
+        contentMinWidth="20rem"
+        contentMaxWidth="24rem"
+        trigger={tagContent}>
+        <RemainingValuePanel
+          node={{
+            price: parsed.payload.price,
+            currency: parsed.payload.currency,
+            billing_cycle: parsed.payload.billingCycle,
+            expired_at: parsed.payload.expiredAt,
+          }}
+        />
+      </Tips>
+    );
+  }
 
   if (isOverflow) {
     return (
@@ -92,8 +121,14 @@ const Tag = React.forwardRef<HTMLDivElement, TagProps>(
         className={cn("flex flex-wrap gap-1 w-full", className)}
         {...props}>
         {tags.map((tag, index) => {
-          const { color } = parseTagWithColor(tag);
-          const badgeColor = color || colorList[index % colorList.length];
+          const parsed: TagItem =
+            typeof tag === "string"
+              ? {
+                  text: parseTagWithColor(tag).text,
+                  color: parseTagWithColor(tag).color,
+                }
+              : tag;
+          const badgeColor = parsed.color || colorList[index % colorList.length];
           return (
             <TagItem
               key={index}
