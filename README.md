@@ -2,7 +2,7 @@
 
 <img width="900" src="./preview.png" alt="PurCarte Theme Preview">
 
-## ✨ PurCarte-Plus ✨
+## ✨ PurCarte-Pro ✨
 
 一款为 [Komari](https://github.com/komari-monitor/komari) 设计的磨砂玻璃风格个性化增强版主题
 
@@ -88,7 +88,7 @@
 
 ### 安装与启用
 
-1.  前往 [Releases](https://github.com/YoungYannick/komari-theme-purcarte-plus/releases) 页面下载最新的 `komari-theme-purcarte-plus.zip` 文件。
+1.  前往 [Releases](https://github.com/YoungYannick/komari-theme-purcarte-plus/releases) 页面下载最新的 `komari-theme-purcarte-pro.zip` 文件。
 2.  进入 Komari 后台，上传 `zip` 压缩包并启用本主题。
 
 > [!NOTE]
@@ -297,7 +297,7 @@
 - **隐藏底栏原始内容** (`hideFooterOriginal`)
   - **类型:** `switch`
   - **默认值:** `false`
-  - **说明:** 启用后将隐藏底栏中的 'Powered by Komari Monitor | Theme by PurCarte-Plus' 内容
+  - **说明:** 启用后将隐藏底栏中的 'Powered by Komari Monitor | Theme by PurCarte-Pro' 内容
 
 - **启用服务器运行时间** (`enableServerUptime`)
   - **类型:** `switch`
