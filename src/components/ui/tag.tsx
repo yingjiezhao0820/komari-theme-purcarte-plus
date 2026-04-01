@@ -90,6 +90,7 @@ const TagItem: React.FC<TagItemProps> = ({
             billing_cycle: parsed.payload.billingCycle,
             expired_at: parsed.payload.expiredAt,
           }}
+          initialCurrency="CNY"
         />
       </Tips>
     );
