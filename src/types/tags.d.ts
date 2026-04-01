@@ -6,6 +6,7 @@ export type TagItemType = "text" | "price" | "custom";
 export interface PriceTagPayload {
   price: NodeData["price"];
   currency: NodeData["currency"];
+  currencyCode?: NodeData["currency_code"];
   billingCycle: NodeData["billing_cycle"];
   expiredAt: NodeData["expired_at"];
 }

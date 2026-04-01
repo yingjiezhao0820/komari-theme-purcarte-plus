@@ -1,7 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { normalizeCurrencyToCode } from "@/components/enhanced/financeUtils";
-import { CURRENCY_SYMBOLS } from "@/components/enhanced/useExchangeRates";
+import { resolveCurrency } from "@/components/enhanced/financeUtils";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -60,15 +59,14 @@ export const formatUptime = (seconds: number) => {
 export const formatPrice = (
   price: number,
   currency: string,
-  billingCycle: number
+  billingCycle: number,
+  currencyCode?: string | null
 ) => {
   if (price === -1) return "免费";
   if (price === 0) return "";
-  if (!currency || !billingCycle) return "N/A";
+  if ((!currency && !currencyCode) || !billingCycle) return "N/A";
 
-  // 标准化货币显示符号
-  const code = normalizeCurrencyToCode(currency);
-  const sym = CURRENCY_SYMBOLS[code] || currency;
+  const sym = resolveCurrency({ currency, currency_code: currencyCode }).symbol;
 
   let cycleStr = `${billingCycle}天`;
   if (billingCycle < 0) {

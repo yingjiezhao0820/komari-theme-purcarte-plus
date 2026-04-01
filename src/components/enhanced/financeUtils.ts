@@ -1,9 +1,65 @@
 import type { NodeData } from "@/types/node.d";
 import type { ExchangeRates } from "./useExchangeRates";
+import { CURRENCY_SYMBOLS } from "./useExchangeRates";
+
+type CurrencyInput = {
+  currency?: string | null;
+  currency_code?: string | null;
+};
+
+type CurrencySource = "currency_code" | "currency" | "legacy_symbol" | "fallback";
+
+export interface ResolvedCurrency {
+  code: string;
+  symbol: string;
+  raw: string;
+  isAmbiguous: boolean;
+  source: CurrencySource;
+}
+
+const DEFAULT_CURRENCY_CODE = "CNY";
+
+const KNOWN_CODES = [
+  "CNY", "USD", "HKD", "EUR", "GBP", "JPY", "KRW", "THB", "RUB",
+  "INR", "TWD", "SGD", "AUD", "CAD", "CHF", "SEK", "NZD", "MYR",
+  "PHP", "VND", "BRL", "TRY", "ZAR", "AED", "SAR", "IDR", "PLN",
+  "NOK", "DKK", "CZK", "HUF", "ILS", "MXN", "ARS", "CLP", "COP",
+  "PEN", "BGN", "RON", "HRK", "ISK",
+] as const;
+
+const MULTI_CHAR_MAP: Record<string, string> = {
+  "HK$": "HKD",
+  "JP¥": "JPY",
+  "NT$": "TWD",
+  "S$": "SGD",
+  "A$": "AUD",
+  "C$": "CAD",
+  "NZ$": "NZD",
+  "R$": "BRL",
+  "RM": "MYR",
+  "د.إ": "AED",
+  "﷼": "SAR",
+};
+
+const SINGLE_CHAR_MAP: Record<string, string> = {
+  "¥": "CNY",
+  "$": "USD",
+  "€": "EUR",
+  "£": "GBP",
+  "₩": "KRW",
+  "฿": "THB",
+  "₽": "RUB",
+  "₹": "INR",
+  "₱": "PHP",
+  "₫": "VND",
+  "₺": "TRY",
+};
+
+const AMBIGUOUS_SYMBOLS = new Set(["¥", "$"]);
 
 export type FinanceNode = Pick<
   NodeData,
-  "price" | "currency" | "billing_cycle" | "expired_at"
+  "price" | "currency" | "currency_code" | "billing_cycle" | "expired_at"
 >;
 
 // 到期时间超过多少年视为无限期（按原价计算）
@@ -68,35 +124,82 @@ function calculateRemainingValueFromPrice(
  * 单独的 ¥ 默认视为 CNY（人民币），JPY 需要通过 "JP¥" 或 "JPY" 标识
  * 单独的 $ 默认视为 USD，其他美元需要前缀（HK$、S$、A$、C$、NZ$、NT$）
  */
-export function normalizeCurrencyToCode(cur: string): string {
-  const trimmed = cur.trim();
-  const upper = trimmed.toUpperCase();
-  // 标准三字母货币代码（直接返回）
-  const KNOWN_CODES = [
-    "CNY", "USD", "HKD", "EUR", "GBP", "JPY", "KRW", "THB", "RUB",
-    "INR", "TWD", "SGD", "AUD", "CAD", "CHF", "SEK", "NZD", "MYR",
-    "PHP", "VND", "BRL", "TRY", "ZAR", "AED", "SAR", "IDR", "PLN",
-    "NOK", "DKK", "CZK", "HUF", "ILS", "MXN", "ARS", "CLP", "COP",
-    "PEN", "BGN", "RON", "HRK", "ISK",
-  ];
-  if (KNOWN_CODES.includes(upper)) return upper;
-  // 多字符符号（必须在单字符之前匹配）
-  const MULTI_CHAR_MAP: Record<string, string> = {
-    "HK$": "HKD", "JP¥": "JPY", "NT$": "TWD", "S$": "SGD",
-    "A$": "AUD", "C$": "CAD", "NZ$": "NZD", "R$": "BRL",
-    "RM": "MYR", "د.إ": "AED", "﷼": "SAR",
-  };
-  for (const [sym, code] of Object.entries(MULTI_CHAR_MAP)) {
-    if (trimmed === sym) return code;
+function normalizeKnownCurrencyCode(code?: string | null): string | null {
+  const upper = code?.trim().toUpperCase();
+  if (!upper) return null;
+  return KNOWN_CODES.includes(upper as (typeof KNOWN_CODES)[number])
+    ? upper
+    : null;
+}
+
+export function resolveCurrency(
+  input: string | CurrencyInput | null | undefined,
+  fallbackCode: string = DEFAULT_CURRENCY_CODE
+): ResolvedCurrency {
+  if (typeof input === "string") {
+    return resolveCurrency({ currency: input }, fallbackCode);
   }
-  // 单字符符号
-  const SINGLE_CHAR_MAP: Record<string, string> = {
-    "¥": "CNY", "$": "USD", "€": "EUR", "£": "GBP",
-    "₩": "KRW", "฿": "THB", "₽": "RUB", "₹": "INR",
-    "₱": "PHP", "₫": "VND", "₺": "TRY",
+
+  const explicitCode = normalizeKnownCurrencyCode(input?.currency_code);
+  if (explicitCode) {
+    return {
+      code: explicitCode,
+      symbol: CURRENCY_SYMBOLS[explicitCode] || explicitCode,
+      raw: input?.currency?.trim() || explicitCode,
+      isAmbiguous: false,
+      source: "currency_code",
+    };
+  }
+
+  const trimmed = input?.currency?.trim() || "";
+  const upper = trimmed.toUpperCase();
+
+  if (normalizeKnownCurrencyCode(upper)) {
+    return {
+      code: upper,
+      symbol: CURRENCY_SYMBOLS[upper] || trimmed || upper,
+      raw: trimmed || upper,
+      isAmbiguous: false,
+      source: "currency",
+    };
+  }
+
+  if (trimmed in MULTI_CHAR_MAP) {
+    const code = MULTI_CHAR_MAP[trimmed];
+    return {
+      code,
+      symbol: CURRENCY_SYMBOLS[code] || trimmed,
+      raw: trimmed,
+      isAmbiguous: false,
+      source: "currency",
+    };
+  }
+
+  if (trimmed in SINGLE_CHAR_MAP) {
+    const code = SINGLE_CHAR_MAP[trimmed];
+    return {
+      code,
+      symbol: CURRENCY_SYMBOLS[code] || trimmed,
+      raw: trimmed,
+      isAmbiguous: AMBIGUOUS_SYMBOLS.has(trimmed),
+      source: "legacy_symbol",
+    };
+  }
+
+  const finalCode = normalizeKnownCurrencyCode(fallbackCode) || DEFAULT_CURRENCY_CODE;
+  return {
+    code: upper || finalCode,
+    symbol: CURRENCY_SYMBOLS[upper || finalCode] || trimmed || finalCode,
+    raw: trimmed || finalCode,
+    isAmbiguous: false,
+    source: "fallback",
   };
-  if (SINGLE_CHAR_MAP[trimmed]) return SINGLE_CHAR_MAP[trimmed];
-  return upper || "CNY"; // 未知货币返回原始大写，空值默认 CNY
+}
+
+export function normalizeCurrencyToCode(
+  cur: string | CurrencyInput | null | undefined
+): string {
+  return resolveCurrency(cur).code;
 }
 
 /**
@@ -125,8 +228,7 @@ export function parsePriceToBase(
     price = 0;
   }
 
-  const cur = node.currency || "¥";
-  const code = normalizeCurrencyToCode(cur);
+  const code = resolveCurrency(node).code;
   const rate = rates[code];
 
   // rate 存在且 > 0 时转换，否则原价返回（未知货币不转换）

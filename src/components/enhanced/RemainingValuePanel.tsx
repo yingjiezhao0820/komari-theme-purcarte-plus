@@ -8,12 +8,12 @@ import { CURRENCY_OPTIONS, CURRENCY_SYMBOLS, useExchangeRates } from "./useExcha
 import {
   calculateOriginalRemainValueForDate,
   getBillingCycleText,
-  normalizeCurrencyToCode,
+  resolveCurrency,
 } from "./financeUtils";
 
 type RemainingValueNode = Pick<
   NodeData,
-  "price" | "currency" | "billing_cycle" | "expired_at"
+  "price" | "currency" | "currency_code" | "billing_cycle" | "expired_at"
 >;
 
 interface RemainingValuePanelProps {
@@ -71,12 +71,12 @@ export function RemainingValuePanel({
   initialCurrency,
 }: RemainingValuePanelProps) {
   const { t } = useLocale();
-  const sourceCurrencyCode = useMemo(
-    () => normalizeCurrencyToCode(node.currency || "¥"),
-    [node.currency]
+  const resolvedCurrency = useMemo(
+    () => resolveCurrency(node),
+    [node]
   );
-  const sourceCurrencySymbol =
-    CURRENCY_SYMBOLS[sourceCurrencyCode] || node.currency || sourceCurrencyCode;
+  const sourceCurrencyCode = resolvedCurrency.code;
+  const sourceCurrencySymbol = resolvedCurrency.symbol;
   const todayStr = useMemo(() => getTodayInShanghai(), []);
   const [selectedCurrency, setSelectedCurrency] = useState(
     initialCurrency || sourceCurrencyCode

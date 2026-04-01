@@ -12,7 +12,7 @@ import {
   parsePriceToBase,
   calculateRemainingValue,
   calculateMonthlyExpense,
-  normalizeCurrencyToCode,
+  resolveCurrency,
 } from "./financeUtils";
 import { ServerTradeModal } from "./ServerTradeModal";
 import { RemainingValuePanel } from "./RemainingValuePanel";
@@ -243,7 +243,7 @@ export function FinanceWidget() {
     // 从节点数据中提取所有实际使用的货币代码
     const nodeCurrencies = new Set<string>();
     for (const node of nodes) {
-      const code = normalizeCurrencyToCode(node.currency || "¥");
+      const code = resolveCurrency(node).code;
       nodeCurrencies.add(code);
     }
     // 合并：节点货币 + 用户选择的货币，去重后排除当前基准货币

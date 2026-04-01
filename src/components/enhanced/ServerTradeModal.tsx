@@ -9,7 +9,7 @@ import {
   formatBytes,
   formatTraffic,
   getBillingCycleText,
-  normalizeCurrencyToCode,
+  resolveCurrency,
 } from "./financeUtils";
 import { useLocale } from "@/config/hooks";
 import { Tag } from "@/components/ui/tag";
@@ -54,12 +54,12 @@ export function ServerTradeModal({
   const [tradeDate, setTradeDate] = useState(initialTradeDate || todayStr);
   const [tradeAmount, setTradeAmount] = useState(initialTradeAmount || "");
 
-  const sourceCurrencyCode = useMemo(
-    () => normalizeCurrencyToCode(node.currency || "¥"),
-    [node.currency]
+  const resolvedCurrency = useMemo(
+    () => resolveCurrency(node),
+    [node]
   );
-  const sourceCurrencySymbol =
-    CURRENCY_SYMBOLS[sourceCurrencyCode] || node.currency || sourceCurrencyCode;
+  const sourceCurrencyCode = resolvedCurrency.code;
+  const sourceCurrencySymbol = resolvedCurrency.symbol;
   const referenceRate = useMemo(() => {
     if (sourceCurrencyCode === userCurrency) return 1;
     const rate = rates[sourceCurrencyCode];
@@ -672,7 +672,7 @@ export function ServerTradeModal({
               <div className="server-info-row">
                 <span className="info-label">{t("enhanced.trade.originalPrice")}</span>
                 <span className="info-value">
-                  {CURRENCY_SYMBOLS[normalizeCurrencyToCode(node.currency || "¥")] || node.currency || "¥"}{" "}
+                  {sourceCurrencySymbol}{" "}
                   {node.price === -1 ? t("enhanced.trade.free") : node.price}
                 </span>
               </div>

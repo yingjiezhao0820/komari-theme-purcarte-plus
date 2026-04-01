@@ -16,6 +16,7 @@ export interface NodeData {
   price: number;
   billing_cycle: number;
   currency: string;
+  currency_code?: string | null;
   expired_at: string | null;
   auto_renewal: boolean;
   group: string;

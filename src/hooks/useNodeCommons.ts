@@ -170,11 +170,17 @@ export const useNodeCommons = (node: NodeData & { stats?: any; _liveDataReady?: 
   if (node.price && node.billing_cycle) {
     priceTag = {
       type: "price",
-      text: formatPrice(node.price, node.currency, node.billing_cycle),
+      text: formatPrice(
+        node.price,
+        node.currency,
+        node.billing_cycle,
+        node.currency_code
+      ),
       color: null,
       payload: {
         price: node.price,
         currency: node.currency,
+        currencyCode: node.currency_code,
         billingCycle: node.billing_cycle,
         expiredAt: node.expired_at,
       },

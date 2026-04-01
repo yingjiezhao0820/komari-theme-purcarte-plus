@@ -86,6 +86,7 @@ const TagItem: React.FC<TagItemProps> = ({
           node={{
             price: parsed.payload.price,
             currency: parsed.payload.currency,
+            currency_code: parsed.payload.currencyCode,
             billing_cycle: parsed.payload.billingCycle,
             expired_at: parsed.payload.expiredAt,
           }}

@@ -96,15 +96,8 @@ function searchPriceToCNY(
   currencyCode: string,
   rates: ExchangeRates
 ): number {
-  switch (currencyCode) {
-    case "CNY": return price;
-    case "USD": return price / (rates.USD || 0.14);
-    case "HKD": return price / (rates.HKD || 1.08);
-    case "EUR": return price / (rates.EUR || 0.12);
-    case "GBP": return price / (rates.GBP || 0.11);
-    case "JPY": return price / (rates.JPY || 22.23);
-    default: return price;
-  }
+  const rate = rates[currencyCode];
+  return rate && rate > 0 ? price / rate : price;
 }
 
 /**
