@@ -81,7 +81,7 @@ jobs:
           cp komari-theme.json theme-package/
           cp -r dist/ theme-package/
 
-          ZIP_NAME="komari-theme-purcarte-pro.zip"
+          ZIP_NAME="komari-theme-purcarte-plus.zip"
 
           cd theme-package
           zip -r ../${ZIP_NAME} .

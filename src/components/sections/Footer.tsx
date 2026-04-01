@@ -160,7 +160,7 @@ const Footer = forwardRef<
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:text-blue-600 transition-colors">
-                  PurCarte-Pro
+                  PurCarte-Plus
                 </a>
               </p>
             )}

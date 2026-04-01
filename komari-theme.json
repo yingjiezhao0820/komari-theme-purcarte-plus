@@ -1,6 +1,6 @@
 {
-    "name": "Komari Theme PurCart Pro",
-    "short": "PurCarte-Pro",
+    "name": "Komari Theme PurCart Plus",
+    "short": "PurCarte-Plus",
     "description": "A frosted glass theme for Komari",
     "version": "tags:VERSION",
     "author": "YannickYoung & Claude",
@@ -9,11 +9,11 @@
     "configuration": {
         "type": "managed",
         "name": {
-            "zh-CN": "PurCart Pro 主题设置",
-            "zh-TW": "PurCart Pro 主題設置",
-            "en": "PurCart Pro Theme Settings",
-            "ja": "PurCart Pro テーマ設定",
-            "id": "Pengaturan Tema PurCart Pro"
+            "zh-CN": "PurCart Plus 主题设置",
+            "zh-TW": "PurCart Plus 主題設置",
+            "en": "PurCart Plus Theme Settings",
+            "ja": "PurCart Plus テーマ設定",
+            "id": "Pengaturan Tema PurCart Plus"
         },
         "data": [
             {
