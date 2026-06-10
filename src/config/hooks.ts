@@ -61,6 +61,7 @@ export function useLocale() {
   const { texts } = appConfig;
   const rawCustomTexts = appConfig.customTexts;
   const { i18n } = useTranslation();
+  const currentLanguage = i18n.resolvedLanguage || i18n.language;
   const prevCustomTextsRef = useRef<string | null>(null);
 
   // 仅注入后台自定义文本覆盖到 i18next，而非完整的中文默认文本
@@ -94,7 +95,7 @@ export function useLocale() {
   const t = useCallback(
     (key: LocaleKeys | (string & {}), params?: Record<string, string | number>): string => {
       // 使用 i18next 翻译（已包含 JSON locale + customTexts 覆盖）
-      const result = i18next.t(key as string, params as any);
+      const result = i18n.t(key as string, params as any);
 
       // 如果 i18next 返回了 key 本身（未找到翻译），回退到 texts 对象
       if (result === key) {
@@ -112,7 +113,7 @@ export function useLocale() {
 
       return result as string;
     },
-    [texts]
+    [i18n, currentLanguage, texts]
   );
 
   return { t, i18n };

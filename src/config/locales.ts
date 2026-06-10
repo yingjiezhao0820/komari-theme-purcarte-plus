@@ -28,6 +28,17 @@ export const defaultTexts = {
     uploadPrefix: "↑",
     downloadPrefix: "↓",
   },
+  nodeCard: {
+    priceFree: "免费",
+    priceCycleDays: "{days}天",
+    priceCycleMonth: "月",
+    priceCycleQuarter: "季",
+    priceCycleHalfYear: "半年",
+    priceCycleYear: "年",
+    priceCycleTwoYears: "两年",
+    priceCycleThreeYears: "三年",
+    priceCycleFiveYears: "五年",
+  },
   header: {
     _: "标题栏",
     toggleView: "切换视图",
